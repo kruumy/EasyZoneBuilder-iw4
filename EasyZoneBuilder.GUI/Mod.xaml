@@ -21,6 +21,7 @@
                 x:Name="selectedMod"
                 Grid.Column="0"
                 Margin="5"
+                DisplayMemberPath="Directory.Name"
                 Loaded="selectedMod_Loaded">
             </ComboBox>
             <Button
@@ -39,13 +40,18 @@
           Margin="5">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="AssetType"
-                            Binding="{Binding Value}"
+                            Binding="{Binding Value.AssetType}"
                             Width="75"
                             IsReadOnly="True" />
                 <DataGridTextColumn Header="Name"
                             Binding="{Binding Key}"
+                            Width="200"
+                            IsReadOnly="True" />
+                <DataGridTextColumn Header="Zone"
+                            Binding="{Binding Value.Zone}"
                             Width="*"
                             IsReadOnly="True" />
+
             </DataGrid.Columns>
             <DataGrid.ContextMenu>
                 <ContextMenu>
@@ -56,25 +62,13 @@
             </DataGrid.ContextMenu>
         </DataGrid>
 
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" ></ColumnDefinition>
-                <ColumnDefinition Width="*" ></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Button
-                x:Name="readFastFileBtn"
-                Grid.Column="0"
-                Margin="5"
-                Content="Read From FastFile"
-                Click="readFastFileBtn_Click">
-            </Button>
-            <Button
+        <Button
                 x:Name="writeFastFileBtn"
-                Grid.Column="1"
+                Grid.Column="0"
+                Grid.Row="2"
                 Margin="5"
-                Content="Write To FastFile"
+                Content="Write To mod.ff"
                 Click="writeFastFileBtn_Click">
-            </Button>
-        </Grid>
+        </Button>
     </Grid>
 </UserControl>

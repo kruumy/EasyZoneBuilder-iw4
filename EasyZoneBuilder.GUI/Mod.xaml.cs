@@ -1,18 +1,7 @@
 ﻿using EasyZoneBuilder.Core;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace EasyZoneBuilder.GUI
 {
@@ -21,8 +10,10 @@ namespace EasyZoneBuilder.GUI
     /// </summary>
     public partial class Mod : UserControl
     {
+        public static Mod Instance;
         public Mod()
         {
+            Instance = this;
             InitializeComponent();
         }
 
@@ -33,10 +24,12 @@ namespace EasyZoneBuilder.GUI
 
         private void CsvGrid_Loaded( object sender, RoutedEventArgs e )
         {
-            if ( selectedMod.SelectedItem is Core.Mod sMod)
+            if ( selectedMod.SelectedItem is Core.Mod sMod )
             {
-                CsvGrid.ItemsSource = sMod.FastFile.CSV;
+                sMod.CSV.Pull();
+                CsvGrid.ItemsSource = sMod.CSV;
             }
+            
         }
 
         private void ReadModCsvBtn_Click( object sender, RoutedEventArgs e )
@@ -50,30 +43,18 @@ namespace EasyZoneBuilder.GUI
             if ( selectedMod.SelectedItem is Core.Mod sMod )
             {
                 writeFastFileBtn.IsEnabled = false;
-                sMod.FastFile.CSV.Push();
-                await sMod.FastFile.Push();
+                sMod.CSV.Push();
+                await sMod.BuildZone();
                 writeFastFileBtn.IsEnabled = true;
-            }
-        }
-
-        private async void readFastFileBtn_Click( object sender, RoutedEventArgs e )
-        {
-            if ( selectedMod.SelectedItem is Core.Mod sMod )
-            {
-                readFastFileBtn.IsEnabled = false;
-                await sMod.FastFile.Pull();
-                sMod.FastFile.CSV.Push();
-                ReadModCsvBtn_Click(sender, e);
-                readFastFileBtn.IsEnabled = true;
             }
         }
 
         private void DeleteContextMenuItem_Click( object sender, RoutedEventArgs e )
         {
-            if ( selectedMod.SelectedItem is Core.Mod sMod && CsvGrid.SelectedItem is KeyValuePair<string,AssetType> kv)
+            if ( selectedMod.SelectedItem is Core.Mod sMod && CsvGrid.SelectedItem is KeyValuePair<string, ModCSV.EntryInfomation> kv )
             {
-                sMod.FastFile.CSV.Remove(kv.Key);
-                sMod.FastFile.CSV.Push();
+                sMod.CSV.Remove(kv.Key);
+                sMod.CSV.Push();
                 ReadModCsvBtn_Click(sender, e);
             }
         }

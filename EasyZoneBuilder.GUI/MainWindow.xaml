@@ -12,7 +12,8 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         
-        <local:Mod></local:Mod>
+        <local:Mod Grid.Column="0"></local:Mod>
+        <local:Zone Grid.Column="1"></local:Zone>
 
     </Grid>
 </Window>

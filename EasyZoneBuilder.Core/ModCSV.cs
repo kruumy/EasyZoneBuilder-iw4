@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Text;
+using static EasyZoneBuilder.Core.ModCSV;
 
 namespace EasyZoneBuilder.Core
 {
-    public class ModCSV : Dictionary<string, AssetType>
+    public class ModCSV : Dictionary<string, EntryInfomation>
     {
         public FileInfo File { get; private set; }
-        public List<string> RequiredZones = new List<string>();
-        private readonly string REQUIREDZONES_PREFIX = "// RequiredZones = ";
         public ModCSV( FileInfo File )
         {
             this.File = File;
@@ -22,10 +22,9 @@ namespace EasyZoneBuilder.Core
         public void Push()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(REQUIREDZONES_PREFIX + RequiredZones.ToJson());
-            foreach ( KeyValuePair<string, AssetType> item in this )
+            foreach ( KeyValuePair<string, EntryInfomation> item in this )
             {
-                sb.AppendLine($"{item.Value},{item.Key}");
+                sb.AppendLine($"{item.Value.AssetType},{item.Key},{item.Value.Zone}");
             }
             System.IO.File.WriteAllText(File.FullName, sb.ToString());
         }
@@ -34,20 +33,15 @@ namespace EasyZoneBuilder.Core
             this.Clear();
             foreach ( string line in System.IO.File.ReadAllLines(this.File.FullName) )
             {
-                if (line.StartsWith(REQUIREDZONES_PREFIX) )
-                {
-                    RequiredZones = line.Substring(REQUIREDZONES_PREFIX.Length).FromJson<List<string>>();
-                    continue;
-                }
-                int comma = line.IndexOf(',');
-                if ( comma != -1 )
-                {
-                    AssetType value = AssetTypeUtil.Parse(line.Substring(0, comma));
-                    string key = line.Substring(comma + 1);
-                    this[ key ] = value;
-                }
+                string[] splitLine = line.Split(new char[] { ',' },System.StringSplitOptions.RemoveEmptyEntries);
+                this[ splitLine[ 1 ] ] = new EntryInfomation() 
+                { 
+                    AssetType = AssetTypeUtil.Parse(splitLine[0]),
+                    Zone = splitLine[2]
+                };
             }
         }
+
         public void Move( FileInfo File )
         {
             if ( this.File.FullName != File.FullName )
@@ -60,6 +54,12 @@ namespace EasyZoneBuilder.Core
         public TempFileCopy TempCopy( FileInfo destination )
         {
             return new TempFileCopy(this.File, destination);
+        }
+
+        public struct EntryInfomation
+        {
+            public AssetType AssetType { get; set; }
+            public string Zone { get; set; }
         }
     }
 }

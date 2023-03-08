@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -102,11 +103,12 @@ namespace EasyZoneBuilder.Core
 
         public static async Task BuildZone( ModCSV csv, FileInfo destination )
         {
-            List<string> commands = new List<string>(csv.RequiredZones.Count + 1);
-            foreach ( string zone in csv.RequiredZones )
+            List<string> commands = new List<string>();
+            foreach ( var zone in csv.Values )
             {
-                commands.Add("loadzone " + zone);
+                commands.Add("loadzone " + zone.Zone);
             }
+            commands = commands.Distinct().ToList();
             FileInfo csvdest = new FileInfo(Path.Combine(Iw4x.Directory.FullName, @"zone_source", csv.File.Name));
             csv.Push();
             using (var tempcopy = csv.TempCopy(csvdest) )

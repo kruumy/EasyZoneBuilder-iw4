@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="EasyZoneBuilder.GUI.Zone"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:EasyZoneBuilder.GUI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <ComboBox
+                x:Name="selectedZone"
+                Grid.Column="0"
+                Margin="5"
+                Loaded="selectedZone_Loaded">
+            </ComboBox>
+            <ComboBox
+                x:Name="selectedAssetType"
+                Grid.Column="1"
+                Margin="5"
+                Loaded="selectedAssetType_Loaded">
+            </ComboBox>
+        </Grid>
+        <ListBox 
+            x:Name="AssetList"
+            Grid.Row="1" 
+            Margin="5">
+            <ListBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem
+                        x:Name="AddToCSVMenuItem"
+                        Header="Add to selected mod.csv" 
+                        Click="AddToCSVMenuItem_Click"/>
+                </ContextMenu>
+            </ListBox.ContextMenu>
+        </ListBox>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="100"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBox
+                x:Name="SearchBox"
+                Margin="5"
+                Grid.Column="0"
+                TextWrapping="NoWrap"
+                TextChanged="SearchBox_TextChanged">
+            </TextBox>
+            <Button
+                x:Name="SearchBtn"
+                Grid.Column="1"
+                Margin="5"
+                Content="Search"
+                Click="SearchBtn_Click">
+                
+            </Button>
+        </Grid>
+        <Button
+                x:Name="readFastFileBtn"
+                Grid.Column="0"
+                Grid.Row="3"
+                Margin="5"
+                Content="Read From FastFile"
+                Click="readFastFileBtn_Click">
+        </Button>
+    </Grid>
+</UserControl>
