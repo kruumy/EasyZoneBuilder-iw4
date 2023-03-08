@@ -1,0 +1,80 @@
+﻿<UserControl x:Class="EasyZoneBuilder.GUI.Mod"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:EasyZoneBuilder.GUI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="400">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <ComboBox
+                x:Name="selectedMod"
+                Grid.Column="0"
+                Margin="5"
+                Loaded="selectedMod_Loaded">
+            </ComboBox>
+            <Button
+                x:Name="ReadModCsvBtn"
+                Grid.Column="1"
+                Margin="5"
+                Content="Read mod.csv"
+                Click="ReadModCsvBtn_Click">
+            </Button>
+        </Grid>
+        <DataGrid x:Name="CsvGrid"
+          Grid.Row="1"
+          Loaded="CsvGrid_Loaded"
+          AutoGenerateColumns="False"
+          SelectionMode="Single"
+          Margin="5">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="AssetType"
+                            Binding="{Binding Value}"
+                            Width="75"
+                            IsReadOnly="True" />
+                <DataGridTextColumn Header="Name"
+                            Binding="{Binding Key}"
+                            Width="*"
+                            IsReadOnly="True" />
+            </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Delete"
+                              x:Name="DeleteContextMenuItem"
+                              Click="DeleteContextMenuItem_Click"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" ></ColumnDefinition>
+                <ColumnDefinition Width="*" ></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button
+                x:Name="readFastFileBtn"
+                Grid.Column="0"
+                Margin="5"
+                Content="Read From FastFile"
+                Click="readFastFileBtn_Click">
+            </Button>
+            <Button
+                x:Name="writeFastFileBtn"
+                Grid.Column="1"
+                Margin="5"
+                Content="Write To FastFile"
+                Click="writeFastFileBtn_Click">
+            </Button>
+        </Grid>
+    </Grid>
+</UserControl>

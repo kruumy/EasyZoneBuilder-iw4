@@ -13,8 +13,6 @@ namespace EasyZoneBuilder.Testing
             IW4X iw = new IW4X(new DirectoryInfo(@"F:\SteamLibrary\steamapps\common\Call of Duty Modern Warfare 2"));
 
 
-            iw.Mods[ 0 ].FastFile.Pull();
-            Console.ReadLine();
             //ZoneBuilder.ListAssets(AssetType.xmodel,"oilrig").Result.ToList().ForEach(x => Console.WriteLine(x));
             /*
             iw.Mods[ 0 ].FastFile.Pull();

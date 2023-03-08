@@ -58,6 +58,7 @@ namespace EasyZoneBuilder.Core
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.RedirectStandardOutput = true;
             p.StartInfo.UseShellExecute = false;
+            p.StartInfo.CreateNoWindow = true;
             p.Start();
             string raw = await p.StandardOutput.ReadToEndAsync();
             p.Dispose();
@@ -113,7 +114,9 @@ namespace EasyZoneBuilder.Core
                 commands.Add("buildzone mod");
                 await ExecuteLines(commands.ToArray());
             }
-            System.IO.File.Move(Path.Combine(Iw4x.Directory.FullName, "zone",Path.GetFileNameWithoutExtension(csv.File.FullName) + ".ff"),destination.FullName);
+            string buildZoneOutput = Path.Combine(Iw4x.Directory.FullName, "zone", Path.GetFileNameWithoutExtension(csv.File.FullName) + ".ff");
+            System.IO.File.Delete(destination.FullName);
+            System.IO.File.Move(buildZoneOutput, destination.FullName);
         }
     }
 }
