@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using static EasyZoneBuilder.Core.ModCSV;
 
@@ -30,6 +31,10 @@ namespace EasyZoneBuilder.Core
         }
         public void Pull()
         {
+            if( !File.Exists )
+            {
+                Push();
+            }
             this.Clear();
             foreach ( string line in System.IO.File.ReadAllLines(this.File.FullName) )
             {

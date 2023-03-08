@@ -73,6 +73,7 @@ namespace EasyZoneBuilder.GUI
                     AssetType = AssetTypeUtil.Parse(selectedAssetType)
                 };
                 sMod.CSV.Push();
+                Mod.Instance.ReadModCsvBtn_Click(sender, e);
             }
         }
 

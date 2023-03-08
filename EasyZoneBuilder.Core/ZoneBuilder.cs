@@ -13,6 +13,8 @@ namespace EasyZoneBuilder.Core
     {
         public static FileInfo Iw4x { get; private set; }
 
+        public static string LastError { get; private set; } = string.Empty;
+
         public static class Default
         {
             public static string[] XAnims => TinyJson.JSONParser.FromJson<string[]>(File.ReadAllText("default_xanims.json"));
@@ -62,6 +64,7 @@ namespace EasyZoneBuilder.Core
             p.StartInfo.CreateNoWindow = true;
             p.Start();
             string raw = await p.StandardOutput.ReadToEndAsync();
+            LastError = await p.StandardError.ReadToEndAsync();
             p.Dispose();
             return raw.Substring(raw.LastIndexOf('"') + 3).Replace("\r", string.Empty); ;
         }
@@ -117,8 +120,15 @@ namespace EasyZoneBuilder.Core
                 await ExecuteLines(commands.ToArray());
             }
             string buildZoneOutput = Path.Combine(Iw4x.Directory.FullName, "zone", Path.GetFileNameWithoutExtension(csv.File.FullName) + ".ff");
-            System.IO.File.Delete(destination.FullName);
-            System.IO.File.Move(buildZoneOutput, destination.FullName);
+            if ( File.Exists(buildZoneOutput) )
+            {
+                System.IO.File.Delete(destination.FullName);
+                System.IO.File.Move(buildZoneOutput, destination.FullName);
+            }
+            else
+            {
+                throw new Exception(LastError);
+            }
         }
     }
 }

@@ -32,7 +32,7 @@ namespace EasyZoneBuilder.GUI
             
         }
 
-        private void ReadModCsvBtn_Click( object sender, RoutedEventArgs e )
+        public void ReadModCsvBtn_Click( object sender, RoutedEventArgs e )
         {
             CsvGrid_Loaded(sender, e);
             CsvGrid.Items.Refresh();

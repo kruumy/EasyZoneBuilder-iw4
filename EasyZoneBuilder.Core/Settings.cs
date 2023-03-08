@@ -1,4 +1,5 @@
 ﻿using EasyZoneBuilder.Core.TinyJson;
+using System;
 using System.IO;
 
 namespace EasyZoneBuilder.Core
@@ -9,21 +10,29 @@ namespace EasyZoneBuilder.Core
         {
             public string Iw4xPath;
         }
-        public readonly static IW4X IW4X;
-        public static Data Value;
-        public readonly static string FILENAME = "settings.json";
+        public static IW4X IW4X { get; private set; }
+        public static Data Value = new Data();
+        public readonly static FileInfo FILE = new FileInfo(Path.Combine(Environment.CurrentDirectory,"settings.json"));
         static Settings()
         {
-            if ( File.Exists(FILENAME) )
+            if ( FILE.Exists )
             {
-                Value = TinyJson.JSONParser.FromJson<Data>(File.ReadAllText(FILENAME));
+                Pull();
+            }
+        }
+
+        public static void Push()
+        {
+            File.WriteAllText(FILE.FullName, Value.ToJson());
+        }
+
+        public static void Pull()
+        {
+            Value = TinyJson.JSONParser.FromJson<Data>(File.ReadAllText(FILE.FullName));
+            if ( Value.Iw4xPath != null)
+            {
                 ZoneBuilder.Init(new FileInfo(Value.Iw4xPath));
                 IW4X = new IW4X(Directory.GetParent(Value.Iw4xPath));
-            }
-            else
-            {
-                Value = new Data();
-                File.WriteAllText(FILENAME, Value.ToJson());
             }
         }
     }
