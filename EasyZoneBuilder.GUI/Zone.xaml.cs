@@ -57,6 +57,7 @@ namespace EasyZoneBuilder.GUI
         private void selectedAssetType_Loaded( object sender, RoutedEventArgs e )
         {
             selectedAssetType.ItemsSource = typeof(AssetType).GetEnumNames();
+            selectedAssetType.SelectedValue = 0;
         }
 
         private void AddToCSVMenuItem_Click( object sender, RoutedEventArgs e )

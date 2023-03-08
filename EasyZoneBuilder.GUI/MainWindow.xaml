@@ -13,7 +13,9 @@
         </Grid.ColumnDefinitions>
         
         <local:Mod Grid.Column="0"></local:Mod>
+        <GridSplitter Height="100" Width="1"/>
         <local:Zone Grid.Column="1"></local:Zone>
+        
 
     </Grid>
 </Window>
