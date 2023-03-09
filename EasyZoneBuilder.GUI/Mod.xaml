@@ -70,13 +70,26 @@
             </DataGrid.ContextMenu>
         </DataGrid>
 
-        <Button
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button
                 x:Name="writeFastFileBtn"
                 Grid.Column="0"
-                Grid.Row="2"
                 Margin="5"
-                Content="Write To mod.ff and _precache.gsc"
+                Content="Write To FastFile"
                 Click="writeFastFileBtn_Click">
-        </Button>
+            </Button>
+            <Button
+                x:Name="writePrecacheBtn"
+                Grid.Column="1"
+                Margin="5"
+                Content="Write To Precache"
+                Click="writePrecacheBtn_Click">
+            </Button>
+        </Grid>
+        
     </Grid>
 </UserControl>
