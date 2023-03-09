@@ -9,6 +9,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="35"></RowDefinition>
             <RowDefinition Height="35"></RowDefinition>
@@ -31,9 +32,23 @@
                 Loaded="selectedAssetType_Loaded">
             </ComboBox>
         </Grid>
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Label
+                x:Name="AssetsFoundLabel"
+                Content="Assets Found: 0"
+                HorizontalAlignment="Left"
+                FontSize="11"
+                Margin="2,0,0,0">
+            </Label>
+        </Grid>
         <ListBox 
             x:Name="AssetList"
-            Grid.Row="1" 
+            Grid.Row="2" 
             Margin="5">
             <ListBox.ContextMenu>
                 <ContextMenu>
@@ -52,7 +67,7 @@
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="100"></ColumnDefinition>
@@ -76,7 +91,7 @@
         <Button
                 x:Name="readFastFileBtn"
                 Grid.Column="0"
-                Grid.Row="3"
+                Grid.Row="4"
                 Margin="5"
                 Content="Read From FastFile"
                 Click="readFastFileBtn_Click">

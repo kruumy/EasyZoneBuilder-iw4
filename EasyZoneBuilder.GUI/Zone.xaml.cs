@@ -1,5 +1,7 @@
 ﻿using EasyZoneBuilder.Core;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -21,15 +23,18 @@ namespace EasyZoneBuilder.GUI
         {
             selectedZone.ItemsSource = Settings.IW4.Zones;
         }
-        private CollectionViewSource cvs = new CollectionViewSource();
+        public readonly CollectionViewSource cvs = new CollectionViewSource();
         private async void readFastFileBtn_Click( object sender, RoutedEventArgs e )
         {
             if ( selectedZone.SelectedItem is string ss && selectedAssetType.SelectedItem is string sat )
             {
                 readFastFileBtn.IsEnabled = false;
                 AssetList.ItemsSource = Array.Empty<string>();
-                cvs.Source = await ZoneBuilder.ListAssets(AssetTypeUtil.Parse(sat), ss);
+                AssetsFoundLabel.Content = "Assets Found: 0";
+                IEnumerable<string> assets = await ZoneBuilder.ListAssets(AssetTypeUtil.Parse(sat), ss);
+                cvs.Source = assets;
                 AssetList.ItemsSource = cvs.View;
+                AssetsFoundLabel.Content = "Assets Found: " + assets.Count();
                 readFastFileBtn.IsEnabled = true;
             }
         }
