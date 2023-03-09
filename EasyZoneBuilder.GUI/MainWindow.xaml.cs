@@ -38,7 +38,7 @@ namespace EasyZoneBuilder.GUI
             };
             selectIw4x.ShowDialog();
             string fileName = Path.GetFileNameWithoutExtension(selectIw4x.FileName);
-            if ( fileName != "iw4x" && fileName != "iw4m" )
+            if ( fileName != "iw4x" && fileName != "iw4m"  /* TODO add zonebuilder exe name */)
             {
                 MessageBox.Show("Not legal executable, exiting...", "First Time Setup");
                 Environment.Exit(0);
