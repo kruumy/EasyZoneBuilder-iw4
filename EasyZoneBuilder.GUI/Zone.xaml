@@ -39,8 +39,16 @@
                 <ContextMenu>
                     <MenuItem
                         x:Name="AddToCSVMenuItem"
-                        Header="Add to selected mod.csv" 
-                        Click="AddToCSVMenuItem_Click"/>
+                        Header="Add to mod.csv" 
+                        Click="AddToCSVMenuItem_Click">
+                        <MenuItem.Icon>
+                            <Image>
+                                <Image.Source>
+                                    <BitmapImage UriSource="Resources/leftArrow.ico" />
+                                </Image.Source>
+                            </Image>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>

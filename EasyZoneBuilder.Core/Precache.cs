@@ -9,7 +9,7 @@ namespace EasyZoneBuilder.Core
     {
         public FileInfo File;
         private static readonly string ANIM_FUNCNAME = "PrecacheMPAnim";
-        private static readonly string MODEL_FUNCNAME = "PrecacheMPModel";
+        private static readonly string MODEL_FUNCNAME = "PrecacheModel";
         public Precache( FileInfo File )
         {
             this.File = File;

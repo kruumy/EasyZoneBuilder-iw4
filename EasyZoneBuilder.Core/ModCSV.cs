@@ -39,10 +39,10 @@ namespace EasyZoneBuilder.Core
             foreach ( string line in System.IO.File.ReadAllLines(this.File.FullName) )
             {
                 string[] splitLine = line.Split(new char[] { ',' },System.StringSplitOptions.RemoveEmptyEntries);
-                this[ splitLine[ 1 ] ] = new EntryInfomation() 
+                this[ splitLine[ 1 ].Trim() ] = new EntryInfomation() 
                 { 
-                    AssetType = AssetTypeUtil.Parse(splitLine[0]),
-                    Zone = splitLine[2]
+                    AssetType = AssetTypeUtil.Parse(splitLine[0].Trim()),
+                    Zone = splitLine[2].Trim()
                 };
             }
         }

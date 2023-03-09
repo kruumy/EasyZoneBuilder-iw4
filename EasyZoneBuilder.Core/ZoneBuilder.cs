@@ -83,7 +83,10 @@ namespace EasyZoneBuilder.Core
             }
             command.Add("listassets " + assetType.ToString());
             string[] lines = await ExecuteLines(command.ToArray());
-            // TODO cut out the first "loading" line
+            if (lines.Length > 0 && lines[0].Contains("Loading") )
+            {
+                lines = lines.Skip(1).ToArray();
+            }
             if ( zones.Length > 0 )
             {
                 return lines.Difference(Default.Get(assetType));
