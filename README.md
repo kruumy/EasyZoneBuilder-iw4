@@ -20,9 +20,9 @@
 
 ### Repository Structure
 ```
-ActorConsole-Rewritten-iw4
-├── ActorConsole.Core
+EasyZoneBuilder-iw4
+├── EasyZoneBuilder.Core
 │   ├── Core Functionality.
-├── ActorConsole.GUI
+├── EasyZoneBuilder.GUI
 │   ├── WPF Front-end.
 ```
