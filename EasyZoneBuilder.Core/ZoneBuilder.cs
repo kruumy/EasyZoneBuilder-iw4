@@ -46,7 +46,7 @@ namespace EasyZoneBuilder.Core
         {
             StringBuilder args = new StringBuilder();
             args.Append("-zonebuilder -stdout");
-            foreach ( var com in commands )
+            foreach ( string com in commands )
             {
                 args.Append(" +");
                 args.Append(com);
@@ -74,7 +74,7 @@ namespace EasyZoneBuilder.Core
         public static async Task<IEnumerable<string>> ListAssets( AssetType assetType, params string[] zones )
         {
             List<string> command = new List<string>(zones.Length + 1);
-            foreach ( var item in zones )
+            foreach ( string item in zones )
             {
                 command.Add("loadzone " + item);
             }
@@ -96,7 +96,7 @@ namespace EasyZoneBuilder.Core
 
         public static async Task<IEnumerable<string>> ListAssets( AssetType assetType, FileInfo file )
         {
-            var destination = new FileInfo(Path.Combine(TargetExecutable.Directory.FullName, @"zone\english", file.Name));
+            FileInfo destination = new FileInfo(Path.Combine(TargetExecutable.Directory.FullName, @"zone\english", file.Name));
             using ( TempFileCopy temp = new TempFileCopy(file, destination) )
             {
                 string command = Path.GetFileNameWithoutExtension(file.FullName);
@@ -107,15 +107,21 @@ namespace EasyZoneBuilder.Core
         public static async Task BuildZone( ModCSV csv, FileInfo destination )
         {
             List<string> commands = new List<string>();
-            foreach ( var zone in csv.Values )
+            foreach ( ModCSV.EntryInfomation zone in csv.Values )
             {
                 commands.Add("loadzone " + zone.Zone);
             }
             commands = commands.Distinct().ToList();
             FileInfo csvdest = new FileInfo(Path.Combine(TargetExecutable.Directory.FullName, @"zone_source", csv.File.Name));
-            csv.Push();
-            using ( var tempcopy = csv.TempCopy(csvdest) )
+            if ( !csvdest.Directory.Exists )
             {
+                csvdest.Directory.Create();
+            }
+            csv.Push();
+            using ( TempFileCopy tempcopy = csv.TempCopy(csvdest) )
+            {
+                LegacyModCSV legcsv = new LegacyModCSV(csvdest);
+                legcsv.Push();
                 commands.Add("buildzone mod");
                 await ExecuteLines(commands.ToArray());
             }

@@ -44,15 +44,6 @@ namespace EasyZoneBuilder.Core
             }
         }
 
-        public void Move( FileInfo File )
-        {
-            if ( this.File.FullName != File.FullName )
-            {
-                System.IO.File.Move(this.File.FullName, File.FullName);
-            }
-            this.File = File;
-        }
-
         public TempFileCopy TempCopy( FileInfo destination )
         {
             return new TempFileCopy(this.File, destination);
