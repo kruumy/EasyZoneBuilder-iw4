@@ -43,8 +43,11 @@ namespace EasyZoneBuilder.GUI
             if ( selectedMod.SelectedItem is Core.Mod sMod )
             {
                 writeFastFileBtn.IsEnabled = false;
+                object oldContent = writeFastFileBtn.Content;
+                writeFastFileBtn.Content = "Writing...";
                 sMod.CSV.Push();
                 await sMod.BuildZone();
+                writeFastFileBtn.Content = oldContent;
                 writeFastFileBtn.IsEnabled = true;
                 MessageBox.Show($"Wrote to mod.ff successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }

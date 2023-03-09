@@ -29,12 +29,15 @@ namespace EasyZoneBuilder.GUI
             if ( selectedZone.SelectedItem is string ss && selectedAssetType.SelectedItem is string sat )
             {
                 readFastFileBtn.IsEnabled = false;
+                object oldBtnContext = readFastFileBtn.Content;
+                readFastFileBtn.Content = "Reading...";
                 AssetList.ItemsSource = Array.Empty<string>();
                 AssetsFoundLabel.Content = "Assets Found: 0";
                 IEnumerable<string> assets = await ZoneBuilder.ListAssets(AssetTypeUtil.Parse(sat), ss);
                 cvs.Source = assets;
                 AssetList.ItemsSource = cvs.View;
                 AssetsFoundLabel.Content = "Assets Found: " + assets.Count();
+                readFastFileBtn.Content = oldBtnContext;
                 readFastFileBtn.IsEnabled = true;
             }
         }
