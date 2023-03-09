@@ -57,7 +57,15 @@
                 <ContextMenu>
                     <MenuItem Header="Delete"
                               x:Name="DeleteContextMenuItem"
-                              Click="DeleteContextMenuItem_Click"/>
+                              Click="DeleteContextMenuItem_Click">
+                        <MenuItem.Icon>
+                            <Image>
+                                <Image.Source>
+                                    <BitmapImage UriSource="Resources/trash.ico" />
+                                </Image.Source>
+                            </Image>
+                        </MenuItem.Icon>
+                    </MenuItem>
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
