@@ -45,6 +45,8 @@ namespace EasyZoneBuilder.GUI
                 writeFastFileBtn.IsEnabled = false;
                 sMod.CSV.Push();
                 await sMod.BuildZone();
+                sMod.SmartCopyCSVToPrecache();
+                sMod.Precache.Push();
                 writeFastFileBtn.IsEnabled = true;
             }
         }

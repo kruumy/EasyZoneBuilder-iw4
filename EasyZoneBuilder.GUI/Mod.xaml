@@ -67,7 +67,7 @@
                 Grid.Column="0"
                 Grid.Row="2"
                 Margin="5"
-                Content="Write To mod.ff"
+                Content="Write To mod.ff and _precache.gsc"
                 Click="writeFastFileBtn_Click">
         </Button>
     </Grid>

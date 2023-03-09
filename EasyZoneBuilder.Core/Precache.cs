@@ -16,7 +16,6 @@ namespace EasyZoneBuilder.Core
             if ( this.File.Exists )
             {
                 Pull();
-                Push();
             }
         }
         public void Push()
