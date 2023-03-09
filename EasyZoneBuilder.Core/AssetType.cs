@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EasyZoneBuilder.Core
 {
@@ -12,10 +10,10 @@ namespace EasyZoneBuilder.Core
 
     public static class AssetTypeUtil
     {
-        public static AssetType Parse(string str)
+        public static AssetType Parse( string str )
         {
             str = str.ToLower().Trim();
-            if (str == AssetType.xanim.ToString())
+            if ( str == AssetType.xanim.ToString() )
             {
                 return AssetType.xanim;
             }

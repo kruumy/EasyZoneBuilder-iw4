@@ -1,39 +1,59 @@
 ﻿using EasyZoneBuilder.Core.TinyJson;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
 
 namespace EasyZoneBuilder.Core
 {
     public static class Settings
     {
-        public struct Data
+        private static string _TargetExecutablePath = string.Empty;
+        public static string TargetExecutablePath
         {
-            public string Iw4xPath;
+            get
+            {
+                return _TargetExecutablePath;
+            }
+            set
+            {
+                _TargetExecutablePath = value;
+                if ( !string.IsNullOrEmpty(value) )
+                {
+                    FileInfo fileInfo = new FileInfo(value);
+                    if ( fileInfo != null && fileInfo.Exists )
+                    {
+                        ZoneBuilder.Initialize(fileInfo);
+                        IW4 = new IW4(fileInfo.Directory);
+                    }
+                }
+                Push();
+            }
         }
-        public static IW4X IW4X { get; private set; }
-        public static Data Value = new Data();
-        public readonly static FileInfo FILE = new FileInfo(Path.Combine(Environment.CurrentDirectory,"settings.json"));
+
+        [IgnoreDataMember]
+        public static IW4 IW4 { get; private set; }
+        [IgnoreDataMember]
+        public static FileInfo File => new FileInfo(Path.Combine(Environment.CurrentDirectory, "EasyZoneBuilder.appsettings.json"));
         static Settings()
         {
-            if ( FILE.Exists )
+            if ( File.Exists )
             {
                 Pull();
             }
         }
 
-        public static void Push()
-        {
-            File.WriteAllText(FILE.FullName, Value.ToJson());
-        }
-
         public static void Pull()
         {
-            Value = TinyJson.JSONParser.FromJson<Data>(File.ReadAllText(FILE.FullName));
-            if ( Value.Iw4xPath != null)
-            {
-                ZoneBuilder.Init(new FileInfo(Value.Iw4xPath));
-                IW4X = new IW4X(Directory.GetParent(Value.Iw4xPath));
-            }
+            string rawFileContents = System.IO.File.ReadAllText(File.FullName);
+            Dictionary<string, string> json = TinyJson.JSONParser.FromJson<Dictionary<string, string>>(rawFileContents);
+            TargetExecutablePath = (string)(json[ nameof(TargetExecutablePath) ]);
+        }
+        public static void Push()
+        {
+            Dictionary<string, string> json = new Dictionary<string, string>();
+            json[ nameof(TargetExecutablePath) ] = TargetExecutablePath;
+            System.IO.File.WriteAllText(File.FullName, json.ToJson());
         }
     }
 }

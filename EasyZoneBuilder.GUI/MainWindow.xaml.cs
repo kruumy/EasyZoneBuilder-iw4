@@ -14,7 +14,7 @@ namespace EasyZoneBuilder.GUI
         public MainWindow()
         {
             InitializeComponent();
-            if ( !Settings.FILE.Exists || string.IsNullOrEmpty(Settings.Value.Iw4xPath) || !File.Exists(Settings.Value.Iw4xPath) )
+            if ( !Settings.File.Exists || string.IsNullOrEmpty(Settings.TargetExecutablePath) || !File.Exists(Settings.TargetExecutablePath) )
             {
                 RunFirstTimeSetup();
             }
@@ -22,10 +22,10 @@ namespace EasyZoneBuilder.GUI
 
         private void RunFirstTimeSetup()
         {
-            MessageBox.Show("Please select your IW4X executable after pressing OK...", "First Time Setup");
+            MessageBox.Show("Please select your IW4 executable after pressing OK...", "First Time Setup");
             OpenFileDialog selectIw4x = new OpenFileDialog
             {
-                Title = "Select your IW4X executable",
+                Title = "Select your IW4 executable",
                 CheckFileExists = true,
                 CheckPathExists = true,
                 DefaultExt = "exe",
@@ -43,9 +43,7 @@ namespace EasyZoneBuilder.GUI
                 MessageBox.Show("Not legal executable, exiting...", "First Time Setup");
                 Environment.Exit(0);
             }
-            Settings.Value.Iw4xPath = selectIw4x.FileName;
-            Settings.Push();
-            Settings.Pull();
+            Settings.TargetExecutablePath = selectIw4x.FileName;
         }
     }
 }

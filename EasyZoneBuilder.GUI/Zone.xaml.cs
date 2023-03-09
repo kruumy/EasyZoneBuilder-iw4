@@ -1,9 +1,8 @@
 ﻿using EasyZoneBuilder.Core;
-using System.IO;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using static System.Net.WebRequestMethods;
 
 namespace EasyZoneBuilder.GUI
 {
@@ -15,21 +14,22 @@ namespace EasyZoneBuilder.GUI
         public Zone()
         {
             InitializeComponent();
+            cvs.Filter += Cvs_Filter;
         }
 
         private void selectedZone_Loaded( object sender, RoutedEventArgs e )
         {
-            selectedZone.ItemsSource = Settings.IW4X.Zones;
+            selectedZone.ItemsSource = Settings.IW4.Zones;
         }
         private CollectionViewSource cvs = new CollectionViewSource();
         private async void readFastFileBtn_Click( object sender, RoutedEventArgs e )
         {
-            if ( selectedZone.SelectedItem is string ss  && selectedAssetType.SelectedItem is string sat)
+            if ( selectedZone.SelectedItem is string ss && selectedAssetType.SelectedItem is string sat )
             {
                 readFastFileBtn.IsEnabled = false;
+                AssetList.ItemsSource = Array.Empty<string>();
                 cvs.Source = await ZoneBuilder.ListAssets(AssetTypeUtil.Parse(sat), ss);
                 AssetList.ItemsSource = cvs.View;
-                cvs.Filter += Cvs_Filter;
                 readFastFileBtn.IsEnabled = true;
             }
         }
@@ -43,7 +43,7 @@ namespace EasyZoneBuilder.GUI
             }
             else
             {
-                if (e.Item is string s)
+                if ( e.Item is string s )
                 {
                     e.Accepted = s.Contains(SearchBox.Text);
                 }
@@ -65,7 +65,7 @@ namespace EasyZoneBuilder.GUI
             if ( Mod.Instance.selectedMod.SelectedItem is Core.Mod sMod &&
                 AssetList.SelectedItem is string selectedAsset &&
                 this.selectedAssetType.SelectedItem is string selectedAssetType &&
-                selectedZone.SelectedItem is string _selectedZone)
+                selectedZone.SelectedItem is string _selectedZone )
             {
                 sMod.CSV[ selectedAsset ] = new ModCSV.EntryInfomation()
                 {

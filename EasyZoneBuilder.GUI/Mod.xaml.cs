@@ -19,7 +19,7 @@ namespace EasyZoneBuilder.GUI
 
         private void selectedMod_Loaded( object sender, RoutedEventArgs e )
         {
-            selectedMod.ItemsSource = Core.Settings.IW4X.Mods;
+            selectedMod.ItemsSource = Core.Settings.IW4.Mods;
         }
 
         private void CsvGrid_Loaded( object sender, RoutedEventArgs e )
@@ -29,7 +29,7 @@ namespace EasyZoneBuilder.GUI
                 sMod.CSV.Pull();
                 CsvGrid.ItemsSource = sMod.CSV;
             }
-            
+
         }
 
         public void ReadModCsvBtn_Click( object sender, RoutedEventArgs e )
@@ -46,7 +46,7 @@ namespace EasyZoneBuilder.GUI
                 sMod.CSV.Push();
                 await sMod.BuildZone();
                 writeFastFileBtn.IsEnabled = true;
-                MessageBox.Show($"Wrote to mod.ff successfully!", "Success",MessageBoxButton.OK,MessageBoxImage.Information);
+                MessageBox.Show($"Wrote to mod.ff successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -66,7 +66,7 @@ namespace EasyZoneBuilder.GUI
             {
                 writePrecacheBtn.IsEnabled = false;
                 sMod.CSV.Push();
-                sMod.SmartCopyCSVToPrecache();
+                sMod.SyncCSVToPrecache();
                 sMod.Precache.Push();
                 writePrecacheBtn.IsEnabled = true;
                 MessageBox.Show("Wrote to _precache.gsc successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);

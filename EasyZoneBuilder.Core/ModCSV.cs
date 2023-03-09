@@ -1,15 +1,12 @@
-﻿using EasyZoneBuilder.Core.TinyJson;
+﻿using EasyZoneBuilder.Core.Interfaces;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
 using System.Text;
 using static EasyZoneBuilder.Core.ModCSV;
 
 namespace EasyZoneBuilder.Core
 {
-    public class ModCSV : Dictionary<string, EntryInfomation>
+    public class ModCSV : Dictionary<string, EntryInfomation>, IFileInfo, ISync
     {
         public FileInfo File { get; private set; }
         public ModCSV( FileInfo File )
@@ -31,18 +28,18 @@ namespace EasyZoneBuilder.Core
         }
         public void Pull()
         {
-            if( !File.Exists )
+            if ( !File.Exists )
             {
                 Push();
             }
             this.Clear();
             foreach ( string line in System.IO.File.ReadAllLines(this.File.FullName) )
             {
-                string[] splitLine = line.Split(new char[] { ',' },System.StringSplitOptions.RemoveEmptyEntries);
-                this[ splitLine[ 1 ].Trim() ] = new EntryInfomation() 
-                { 
-                    AssetType = AssetTypeUtil.Parse(splitLine[0].Trim()),
-                    Zone = splitLine[2].Trim()
+                string[] splitLine = line.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries);
+                this[ splitLine[ 1 ].Trim() ] = new EntryInfomation()
+                {
+                    AssetType = AssetTypeUtil.Parse(splitLine[ 0 ].Trim()),
+                    Zone = splitLine[ 2 ].Trim()
                 };
             }
         }

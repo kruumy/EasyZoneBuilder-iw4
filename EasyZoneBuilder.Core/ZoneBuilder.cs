@@ -11,7 +11,7 @@ namespace EasyZoneBuilder.Core
 {
     public static class ZoneBuilder
     {
-        public static FileInfo Iw4x { get; private set; }
+        public static FileInfo TargetExecutable { get; private set; }
 
         public static string LastError { get; private set; } = string.Empty;
 
@@ -21,17 +21,14 @@ namespace EasyZoneBuilder.Core
             public static string[] XModels => TinyJson.JSONParser.FromJson<string[]>(File.ReadAllText("default_xmodels.json"));
             public static string[] Get( AssetType assetType )
             {
-                if ( assetType == AssetType.xanim )
+                switch ( assetType )
                 {
-                    return XAnims;
-                }
-                else if ( assetType == AssetType.xmodel )
-                {
-                    return XModels;
-                }
-                else
-                {
-                    return null;
+                    case AssetType.xanim:
+                        return XAnims;
+                    case AssetType.xmodel:
+                        return XModels;
+                    default:
+                        return null;
                 }
             }
 
@@ -41,9 +38,9 @@ namespace EasyZoneBuilder.Core
                 File.WriteAllText("default_xmodels.json", (await ZoneBuilder.ListAssets(AssetType.xmodel)).ToJson());
             }
         }
-        public static void Init( FileInfo iw4x )
+        public static void Initialize( FileInfo iw4x )
         {
-            Iw4x = iw4x;
+            TargetExecutable = iw4x;
         }
         public static async Task<string> Execute( params string[] commands )
         {
@@ -55,8 +52,8 @@ namespace EasyZoneBuilder.Core
                 args.Append(com);
             }
             Process p = new Process();
-            p.StartInfo.FileName = Iw4x.FullName;
-            p.StartInfo.WorkingDirectory = Iw4x.Directory.FullName;
+            p.StartInfo.FileName = TargetExecutable.FullName;
+            p.StartInfo.WorkingDirectory = TargetExecutable.Directory.FullName;
             p.StartInfo.Arguments = args.ToString();
             p.StartInfo.RedirectStandardError = true;
             p.StartInfo.RedirectStandardOutput = true;
@@ -83,7 +80,7 @@ namespace EasyZoneBuilder.Core
             }
             command.Add("listassets " + assetType.ToString());
             string[] lines = await ExecuteLines(command.ToArray());
-            if (lines.Length > 0 && lines[0].Contains("Loading") )
+            if ( lines.Length > 0 && lines[ 0 ].Contains("Loading") )
             {
                 lines = lines.Skip(1).ToArray();
             }
@@ -99,7 +96,7 @@ namespace EasyZoneBuilder.Core
 
         public static async Task<IEnumerable<string>> ListAssets( AssetType assetType, FileInfo file )
         {
-            var destination = new FileInfo(Path.Combine(Iw4x.Directory.FullName, @"zone\english", file.Name));
+            var destination = new FileInfo(Path.Combine(TargetExecutable.Directory.FullName, @"zone\english", file.Name));
             using ( TempFileCopy temp = new TempFileCopy(file, destination) )
             {
                 string command = Path.GetFileNameWithoutExtension(file.FullName);
@@ -115,14 +112,14 @@ namespace EasyZoneBuilder.Core
                 commands.Add("loadzone " + zone.Zone);
             }
             commands = commands.Distinct().ToList();
-            FileInfo csvdest = new FileInfo(Path.Combine(Iw4x.Directory.FullName, @"zone_source", csv.File.Name));
+            FileInfo csvdest = new FileInfo(Path.Combine(TargetExecutable.Directory.FullName, @"zone_source", csv.File.Name));
             csv.Push();
-            using (var tempcopy = csv.TempCopy(csvdest) )
+            using ( var tempcopy = csv.TempCopy(csvdest) )
             {
                 commands.Add("buildzone mod");
                 await ExecuteLines(commands.ToArray());
             }
-            string buildZoneOutput = Path.Combine(Iw4x.Directory.FullName, "zone", Path.GetFileNameWithoutExtension(csv.File.FullName) + ".ff");
+            string buildZoneOutput = Path.Combine(TargetExecutable.Directory.FullName, "zone", Path.GetFileNameWithoutExtension(csv.File.FullName) + ".ff");
             if ( File.Exists(buildZoneOutput) )
             {
                 System.IO.File.Delete(destination.FullName);
