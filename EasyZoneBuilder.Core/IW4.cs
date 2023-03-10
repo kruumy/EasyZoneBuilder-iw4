@@ -1,4 +1,5 @@
 ﻿using EasyZoneBuilder.Core.Interfaces;
+using System.Collections.Generic;
 using System.IO;
 
 namespace EasyZoneBuilder.Core
@@ -12,16 +13,16 @@ namespace EasyZoneBuilder.Core
             get
             {
                 string[] fullPath = System.IO.Directory.GetFiles(Path.Combine(Directory.FullName, "zone"), "*.ff", SearchOption.AllDirectories);
-                string[] names = new string[ fullPath.Length ];
+                List<string> result = new List<string>(fullPath.Length);
                 for ( int i = 0; i < fullPath.Length; i++ )
                 {
                     string name = Path.GetFileNameWithoutExtension(fullPath[ i ]);
-                    if ( !name.EndsWith("_load") && !string.IsNullOrEmpty(name.Trim()) )
+                    if ( name != "mp_ambush_sh" && name != "mp_bloc" && name != "mp_cargoship" ) // TODO: check why these zones dont work in zonebuilder, my guess is that it needs some other zone loaded before it
                     {
-                        names[ i ] = name;
+                        result.Add(name);
                     }
                 }
-                return names;
+                return result.ToArray();
             }
         }
 

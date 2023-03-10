@@ -9,8 +9,6 @@ namespace EasyZoneBuilder.Core
 {
     public static class DependencyGraphUtil
     {
-        // TODO remove GenerateDependencyGraphJson and add a RegenerateZones(params string[] zones)
-
         public static async Task GenerateDependencyGraphJson()
         {
             Dictionary<string, Dictionary<string, List<string>>> json = new Dictionary<string, Dictionary<string, List<string>>>();
@@ -91,6 +89,11 @@ namespace EasyZoneBuilder.Core
                 finalZoneScore[ nextZone ] = zoneScore[ nextZone ];
             }
             return finalZoneScore.Keys;
+        }
+
+        public static async Task<IEnumerable<string>> GetRequiredZonesAsync( ModCSV csv )
+        {
+            return await Task.Run(() => GetRequiredZones(csv));
         }
     }
 }
