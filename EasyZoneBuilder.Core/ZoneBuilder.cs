@@ -50,7 +50,7 @@ namespace EasyZoneBuilder.Core
                     string err = await p.StandardError.ReadToEndAsync();
                     if ( !string.IsNullOrEmpty(err.Trim()) )
                     {
-                        throw new Exception("Zonebuilder: " + err);
+                        throw new Exception($"{TargetExecutable.FullName} {args} : " + err);
                     }
                     ret.AppendLine(raw.Substring(raw.LastIndexOf('"') + 3).Replace("\r", string.Empty));
                 }
