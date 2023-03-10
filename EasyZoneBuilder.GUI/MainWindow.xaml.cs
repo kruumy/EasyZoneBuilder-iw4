@@ -18,6 +18,7 @@ namespace EasyZoneBuilder.GUI
             {
                 RunFirstTimeSetup();
             }
+
         }
 
         private void RunFirstTimeSetup()

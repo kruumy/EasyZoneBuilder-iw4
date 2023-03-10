@@ -1,5 +1,4 @@
-﻿using EasyZoneBuilder.Core.TinyJson;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -15,29 +14,6 @@ namespace EasyZoneBuilder.Core
 
         public static string LastError { get; private set; } = string.Empty;
 
-        public static class Default
-        {
-            public static string[] XAnims => TinyJson.JSONParser.FromJson<string[]>(File.ReadAllText("default_xanims.json"));
-            public static string[] XModels => TinyJson.JSONParser.FromJson<string[]>(File.ReadAllText("default_xmodels.json"));
-            public static string[] Get( AssetType assetType )
-            {
-                switch ( assetType )
-                {
-                    case AssetType.xanim:
-                        return XAnims;
-                    case AssetType.xmodel:
-                        return XModels;
-                    default:
-                        return null;
-                }
-            }
-
-            public static async Task Regenerate()
-            {
-                File.WriteAllText("default_xanims.json", (await ZoneBuilder.ListAssets(AssetType.xanim)).ToJson());
-                File.WriteAllText("default_xmodels.json", (await ZoneBuilder.ListAssets(AssetType.xmodel)).ToJson());
-            }
-        }
         public static void Initialize( FileInfo iw4x )
         {
             TargetExecutable = iw4x;
@@ -45,25 +21,28 @@ namespace EasyZoneBuilder.Core
         public static async Task<string> Execute( params string[] commands )
         {
             StringBuilder args = new StringBuilder();
-            args.Append("-zonebuilder -stdout");
+            args.Append("-nosteam -zonebuilder -stdout");
             foreach ( string com in commands )
             {
                 args.Append(" +");
                 args.Append(com);
             }
-            Process p = new Process();
-            p.StartInfo.FileName = TargetExecutable.FullName;
-            p.StartInfo.WorkingDirectory = TargetExecutable.Directory.FullName;
-            p.StartInfo.Arguments = args.ToString();
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.UseShellExecute = false;
-            p.StartInfo.CreateNoWindow = true;
-            p.Start();
-            string raw = await p.StandardOutput.ReadToEndAsync();
-            LastError = await p.StandardError.ReadToEndAsync();
-            p.Dispose();
-            return raw.Substring(raw.LastIndexOf('"') + 3).Replace("\r", string.Empty); ;
+            args.Append(" +quit");
+            using ( Process p = new Process() )
+            {
+                p.StartInfo.FileName = TargetExecutable.FullName;
+                p.StartInfo.WorkingDirectory = TargetExecutable.Directory.FullName;
+                p.StartInfo.Arguments = args.ToString();
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardError = true;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                p.StartInfo.CreateNoWindow = true;
+                p.Start();
+                string raw = await p.StandardOutput.ReadToEndAsync();
+                LastError = await p.StandardError.ReadToEndAsync();
+                return raw.Substring(raw.LastIndexOf('"') + 3).Replace("\r", string.Empty);
+            }
         }
 
         public static async Task<string[]> ExecuteLines( params string[] commands )
@@ -71,27 +50,29 @@ namespace EasyZoneBuilder.Core
             return (await Execute(commands)).Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
         }
 
-        public static async Task<IEnumerable<string>> ListAssets( AssetType assetType, params string[] zones )
+        public static async Task<Dictionary<string, AssetType>> ListAssets( string zone )
         {
-            List<string> command = new List<string>(zones.Length + 1);
-            foreach ( string item in zones )
+            Dictionary<string, AssetType> ret = new Dictionary<string, AssetType>();
+            string[] rawLines = await ExecuteLines($"verifyzone {zone}");
+            for ( int i = 5; i < rawLines.Length; i++ )
             {
-                command.Add("loadzone " + item);
+                string[] rawSplit = rawLines[ i ].Split(':');
+                try
+                {
+                    ret[ rawSplit[ 2 ].Trim() ] = AssetTypeUtil.Parse(rawSplit[ 1 ].Trim());
+                }
+                catch ( ArgumentException e )
+                {
+                    Debug.WriteLine(e.Message);
+                }
             }
-            command.Add("listassets " + assetType.ToString());
-            string[] lines = await ExecuteLines(command.ToArray());
-            if ( lines.Length > 0 && lines[ 0 ].Contains("Loading") )
-            {
-                lines = lines.Skip(1).ToArray();
-            }
-            if ( zones.Length > 0 )
-            {
-                return lines.Difference(Default.Get(assetType));
-            }
-            else
-            {
-                return lines;
-            }
+            return ret;
+        }
+
+        public static async Task<IEnumerable<string>> ListAssets( AssetType assetType, string zone )
+        {
+            Dictionary<string, AssetType> dict = await ListAssets(zone);
+            return dict.Where(item => item.Value == assetType).Select(item => item.Key);
         }
 
         public static async Task<IEnumerable<string>> ListAssets( AssetType assetType, FileInfo file )
