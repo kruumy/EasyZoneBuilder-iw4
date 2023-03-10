@@ -8,9 +8,13 @@ namespace EasyZoneBuilder.Core
 {
     public static class DependencyGraphUtil
     {
+        public const string FILENAME = "dependency_graph.json";
+
         public static async Task GenerateDependencyGraphJson()
         {
-            Dictionary<string, Dictionary<string, AssetType>> zone_asset_assetType = await ZoneBuilder.ListAssets(Core.Settings.IW4.Zones);
+            string[] zones = Core.Settings.IW4.Zones;
+            Console.WriteLine($"Reading {zones.Count()} zones...");
+            Dictionary<string, Dictionary<string, AssetType>> zone_asset_assetType = await ZoneBuilder.ListAssets(zones);
             Dictionary<string, List<string>> asset_zones = new Dictionary<string, List<string>>();
             foreach ( KeyValuePair<string, Dictionary<string, AssetType>> item in zone_asset_assetType )
             {
@@ -23,13 +27,13 @@ namespace EasyZoneBuilder.Core
                     asset_zones[ $"{item1.Value}:{item1.Key}" ].Add(item.Key); // TODO: might need to remove duplicates
                 }
             }
-            File.WriteAllText("dependency_graph.json", Core.TinyJson.JSONWriter.ToJson(asset_zones));
+            File.WriteAllText(FILENAME, Core.TinyJson.JSONWriter.ToJson(asset_zones));
+            Console.WriteLine("Done!");
         }
         public static IEnumerable<string> GetRequiredZones( ModCSV csv )
         {
             // Took a lot of inspiration from https://github.com/XLabsProject/iw4-zone-asset-finder/blob/main/iw4-zone-asset-finder/Commands/BuildRequirements.cs
-            string rawdepgraph = File.ReadAllText("dependency_graph.json");
-            Dictionary<string, List<string>> dependency_graph = Core.TinyJson.JSONParser.FromJson<Dictionary<string, List<string>>>(rawdepgraph);
+            Dictionary<string, List<string>> dependency_graph = Get();
             List<KeyValuePair<string, List<string>>> assets_zones = new List<KeyValuePair<string, List<string>>>();
             foreach ( KeyValuePair<string, AssetType> asset in csv )
             {
@@ -68,6 +72,16 @@ namespace EasyZoneBuilder.Core
         public static async Task<IEnumerable<string>> GetRequiredZonesAsync( ModCSV csv )
         {
             return await Task.Run(() => GetRequiredZones(csv));
+        }
+
+        public static Dictionary<string, List<string>> Get()
+        {
+            return Core.TinyJson.JSONParser.FromJson<Dictionary<string, List<string>>>(File.ReadAllText(FILENAME));
+        }
+
+        public static async Task<Dictionary<string, List<string>>> GetAsync()
+        {
+            return await Task.Run(() => Get());
         }
     }
 }

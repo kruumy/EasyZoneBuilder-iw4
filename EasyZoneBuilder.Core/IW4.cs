@@ -1,6 +1,7 @@
 ﻿using EasyZoneBuilder.Core.Interfaces;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace EasyZoneBuilder.Core
 {
@@ -8,6 +9,29 @@ namespace EasyZoneBuilder.Core
     {
         public DirectoryInfo Directory { get; }
         public Mod[] Mods { get; }
+
+        public readonly string[] BlacklistedZones =
+        {
+            "mp_ambush_sh",
+            "mp_bloc",
+            "mp_cargoship",
+            "mp_fav_tropical",
+            "mp_killhouse",
+            "mp_nuked",
+            "mp_nuked_shaders",
+            "mp_storm_spring",
+            "team_opfor",
+            "team_opforce_airborne",
+            "team_opforce_composite",
+            "team_rangers",
+            "team_spetsnaz",
+            "team_tf141",
+            "team_us_army",
+            "iw4x_code_post_gfx_mp"
+        };
+        // TODO: check why these zones dont work in zonebuilder,
+        // my guess is that it needs some other zone loaded before it
+
         public string[] Zones
         {
             get
@@ -17,7 +41,7 @@ namespace EasyZoneBuilder.Core
                 for ( int i = 0; i < fullPath.Length; i++ )
                 {
                     string name = Path.GetFileNameWithoutExtension(fullPath[ i ]);
-                    if ( name != "mp_ambush_sh" && name != "mp_bloc" && name != "mp_cargoship" ) // TODO: check why these zones dont work in zonebuilder, my guess is that it needs some other zone loaded before it
+                    if ( !BlacklistedZones.Any(z => name == z) )
                     {
                         result.Add(name);
                     }

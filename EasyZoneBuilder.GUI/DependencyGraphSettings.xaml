@@ -6,8 +6,85 @@
         xmlns:local="clr-namespace:EasyZoneBuilder.GUI"
         mc:Ignorable="d"
         Style="{DynamicResource CustomWindowStyle}"
-        Title="Dependency Graph Settings" Height="225" Width="400" ResizeMode="NoResize" Icon="/Resources/settings.ico" WindowStartupLocation="CenterOwner">
+        Title="Dependency Graph Settings" Height="300" Width="450" ResizeMode="NoResize" Icon="/Resources/settings.ico" WindowStartupLocation="CenterOwner">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="125"></ColumnDefinition>
+            <ColumnDefinition Width="125"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Label
+                Content="Dependency Graph"
+                HorizontalAlignment="Center">
+
+            </Label>
+            <ListBox
+                x:Name="DependencyGraphInfoBox"
+                Grid.Row="1"
+                Margin="5"
+                FontSize="11"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                Loaded="DependencyGraphInfoBox_Loaded">
+            </ListBox>
+        </Grid>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Label
+                Content="Detected Zones"
+                HorizontalAlignment="Center">
+            </Label>
+            <ListBox
+                x:Name="ZonesListBox"
+                Grid.Row="1"
+                Margin="5"
+                FontSize="11"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                Loaded="ZonesListBox_Loaded">
+            </ListBox>
+        </Grid>
+
         
+        
+        
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Button
+                x:Name="RegenerateDependencyGraphBtn"
+                Content="Regenerate Dependency Graph"
+                Click="RegenerateDependencyGraphBtn_Click"
+                Margin="5"
+                Grid.Row="2">
+            </Button>
+            <Label
+                Grid.Row="0"
+                Content="Console Output"
+                HorizontalAlignment="Center">
+                
+            </Label>
+            <TextBox 
+                x:Name="ConsoleOutputBox"
+                Grid.Row="1"
+                Margin="5"
+                IsReadOnly="True"
+                Loaded="ConsoleOutputBox_Loaded"
+                Unloaded="ConsoleOutputBox_Unloaded">
+            </TextBox>
+            
+        </Grid>
+            
     </Grid>
 </Window>

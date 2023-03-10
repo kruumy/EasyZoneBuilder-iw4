@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using EasyZoneBuilder.Core;
+using System;
+using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace EasyZoneBuilder.GUI
 {
@@ -22,6 +15,70 @@ namespace EasyZoneBuilder.GUI
         public DependencyGraphSettings()
         {
             InitializeComponent();
+        }
+
+        private void ZonesListBox_Loaded( object sender, RoutedEventArgs e )
+        {
+            ZonesListBox.ItemsSource = Settings.IW4.Zones;
+        }
+
+        private ConsoleWriter ConsoleWriter;
+
+        private void ConsoleOutputBox_Loaded( object sender, RoutedEventArgs e )
+        {
+            ConsoleWriter = new ConsoleWriter(ConsoleOutputBox);
+        }
+
+        private void ConsoleOutputBox_Unloaded( object sender, RoutedEventArgs e )
+        {
+            ConsoleWriter.Dispose();
+            ConsoleWriter = null;
+        }
+
+        private async void RegenerateDependencyGraphBtn_Click( object sender, RoutedEventArgs e )
+        {
+            if ( MessageBoxResult.OK == MessageBox.Show("Are you sure? This will take a few minutes.", "Warning", MessageBoxButton.OKCancel, MessageBoxImage.Warning) )
+            {
+                RegenerateDependencyGraphBtn.IsEnabled = false;
+                object oldContent = RegenerateDependencyGraphBtn.Content;
+                RegenerateDependencyGraphBtn.Content = "Generating...";
+                await DependencyGraphUtil.GenerateDependencyGraphJson();
+                DependencyGraphInfoBox_Loaded(sender, e);
+                RegenerateDependencyGraphBtn.Content = oldContent;
+                RegenerateDependencyGraphBtn.IsEnabled = true;
+                MessageBox.Show($"Successfully written to '{DependencyGraphUtil.FILENAME}'!");
+            }
+        }
+
+        private async void DependencyGraphInfoBox_Loaded( object sender, RoutedEventArgs e )
+        {
+            DependencyGraphInfoBox.Items.Clear();
+            System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> graph = await DependencyGraphUtil.GetAsync();
+            DependencyGraphInfoBox.Items.Add($"Asset Count = {graph.Count}");
+        }
+    }
+
+    internal class ConsoleWriter : TextWriter, IDisposable
+    {
+        private readonly TextBox _output;
+
+        public ConsoleWriter( TextBox output )
+        {
+            _output = output;
+            Console.SetOut(this);
+        }
+
+        public override void Write( char value )
+        {
+            _output.Dispatcher.Invoke(() => _output.AppendText(value.ToString()));
+        }
+
+        public override Encoding Encoding => Encoding.Unicode;
+
+        protected override void Dispose( bool disposing )
+        {
+            Console.SetOut(Console.Out);
+            base.Dispose(disposing);
         }
     }
 }

@@ -12,8 +12,6 @@ namespace EasyZoneBuilder.Core
     {
         public static FileInfo TargetExecutable { get; private set; }
 
-        public static string LastError { get; private set; } = string.Empty;
-
         private static readonly int MAX_COMMANDS_PER_EXECUTATION = 30;
 
         public static void Initialize( FileInfo iw4x )
@@ -24,8 +22,11 @@ namespace EasyZoneBuilder.Core
         {
             StringBuilder ret = new StringBuilder();
             IEnumerable<string[]> batchCommands = commands.SplitIntoChunks(MAX_COMMANDS_PER_EXECUTATION);
+            int i = 0;
             foreach ( string[] bcommands in batchCommands )
             {
+                i++;
+                Console.WriteLine($"{i}/{batchCommands.Count()} with {bcommands.Count()} zones");
                 StringBuilder args = new StringBuilder();
                 args.Append("-nosteam -zonebuilder -stdout");
                 foreach ( string com in bcommands )
@@ -46,7 +47,11 @@ namespace EasyZoneBuilder.Core
                     p.StartInfo.CreateNoWindow = true;
                     p.Start();
                     string raw = await p.StandardOutput.ReadToEndAsync();
-                    LastError = await p.StandardError.ReadToEndAsync();
+                    string err = await p.StandardError.ReadToEndAsync();
+                    if ( !string.IsNullOrEmpty(err.Trim()) )
+                    {
+                        throw new Exception("Zonebuilder: " + err);
+                    }
                     ret.AppendLine(raw.Substring(raw.LastIndexOf('"') + 3).Replace("\r", string.Empty));
                 }
             }
@@ -169,7 +174,7 @@ namespace EasyZoneBuilder.Core
             }
             else
             {
-                throw new Exception(LastError);
+                throw new FileNotFoundException();
             }
         }
     }
