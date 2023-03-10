@@ -23,7 +23,6 @@ namespace EasyZoneBuilder.Core
                     Console.Write(":" + json[ zone ][ assetType ].Length + "\n");
                 }
                 Console.ForegroundColor = ConsoleColor.White;
-
             }
             Dictionary<string, List<string>> newJson = new Dictionary<string, List<string>>();
             foreach ( KeyValuePair<string, Dictionary<string, string[]>> item in json )
@@ -49,64 +48,35 @@ namespace EasyZoneBuilder.Core
 
         public static IEnumerable<string> GetRequiredZones( ModCSV csv )
         {
+            // Took a lot of inspiration from https://github.com/XLabsProject/iw4-zone-asset-finder/blob/main/iw4-zone-asset-finder/Commands/BuildRequirements.cs
             Dictionary<string, List<string>> dependency_graph = Core.TinyJson.JSONParser.FromJson<Dictionary<string, List<string>>>(File.ReadAllText("dependency_graph.json"));
-
-            List<List<string>> allZones = new List<List<string>>();
-            foreach ( KeyValuePair<string, AssetType> entry in csv )
+            List<KeyValuePair<string, List<string>>> assets_zones = new List<KeyValuePair<string, List<string>>>();
+            foreach ( KeyValuePair<string, AssetType> asset in csv )
             {
-                allZones.Add(dependency_graph[ $"{entry.Value}:{entry.Key}" ]);
+                string dependency_graph_assetQuery = $"{asset.Value}:{asset.Key}";
+                List<string> queryResult = dependency_graph[ dependency_graph_assetQuery ];
+                assets_zones.Add(new KeyValuePair<string, List<string>>(asset.Key, queryResult));
             }
-            IEnumerable<string> ret = IntersectAll(allZones);
-            return ret;
-        }
-
-        private static IEnumerable<T> IntersectAll<T>( IEnumerable<IEnumerable<T>> lists )
-        {
-            List<T> ret = new List<T>();
-            IEnumerable<T> prevList = null;
-            foreach ( IEnumerable<T> list in lists )
+            Dictionary<string, int> finalZoneScore = new Dictionary<string, int>();
+            while ( assets_zones.Count > 0 )
             {
-                if ( prevList != null )
+                Dictionary<string, int> zoneScore = new Dictionary<string, int>();
+                foreach ( KeyValuePair<string, List<string>> asset_zones in assets_zones )
                 {
-                    IEnumerable<T> intersects = list.Intersect(prevList);
-                    if ( intersects.Count() > 0 )
+                    foreach ( string zone in asset_zones.Value )
                     {
-                        bool added = false;
-                        foreach ( T intersect in intersects )
+                        if ( !zoneScore.ContainsKey(zone) )
                         {
-                            if ( ret.Contains(intersect) )
-                            {
-                                added = true;
-                                ret.Add(intersect);
-                                break;
-                            }
+                            zoneScore[ zone ] = 0;
                         }
-                        if ( !added )
-                        {
-                            ret.Add(intersects.First());
-                        }
-                    }
-                    else
-                    {
-                        bool added = false;
-                        foreach ( T prev in list )
-                        {
-                            if ( ret.Contains(prev) )
-                            {
-                                added = true;
-                                ret.Add(prev);
-                                break;
-                            }
-                        }
-                        if ( !added )
-                        {
-                            ret.Add(list.First());
-                        }
+                        zoneScore[ zone ]++;
                     }
                 }
-                prevList = list;
+                string nextZone = zoneScore.OrderByDescending(o => o.Value).First().Key;
+                assets_zones.RemoveAll(o => o.Value.Contains(nextZone));
+                finalZoneScore[ nextZone ] = zoneScore[ nextZone ];
             }
-            return ret.Distinct();
+            return finalZoneScore.Keys;
         }
     }
 }
