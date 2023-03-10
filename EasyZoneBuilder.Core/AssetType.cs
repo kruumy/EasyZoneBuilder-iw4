@@ -5,7 +5,17 @@ namespace EasyZoneBuilder.Core
     public enum AssetType
     {
         xanim,
-        xmodel
+        xmodel,
+        xmodelsurfs,
+        image,
+        material,
+        sound,
+        map_ents,
+        lightdef,
+        localize,
+        weapon,
+        stringtable,
+        leaderboarddef
     }
 
     public static class AssetTypeUtil
@@ -13,18 +23,15 @@ namespace EasyZoneBuilder.Core
         public static AssetType Parse( string str )
         {
             str = str.ToLower().Trim();
-            if ( str == AssetType.xanim.ToString() )
+            string[] array = typeof(AssetType).GetEnumNames();
+            for ( int i = 0; i < array.Length; i++ )
             {
-                return AssetType.xanim;
+                if ( array[ i ] == str )
+                {
+                    return (AssetType)i;
+                }
             }
-            else if ( str == AssetType.xmodel.ToString() )
-            {
-                return AssetType.xmodel;
-            }
-            else
-            {
-                throw new ArgumentException(str, nameof(str));
-            }
+            throw new ArgumentException(str, nameof(str));
         }
     }
 }

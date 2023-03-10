@@ -38,7 +38,7 @@ namespace EasyZoneBuilder.Core
             List<string> toRemoveFromPreacache = new List<string>();
             foreach ( KeyValuePair<string, AssetType> entry in Precache )
             {
-                if ( entry.Key.Contains("pb_") || entry.Key.Contains("mp_") ) // TODO: make this better, possible use dependecygraph or cache default mp assets
+                if ( !entry.Key.Contains("pb_") && !entry.Key.Contains("mp_") ) // TODO: make this better, possible use dependecygraph or cache default mp assets
                 {
                     toRemoveFromPreacache.Add(entry.Key);
                 }

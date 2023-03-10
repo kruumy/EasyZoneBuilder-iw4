@@ -61,10 +61,7 @@ namespace EasyZoneBuilder.Core
                 {
                     ret[ rawSplit[ 2 ].Trim() ] = AssetTypeUtil.Parse(rawSplit[ 1 ].Trim());
                 }
-                catch ( ArgumentException e )
-                {
-                    Debug.WriteLine(e.Message);
-                }
+                catch ( ArgumentException ) { }
             }
             return ret;
         }

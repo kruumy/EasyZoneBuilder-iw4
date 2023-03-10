@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,23 +16,21 @@ namespace EasyZoneBuilder.Core
             Dictionary<string, Dictionary<string, List<string>>> json = new Dictionary<string, Dictionary<string, List<string>>>();
             foreach ( string zone in Core.Settings.IW4.Zones )
             {
-                Console.WriteLine(zone);
-                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Debug.WriteLine(zone);
                 json[ zone ] = new Dictionary<string, List<string>>();
 
                 Dictionary<string, AssetType> assets = await ZoneBuilder.ListAssets(zone);
                 foreach ( KeyValuePair<string, AssetType> asset in assets )
                 {
-                    if ( json[ zone ][ asset.Value.ToString() ] == null )
-                    {
-                        json[ zone ][ asset.Value.ToString() ] = new List<string>();
-                    }
-                    else
+                    if ( json[ zone ].TryGetValue(asset.Value.ToString(), out List<string> val) )
                     {
                         json[ zone ][ asset.Value.ToString() ].Add(asset.Key);
                     }
+                    else
+                    {
+                        json[ zone ][ asset.Value.ToString() ] = new List<string>();
+                    }
                 }
-                Console.ForegroundColor = ConsoleColor.White;
             }
             Dictionary<string, List<string>> newJson = new Dictionary<string, List<string>>();
             foreach ( KeyValuePair<string, Dictionary<string, List<string>>> item in json )
@@ -57,7 +56,8 @@ namespace EasyZoneBuilder.Core
         public static IEnumerable<string> GetRequiredZones( ModCSV csv )
         {
             // Took a lot of inspiration from https://github.com/XLabsProject/iw4-zone-asset-finder/blob/main/iw4-zone-asset-finder/Commands/BuildRequirements.cs
-            Dictionary<string, List<string>> dependency_graph = Core.TinyJson.JSONParser.FromJson<Dictionary<string, List<string>>>(File.ReadAllText("dependency_graph.json"));
+            string rawdepgraph = File.ReadAllText("dependency_graph.json");
+            Dictionary<string, List<string>> dependency_graph = Core.TinyJson.JSONParser.FromJson<Dictionary<string, List<string>>>(rawdepgraph);
             List<KeyValuePair<string, List<string>>> assets_zones = new List<KeyValuePair<string, List<string>>>();
             foreach ( KeyValuePair<string, AssetType> asset in csv )
             {

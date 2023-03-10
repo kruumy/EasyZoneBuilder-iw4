@@ -15,7 +15,11 @@ namespace EasyZoneBuilder.Core
                 string[] names = new string[ fullPath.Length ];
                 for ( int i = 0; i < fullPath.Length; i++ )
                 {
-                    names[ i ] = Path.GetFileNameWithoutExtension(fullPath[ i ]);
+                    string name = Path.GetFileNameWithoutExtension(fullPath[ i ]);
+                    if ( !name.EndsWith("_load") && !string.IsNullOrEmpty(name.Trim()) )
+                    {
+                        names[ i ] = name;
+                    }
                 }
                 return names;
             }
