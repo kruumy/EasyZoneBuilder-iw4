@@ -11,7 +11,7 @@ namespace EasyZoneBuilder.Core
         {
             get
             {
-                string[] fullPath = System.IO.Directory.GetFiles(Path.Combine(Directory.FullName, "zone/english"), "*.ff", SearchOption.TopDirectoryOnly);
+                string[] fullPath = System.IO.Directory.GetFiles(Path.Combine(Directory.FullName, "zone"), "*.ff", SearchOption.AllDirectories);
                 string[] names = new string[ fullPath.Length ];
                 for ( int i = 0; i < fullPath.Length; i++ )
                 {
