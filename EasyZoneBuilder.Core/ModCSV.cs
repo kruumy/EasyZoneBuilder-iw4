@@ -7,6 +7,7 @@ namespace EasyZoneBuilder.Core
 {
     public class ModCSV : Dictionary<string, AssetType>, IFileInfo, ISync
     {
+
         public ModCSV( FileInfo File )
         {
             this.File = File;
@@ -15,6 +16,8 @@ namespace EasyZoneBuilder.Core
                 Pull();
             }
         }
+
+
 
         public FileInfo File { get; private set; }
 
@@ -45,6 +48,14 @@ namespace EasyZoneBuilder.Core
         public TempFileCopy TempCopy( FileInfo destination )
         {
             return new TempFileCopy(this.File, destination);
+        }
+
+        public void AddRange( IEnumerable<KeyValuePair<string, AssetType>> pairs )
+        {
+            foreach ( KeyValuePair<string, AssetType> pair in pairs )
+            {
+                this[ pair.Key ] = pair.Value;
+            }
         }
     }
 }

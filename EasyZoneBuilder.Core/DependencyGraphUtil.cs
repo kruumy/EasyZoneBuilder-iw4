@@ -12,28 +12,35 @@ namespace EasyZoneBuilder.Core
 
         public static async Task GenerateDependencyGraphJson()
         {
-            Dictionary<string, Dictionary<string, string[]>> json = new Dictionary<string, Dictionary<string, string[]>>();
+            Dictionary<string, Dictionary<string, List<string>>> json = new Dictionary<string, Dictionary<string, List<string>>>();
             foreach ( string zone in Core.Settings.IW4.Zones )
             {
                 Console.WriteLine(zone);
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                json[ zone ] = new Dictionary<string, string[]>();
-                foreach ( string assetType in typeof(AssetType).GetEnumNames() )
+                json[ zone ] = new Dictionary<string, List<string>>();
+
+                Dictionary<string, AssetType> assets = await ZoneBuilder.ListAssets(zone);
+                foreach ( KeyValuePair<string, AssetType> asset in assets )
                 {
-                    Console.Write(assetType);
-                    json[ zone ][ assetType ] = (await ZoneBuilder.ListAssets(AssetTypeUtil.Parse(assetType), zone)).ToArray();
-                    Console.Write(":" + json[ zone ][ assetType ].Length + "\n");
+                    if ( json[ zone ][ asset.Value.ToString() ] == null )
+                    {
+                        json[ zone ][ asset.Value.ToString() ] = new List<string>();
+                    }
+                    else
+                    {
+                        json[ zone ][ asset.Value.ToString() ].Add(asset.Key);
+                    }
                 }
                 Console.ForegroundColor = ConsoleColor.White;
             }
             Dictionary<string, List<string>> newJson = new Dictionary<string, List<string>>();
-            foreach ( KeyValuePair<string, Dictionary<string, string[]>> item in json )
+            foreach ( KeyValuePair<string, Dictionary<string, List<string>>> item in json )
             {
                 string zone = item.Key;
-                foreach ( KeyValuePair<string, string[]> item1 in item.Value )
+                foreach ( KeyValuePair<string, List<string>> item1 in item.Value )
                 {
                     string assetType = item1.Key;
-                    string[] assets = item1.Value;
+                    List<string> assets = item1.Value;
                     foreach ( string asset in assets )
                     {
                         if ( !newJson.TryGetValue($"{assetType}:{asset}", out _) )

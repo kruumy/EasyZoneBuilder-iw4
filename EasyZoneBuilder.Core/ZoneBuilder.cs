@@ -77,11 +77,17 @@ namespace EasyZoneBuilder.Core
 
         public static async Task<IEnumerable<string>> ListAssets( AssetType assetType, FileInfo file )
         {
+            Dictionary<string, AssetType> dict = await ListAssets(file);
+            return dict.Where(item => item.Value == assetType).Select(item => item.Key);
+        }
+
+        public static async Task<Dictionary<string, AssetType>> ListAssets( FileInfo file )
+        {
             FileInfo destination = new FileInfo(Path.Combine(TargetExecutable.Directory.FullName, @"zone\english", file.Name));
             using ( TempFileCopy temp = new TempFileCopy(file, destination) )
             {
                 string command = Path.GetFileNameWithoutExtension(file.FullName);
-                return await ListAssets(assetType, command);
+                return await ListAssets(command);
             }
         }
 
