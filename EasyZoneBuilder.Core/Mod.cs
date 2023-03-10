@@ -26,6 +26,21 @@ namespace EasyZoneBuilder.Core
             await ZoneBuilder.BuildZone(CSV, FastFile);
         }
 
+        public async Task ReadZone()
+        {
+            CSV.Clear();
+            foreach ( string type in typeof(AssetType).GetEnumNames() )
+            {
+                AssetType assetType = AssetTypeUtil.Parse(type);
+                IEnumerable<string> assets = await ZoneBuilder.ListAssets(assetType, FastFile);
+                foreach ( string asset in assets )
+                {
+                    CSV[ asset ] = assetType;
+                }
+            }
+            CSV.Push();
+        }
+
         public void SyncCSVToPrecache()
         {
             List<string> toRemoveFromPreacache = new List<string>();

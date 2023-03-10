@@ -22,19 +22,29 @@ namespace EasyZoneBuilder.GUI
             selectedMod.ItemsSource = Core.Settings.IW4.Mods;
         }
 
-        private void CsvGrid_Loaded( object sender, RoutedEventArgs e )
+        public void ReadModCsvBtn_Click( object sender, RoutedEventArgs e )
         {
             if ( selectedMod.SelectedItem is Core.Mod sMod )
             {
+                if ( sMod.CSV.Count <= 0 && sMod.FastFile.Exists )
+                {
+                    if ( MessageBoxResult.Yes == MessageBox.Show("Empty mod.csv detected!\nWould you like to generate the mod.csv from the mod.ff?", "Notice", MessageBoxButton.YesNo, MessageBoxImage.Question) )
+                    {
+                        readFastFileContextMenu_Click(sender, e);
+                    }
+                }
                 sMod.CSV.Pull();
+                detectedZonesBox.Text = string.Empty;
+                foreach ( string zone in DependencyGraphUtil.GetRequiredZones(sMod.CSV) )
+                {
+                    detectedZonesBox.Text += zone + ", ";
+                }
+                if ( detectedZonesBox.Text.Length > 2 )
+                {
+                    detectedZonesBox.Text = detectedZonesBox.Text.Remove(detectedZonesBox.Text.Length - 2, 2);
+                }
                 CsvGrid.ItemsSource = sMod.CSV;
             }
-
-        }
-
-        public void ReadModCsvBtn_Click( object sender, RoutedEventArgs e )
-        {
-            CsvGrid_Loaded(sender, e);
             CsvGrid.Items.Refresh();
         }
 
@@ -73,6 +83,20 @@ namespace EasyZoneBuilder.GUI
                 sMod.Precache.Push();
                 writePrecacheBtn.IsEnabled = true;
                 MessageBox.Show("Wrote to _precache.gsc successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private async void readFastFileContextMenu_Click( object sender, RoutedEventArgs e )
+        {
+            if ( selectedMod.SelectedItem is Core.Mod sMod && sMod.FastFile.Exists )
+            {
+                ReadModCsvBtn.IsEnabled = false;
+                object oldContent = ReadModCsvBtn.Content;
+                ReadModCsvBtn.Content = "Reading...";
+                await sMod.ReadZone();
+                ReadModCsvBtn_Click(sender, e);
+                ReadModCsvBtn.Content = oldContent;
+                ReadModCsvBtn.IsEnabled = true;
             }
         }
     }

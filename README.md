@@ -10,7 +10,7 @@
   <a href="https://paypal.me/JPauls281"><img src="https://img.shields.io/badge/Donate-Paypal-orange?style=flat-square"></a>
 </div>
 
-<h4 align="center">Build zones fast</h4>
+<h4 align="center">Build zones fast!</h4>
 
 <div align="center">
   <a href="preview.png">
@@ -18,7 +18,15 @@
   </a>
 </div>
 
-### Repository Structure
+## Support
+
+| Name | Status |
+| --- | --- |
+| [IW4X Zonebuilder](https://github.com/XLabsProject/iw4x-client) | ✅ |
+| [Zonebuilder](https://github.com/RagdollPhysics/zonebuilder) | ❔ |
+| [Zonetool](https://github.com/ZoneTool/zonetool) | ❔ |
+
+## Repository Structure
 ```
 EasyZoneBuilder-iw4
 ├── EasyZoneBuilder.Core

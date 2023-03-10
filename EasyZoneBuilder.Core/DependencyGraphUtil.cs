@@ -8,6 +8,8 @@ namespace EasyZoneBuilder.Core
 {
     public static class DependencyGraphUtil
     {
+        // TODO remove GenerateDependencyGraphJson and add a RegenerateZones(params string[] zones)
+
         public static async Task GenerateDependencyGraphJson()
         {
             Dictionary<string, Dictionary<string, string[]>> json = new Dictionary<string, Dictionary<string, string[]>>();
@@ -45,7 +47,6 @@ namespace EasyZoneBuilder.Core
             }
             File.WriteAllText("dependency_graph.json", Core.TinyJson.JSONWriter.ToJson(newJson));
         }
-
         public static IEnumerable<string> GetRequiredZones( ModCSV csv )
         {
             // Took a lot of inspiration from https://github.com/XLabsProject/iw4-zone-asset-finder/blob/main/iw4-zone-asset-finder/Commands/BuildRequirements.cs
@@ -54,8 +55,14 @@ namespace EasyZoneBuilder.Core
             foreach ( KeyValuePair<string, AssetType> asset in csv )
             {
                 string dependency_graph_assetQuery = $"{asset.Value}:{asset.Key}";
-                List<string> queryResult = dependency_graph[ dependency_graph_assetQuery ];
-                assets_zones.Add(new KeyValuePair<string, List<string>>(asset.Key, queryResult));
+                if ( dependency_graph.TryGetValue(dependency_graph_assetQuery, out List<string> queryResult) )
+                {
+                    assets_zones.Add(new KeyValuePair<string, List<string>>(asset.Key, queryResult));
+                }
+                else
+                {
+                    return Array.Empty<string>();
+                }
             }
             Dictionary<string, int> finalZoneScore = new Dictionary<string, int>();
             while ( assets_zones.Count > 0 )
