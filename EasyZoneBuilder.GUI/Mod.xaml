@@ -40,15 +40,11 @@
           Margin="5">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="AssetType"
-                            Binding="{Binding Value.AssetType}"
+                            Binding="{Binding Value}"
                             Width="75"
                             IsReadOnly="True" />
                 <DataGridTextColumn Header="Name"
                             Binding="{Binding Key}"
-                            Width="200"
-                            IsReadOnly="True" />
-                <DataGridTextColumn Header="Zone"
-                            Binding="{Binding Value.Zone}"
                             Width="*"
                             IsReadOnly="True" />
 

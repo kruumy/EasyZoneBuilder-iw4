@@ -40,9 +40,9 @@ namespace EasyZoneBuilder.Core
             {
                 Precache.Remove(key);
             }
-            foreach ( KeyValuePair<string, ModCSV.EntryInfomation> entry in CSV )
+            foreach ( KeyValuePair<string, AssetType> entry in CSV )
             {
-                Precache[ entry.Key ] = entry.Value.AssetType;
+                Precache[ entry.Key ] = entry.Value;
             }
         }
     }

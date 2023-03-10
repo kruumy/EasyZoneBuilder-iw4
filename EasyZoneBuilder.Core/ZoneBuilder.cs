@@ -107,9 +107,10 @@ namespace EasyZoneBuilder.Core
         public static async Task BuildZone( ModCSV csv, FileInfo destination )
         {
             List<string> commands = new List<string>();
-            foreach ( ModCSV.EntryInfomation zone in csv.Values )
+            foreach ( string zone in DependencyGraphUtil.GetRequiredZones(csv) )
             {
-                commands.Add("loadzone " + zone.Zone);
+                Debug.WriteLine(zone);
+                commands.Add("loadzone " + zone);
             }
             commands = commands.Distinct().ToList();
             FileInfo csvdest = new FileInfo(Path.Combine(TargetExecutable.Directory.FullName, @"zone_source", csv.File.Name));
@@ -120,8 +121,6 @@ namespace EasyZoneBuilder.Core
             csv.Push();
             using ( TempFileCopy tempcopy = csv.TempCopy(csvdest) )
             {
-                LegacyModCSV legcsv = new LegacyModCSV(csvdest);
-                legcsv.Push();
                 commands.Add("buildzone mod");
                 await ExecuteLines(commands.ToArray());
             }

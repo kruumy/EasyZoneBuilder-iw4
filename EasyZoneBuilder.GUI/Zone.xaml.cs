@@ -75,11 +75,7 @@ namespace EasyZoneBuilder.GUI
                 this.selectedAssetType.SelectedItem is string selectedAssetType &&
                 selectedZone.SelectedItem is string _selectedZone )
             {
-                sMod.CSV[ selectedAsset ] = new ModCSV.EntryInfomation()
-                {
-                    Zone = _selectedZone,
-                    AssetType = AssetTypeUtil.Parse(selectedAssetType)
-                };
+                sMod.CSV[ selectedAsset ] = AssetTypeUtil.Parse(selectedAssetType);
                 sMod.CSV.Push();
                 Mod.Instance.ReadModCsvBtn_Click(sender, e);
             }

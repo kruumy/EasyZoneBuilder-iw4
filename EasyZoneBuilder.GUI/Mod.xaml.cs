@@ -55,7 +55,7 @@ namespace EasyZoneBuilder.GUI
 
         private void DeleteContextMenuItem_Click( object sender, RoutedEventArgs e )
         {
-            if ( selectedMod.SelectedItem is Core.Mod sMod && CsvGrid.SelectedItem is KeyValuePair<string, ModCSV.EntryInfomation> kv )
+            if ( selectedMod.SelectedItem is Core.Mod sMod && CsvGrid.SelectedItem is KeyValuePair<string, AssetType> kv )
             {
                 sMod.CSV.Remove(kv.Key);
                 sMod.CSV.Push();
