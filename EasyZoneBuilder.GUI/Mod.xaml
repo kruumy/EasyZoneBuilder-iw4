@@ -77,23 +77,39 @@
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="130"></ColumnDefinition>
+                <ColumnDefinition Width="35"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Label
-                Grid.Column="0"
-                Content="Detected Zones:"
-                Margin="5">
-            </Label>
+            <Button
+                x:Name="FindRequiredZonesBtn"
+                Grid.Column="1"
+                Content="Find Required Zones"
+                Margin="5"
+                Click="FindRequiredZonesBtn_Click">
+            </Button>
             <TextBox
                 x:Name="detectedZonesBox"
-                Grid.Column="1"
+                Grid.Column="0"
                 Margin="5"
                 IsReadOnly="True"
                 TextAlignment="Left"
                 TextWrapping="NoWrap"
                 VerticalContentAlignment="Center">
             </TextBox>
+            <Button
+                x:Name="DependencyGraphSettingsBtn"
+                Grid.Column="2"
+                Margin="5"
+                Click="DependencyGraphSettingsBtn_Click">
+                <StackPanel>
+                    <Image>
+                        <Image.Source>
+                            <BitmapImage UriSource="Resources/settings.ico" />
+                        </Image.Source>
+                    </Image>
+                </StackPanel>
+            </Button>
         </Grid>
         
         <Grid Grid.Row="3">

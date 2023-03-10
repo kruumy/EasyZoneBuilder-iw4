@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,45 +10,20 @@ namespace EasyZoneBuilder.Core
     {
         public static async Task GenerateDependencyGraphJson()
         {
-            Dictionary<string, Dictionary<string, List<string>>> json = new Dictionary<string, Dictionary<string, List<string>>>();
-            foreach ( string zone in Core.Settings.IW4.Zones )
+            Dictionary<string, Dictionary<string, AssetType>> zone_asset_assetType = await ZoneBuilder.ListAssets(Core.Settings.IW4.Zones);
+            Dictionary<string, List<string>> asset_zones = new Dictionary<string, List<string>>();
+            foreach ( KeyValuePair<string, Dictionary<string, AssetType>> item in zone_asset_assetType )
             {
-                Debug.WriteLine(zone);
-                json[ zone ] = new Dictionary<string, List<string>>();
-
-                Dictionary<string, AssetType> assets = await ZoneBuilder.ListAssets(zone);
-                foreach ( KeyValuePair<string, AssetType> asset in assets )
+                foreach ( KeyValuePair<string, AssetType> item1 in item.Value )
                 {
-                    if ( json[ zone ].TryGetValue(asset.Value.ToString(), out List<string> val) )
+                    if ( !asset_zones.TryGetValue($"{item1.Value}:{item1.Key}", out _) )
                     {
-                        json[ zone ][ asset.Value.ToString() ].Add(asset.Key);
+                        asset_zones[ $"{item1.Value}:{item1.Key}" ] = new List<string>();
                     }
-                    else
-                    {
-                        json[ zone ][ asset.Value.ToString() ] = new List<string>();
-                    }
+                    asset_zones[ $"{item1.Value}:{item1.Key}" ].Add(item.Key); // TODO: might need to remove duplicates
                 }
             }
-            Dictionary<string, List<string>> newJson = new Dictionary<string, List<string>>();
-            foreach ( KeyValuePair<string, Dictionary<string, List<string>>> item in json )
-            {
-                string zone = item.Key;
-                foreach ( KeyValuePair<string, List<string>> item1 in item.Value )
-                {
-                    string assetType = item1.Key;
-                    List<string> assets = item1.Value;
-                    foreach ( string asset in assets )
-                    {
-                        if ( !newJson.TryGetValue($"{assetType}:{asset}", out _) )
-                        {
-                            newJson[ $"{assetType}:{asset}" ] = new List<string>();
-                        }
-                        newJson[ $"{assetType}:{asset}" ].Add(zone);
-                        newJson[ $"{assetType}:{asset}" ] = newJson[ $"{assetType}:{asset}" ].Distinct().ToList();
-                    }
-                }
-            }
-            File.WriteAllText("dependency_graph.json", Core.TinyJson.JSONWriter.ToJson(newJson));
+            File.WriteAllText("dependency_graph.json", Core.TinyJson.JSONWriter.ToJson(asset_zones));
         }
         public static IEnumerable<string> GetRequiredZones( ModCSV csv )
         {

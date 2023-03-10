@@ -80,12 +80,19 @@
     <Compile Include="DarkTheme.xaml.cs">
       <DependentUpon>DarkTheme.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DependencyGraphSettings.xaml.cs">
+      <DependentUpon>DependencyGraphSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Zone.xaml.cs">
       <DependentUpon>Zone.xaml</DependentUpon>
     </Compile>
     <Page Include="DarkTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DependencyGraphSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -164,6 +171,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\settings.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

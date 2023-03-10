@@ -35,14 +35,6 @@ namespace EasyZoneBuilder.GUI
                 }
                 sMod.CSV.Pull();
                 detectedZonesBox.Text = string.Empty;
-                foreach ( string zone in DependencyGraphUtil.GetRequiredZones(sMod.CSV) )
-                {
-                    detectedZonesBox.Text += zone + ", ";
-                }
-                if ( detectedZonesBox.Text.Length > 2 )
-                {
-                    detectedZonesBox.Text = detectedZonesBox.Text.Remove(detectedZonesBox.Text.Length - 2, 2);
-                }
                 CsvGrid.ItemsSource = sMod.CSV;
             }
             CsvGrid.Items.Refresh();
@@ -98,6 +90,33 @@ namespace EasyZoneBuilder.GUI
                 ReadModCsvBtn.Content = oldContent;
                 ReadModCsvBtn.IsEnabled = true;
             }
+        }
+
+        private async void FindRequiredZonesBtn_Click( object sender, RoutedEventArgs e )
+        {
+            if ( selectedMod.SelectedItem is Core.Mod sMod )
+            {
+                FindRequiredZonesBtn.IsEnabled = false;
+                object oldContent = FindRequiredZonesBtn.Content;
+                FindRequiredZonesBtn.Content = "Finding...";
+                detectedZonesBox.Text = string.Empty;
+                foreach ( string zone in await DependencyGraphUtil.GetRequiredZonesAsync(sMod.CSV) )
+                {
+                    detectedZonesBox.Text += zone + ", ";
+                }
+                if ( detectedZonesBox.Text.Length > 2 )
+                {
+                    detectedZonesBox.Text = detectedZonesBox.Text.Remove(detectedZonesBox.Text.Length - 2, 2);
+                }
+                FindRequiredZonesBtn.Content = oldContent;
+                FindRequiredZonesBtn.IsEnabled = true;
+            }
+        }
+
+        private void DependencyGraphSettingsBtn_Click( object sender, RoutedEventArgs e )
+        {
+            DependencyGraphSettings window = new DependencyGraphSettings();
+            window.ShowDialog();
         }
     }
 }
