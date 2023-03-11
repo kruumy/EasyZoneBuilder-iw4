@@ -53,7 +53,7 @@ namespace EasyZoneBuilder.GUI
             {
                 if ( e.Item is string s )
                 {
-                    e.Accepted = s.Contains(SearchBox.Text);
+                    e.Accepted = s.Contains(SearchBox.Text); // TODO: search by word and not phrase
                 }
                 else
                 {
