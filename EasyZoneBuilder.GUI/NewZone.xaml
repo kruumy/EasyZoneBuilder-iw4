@@ -79,7 +79,8 @@
             <TextBox
                     x:Name="SearchTextBox"
                     Margin="5"
-                    Grid.Column="1">
+                    Grid.Column="1"
+                    KeyDown="SearchTextBox_KeyDown">
             </TextBox>
             <Button
                     x:Name="SearchBtn"

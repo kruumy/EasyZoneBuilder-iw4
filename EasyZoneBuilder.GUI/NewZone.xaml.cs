@@ -95,12 +95,22 @@ namespace EasyZoneBuilder.GUI
 
         private async void SearchBtn_Click( object sender, RoutedEventArgs e )
         {
+            SearchTextBox.IsEnabled = false;
             SearchBtn.IsEnabled = false;
             object oldContent = SearchBtn.Content;
             SearchBtn.Content = "Filtering...";
             await Dispatcher.InvokeAsync(() => cvs.View.Refresh(), System.Windows.Threading.DispatcherPriority.Background);
             SearchBtn.Content = oldContent;
             SearchBtn.IsEnabled = true;
+            SearchTextBox.IsEnabled = true;
+        }
+
+        private void SearchTextBox_KeyDown( object sender, System.Windows.Input.KeyEventArgs e )
+        {
+            if ( e.Key == System.Windows.Input.Key.Enter && SearchTextBox.IsEnabled )
+            {
+                SearchBtn_Click(sender, e);
+            }
         }
     }
 }
