@@ -85,10 +85,5 @@ namespace EasyZoneBuilder.GUI
         {
             cvs?.View?.Refresh();
         }
-
-        private void SearchBox_TextChanged( object sender, TextChangedEventArgs e )
-        {
-            cvs?.View?.Refresh();
-        }
     }
 }
