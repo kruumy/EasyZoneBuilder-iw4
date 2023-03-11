@@ -43,18 +43,21 @@ namespace EasyZoneBuilder.GUI
                 object oldContent = RegenerateDependencyGraphBtn.Content;
                 RegenerateDependencyGraphBtn.Content = "Generating...";
                 await DependencyGraphUtil.GenerateDependencyGraphJson();
-                DependencyGraphInfoBox_Loaded(sender, e);
                 RegenerateDependencyGraphBtn.Content = oldContent;
                 RegenerateDependencyGraphBtn.IsEnabled = true;
-                MessageBox.Show($"Successfully written to '{DependencyGraphUtil.FILENAME}'!");
+                MessageBox.Show($"Successfully written to '{DependencyGraphUtil.File.Name}'!");
+                DependencyGraphInfoBox_Loaded(sender, e);
             }
         }
 
         private async void DependencyGraphInfoBox_Loaded( object sender, RoutedEventArgs e )
         {
-            DependencyGraphInfoBox.Items.Clear();
-            System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> graph = await DependencyGraphUtil.GetAsync();
-            DependencyGraphInfoBox.Items.Add($"Asset Count = {graph.Count}");
+            if ( DependencyGraphUtil.File.Exists )
+            {
+                DependencyGraphInfoBox.Items.Clear();
+                System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> graph = await DependencyGraphUtil.GetAsync();
+                DependencyGraphInfoBox.Items.Add($"Asset Count = {graph.Count}");
+            }
         }
     }
 

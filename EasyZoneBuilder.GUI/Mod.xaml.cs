@@ -26,6 +26,7 @@ namespace EasyZoneBuilder.GUI
         {
             if ( selectedMod.SelectedItem is Core.Mod sMod )
             {
+                sMod.CSV.Pull();
                 if ( sMod.CSV.Count <= 0 && sMod.FastFile.Exists )
                 {
                     if ( MessageBoxResult.Yes == MessageBox.Show("Empty mod.csv detected!\nWould you like to generate the mod.csv from the mod.ff?", "Notice", MessageBoxButton.YesNo, MessageBoxImage.Question) )
@@ -33,7 +34,6 @@ namespace EasyZoneBuilder.GUI
                         readFastFileContextMenu_Click(sender, e);
                     }
                 }
-                sMod.CSV.Pull();
                 detectedZonesBox.Text = string.Empty;
                 CsvGrid.ItemsSource = sMod.CSV;
             }
@@ -57,9 +57,12 @@ namespace EasyZoneBuilder.GUI
 
         private void DeleteContextMenuItem_Click( object sender, RoutedEventArgs e )
         {
-            if ( selectedMod.SelectedItem is Core.Mod sMod && CsvGrid.SelectedItem is KeyValuePair<string, AssetType> kv )
+            if ( selectedMod.SelectedItem is Core.Mod sMod && CsvGrid.SelectedItems.Count > 0 )
             {
-                sMod.CSV.Remove(kv.Key);
+                foreach ( object item in CsvGrid.SelectedItems )
+                {
+                    sMod.CSV.Remove(((KeyValuePair<string, AssetType>)item).Key);
+                }
                 sMod.CSV.Push();
                 ReadModCsvBtn_Click(sender, e);
             }

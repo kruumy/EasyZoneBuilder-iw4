@@ -18,6 +18,10 @@ namespace EasyZoneBuilder.GUI
             {
                 RunFirstTimeSetup();
             }
+            if ( !DependencyGraphUtil.File.Exists )
+            {
+                RunNoDependencyGraph();
+            }
 
         }
 
@@ -45,6 +49,13 @@ namespace EasyZoneBuilder.GUI
                 Environment.Exit(0);
             }
             Settings.TargetExecutablePath = selectIw4x.FileName;
+        }
+
+        private void RunNoDependencyGraph()
+        {
+            MessageBox.Show("No dependency graph detected!\nPress OK to generate one or download the default one from Github.", "Info", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            new DependencyGraphSettings().ShowDialog();
+            Environment.Exit(0);
         }
     }
 }

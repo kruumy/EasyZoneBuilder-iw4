@@ -45,7 +45,7 @@
         <DataGrid x:Name="CsvGrid"
           Grid.Row="1"
           AutoGenerateColumns="False"
-          SelectionMode="Single"
+          SelectionMode="Extended"
           Margin="5">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="AssetType"

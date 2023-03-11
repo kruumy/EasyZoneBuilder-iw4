@@ -8,7 +8,7 @@ namespace EasyZoneBuilder.Core
 {
     public static class DependencyGraphUtil
     {
-        public const string FILENAME = "dependency_graph.json";
+        public static readonly FileInfo File = new FileInfo(Path.Combine(Environment.CurrentDirectory, "dependency_graph.json"));
 
         public static async Task GenerateDependencyGraphJson()
         {
@@ -27,9 +27,31 @@ namespace EasyZoneBuilder.Core
                     asset_zones[ $"{item1.Value}:{item1.Key}" ].Add(item.Key); // TODO: might need to remove duplicates
                 }
             }
-            File.WriteAllText(FILENAME, Core.TinyJson.JSONWriter.ToJson(asset_zones));
+            System.IO.File.WriteAllText(File.FullName, Core.TinyJson.JSONWriter.ToJson(asset_zones));
             Console.WriteLine("Done!");
         }
+
+        public static Dictionary<string, AssetType> GetAssets( string zone )
+        {
+            Dictionary<string, List<string>> dependency_graph = Get();
+            Dictionary<string, AssetType> ret = new Dictionary<string, AssetType>();
+
+            foreach ( KeyValuePair<string, List<string>> dependency_graph_item in dependency_graph )
+            {
+                string[] assetLine = dependency_graph_item.Key.Split(':');
+                if ( dependency_graph_item.Value.Any(z => z == zone) )
+                {
+                    ret[ assetLine[ 1 ] ] = AssetTypeUtil.Parse(assetLine[ 0 ]);
+                }
+            }
+            return ret;
+        }
+
+        public static async Task<Dictionary<string, AssetType>> GetAssetsAsync( string zone )
+        {
+            return await Task.Run(() => GetAssets(zone));
+        }
+
         public static IEnumerable<string> GetRequiredZones( ModCSV csv )
         {
             // Took a lot of inspiration from https://github.com/XLabsProject/iw4-zone-asset-finder/blob/main/iw4-zone-asset-finder/Commands/BuildRequirements.cs
@@ -76,12 +98,26 @@ namespace EasyZoneBuilder.Core
 
         public static Dictionary<string, List<string>> Get()
         {
-            return Core.TinyJson.JSONParser.FromJson<Dictionary<string, List<string>>>(File.ReadAllText(FILENAME));
+            return Core.TinyJson.JSONParser.FromJson<Dictionary<string, List<string>>>(System.IO.File.ReadAllText(File.FullName));
         }
 
         public static async Task<Dictionary<string, List<string>>> GetAsync()
         {
             return await Task.Run(() => Get());
+        }
+
+        public async static Task<IEnumerable<string>> GetZones()
+        {
+            HashSet<string> result = new HashSet<string>();
+            Dictionary<string, List<string>> graph = await GetAsync();
+            foreach ( List<string> item in graph.Values )
+            {
+                foreach ( string item1 in item )
+                {
+                    result.Add(item1);
+                }
+            }
+            return result;
         }
     }
 }

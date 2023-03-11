@@ -31,7 +31,10 @@ namespace EasyZoneBuilder.Core
             foreach ( string line in System.IO.File.ReadAllLines(this.File.FullName) )
             {
                 string[] splitLine = line.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries);
-                this[ splitLine[ 1 ].Trim() ] = AssetTypeUtil.Parse(splitLine[ 0 ].Trim());
+                if ( splitLine.Length > 1 )
+                {
+                    this[ splitLine[ 1 ].Trim() ] = AssetTypeUtil.Parse(splitLine[ 0 ].Trim());
+                }
             }
         }
 

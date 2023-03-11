@@ -83,6 +83,9 @@
     <Compile Include="DependencyGraphSettings.xaml.cs">
       <DependentUpon>DependencyGraphSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NewZone.xaml.cs">
+      <DependentUpon>NewZone.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Zone.xaml.cs">
       <DependentUpon>Zone.xaml</DependentUpon>
     </Compile>
@@ -107,6 +110,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Mod.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NewZone.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
