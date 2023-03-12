@@ -107,7 +107,7 @@ namespace EasyZoneBuilder.Core
                 {
                     if ( line.StartsWith("Loading zone") )
                     {
-                        currentZone = rawLines[ i ].Substring(14, line.LastIndexOf('\'') - 14);
+                        currentZone = line.Substring(14, line.LastIndexOf('\'') - 14);
                         if ( !ret.TryGetValue(currentZone, out _) )
                         {
                             ret[ currentZone ] = new Dictionary<string, AssetType>();

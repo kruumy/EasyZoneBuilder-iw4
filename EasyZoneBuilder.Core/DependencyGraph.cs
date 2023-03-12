@@ -11,11 +11,13 @@ namespace EasyZoneBuilder.Core
     public class DependencyGraph : Dictionary<string, List<string>>, IASync, IFileInfo
     {
         [IgnoreDataMember]
-        public readonly static DependencyGraph DefaultInstance = new DependencyGraph(new FileInfo(Path.Combine(Environment.CurrentDirectory, "dependency_graph.json")));
+        public static readonly DependencyGraph DefaultInstance = new DependencyGraph(new FileInfo(Path.Combine(Environment.CurrentDirectory, "dependency_graph.json")));
+
         public DependencyGraph( FileInfo File )
         {
             this.File = File;
         }
+
         public DependencyGraph( Dictionary<string, List<string>> dict, FileInfo File ) : base(dict)
         {
             this.File = File;
@@ -24,23 +26,24 @@ namespace EasyZoneBuilder.Core
         [IgnoreDataMember]
         public FileInfo File { get; }
 
-        public async Task Pull()
+        public async Task GenerateDependencyGraphJson( IEnumerable<string> zones )
         {
-            string rawText = System.IO.File.ReadAllText(this.File.FullName);
-            Dictionary<string, List<string>> Dict = null;
-            await Task.Run(() => { Dict = TinyJson.JSONParser.FromJson<Dictionary<string, List<string>>>(rawText); });
+            Console.WriteLine($"Reading {zones.Count()} zones...");
+            Dictionary<string, Dictionary<string, AssetType>> zone_asset_assetType = await ZoneBuilder.ListAssets(zones);
             this.Clear();
-            foreach ( KeyValuePair<string, List<string>> entry in Dict )
+            foreach ( KeyValuePair<string, Dictionary<string, AssetType>> item in zone_asset_assetType )
             {
-                this.Add(entry.Key, entry.Value);
+                foreach ( KeyValuePair<string, AssetType> item1 in item.Value )
+                {
+                    if ( !this.TryGetValue($"{item1.Value}:{item1.Key}", out _) )
+                    {
+                        this[ $"{item1.Value}:{item1.Key}" ] = new List<string>();
+                    }
+                    this[ $"{item1.Value}:{item1.Key}" ].Add(item.Key); // TODO: might need to remove duplicates
+                }
             }
-        }
-
-        public async Task Push()
-        {
-            string Dict = null;
-            await Task.Run(() => { Dict = TinyJson.JSONWriter.ToJson(this); });
-            System.IO.File.WriteAllText(File.FullName, Dict);
+            await Push();
+            Console.WriteLine("Done!");
         }
 
         public Dictionary<string, AssetType> GetAssets( string zone )
@@ -61,26 +64,6 @@ namespace EasyZoneBuilder.Core
         public async Task<Dictionary<string, AssetType>> GetAssetsAsync( string zone )
         {
             return await Task.Run(() => GetAssets(zone));
-        }
-
-        public async Task GenerateDependencyGraphJson( IEnumerable<string> zones )
-        {
-            Console.WriteLine($"Reading {zones.Count()} zones...");
-            Dictionary<string, Dictionary<string, AssetType>> zone_asset_assetType = await ZoneBuilder.ListAssets(zones);
-            this.Clear();
-            foreach ( KeyValuePair<string, Dictionary<string, AssetType>> item in zone_asset_assetType )
-            {
-                foreach ( KeyValuePair<string, AssetType> item1 in item.Value )
-                {
-                    if ( !this.TryGetValue($"{item1.Value}:{item1.Key}", out _) )
-                    {
-                        this[ $"{item1.Value}:{item1.Key}" ] = new List<string>();
-                    }
-                    this[ $"{item1.Value}:{item1.Key}" ].Add(item.Key); // TODO: might need to remove duplicates
-                }
-            }
-            await Push();
-            Console.WriteLine("Done!");
         }
 
         public IEnumerable<string> GetRequiredZones( ModCSV csv )
@@ -132,6 +115,25 @@ namespace EasyZoneBuilder.Core
                 }
             }
             return result;
+        }
+
+        public async Task Pull()
+        {
+            string rawText = System.IO.File.ReadAllText(this.File.FullName);
+            Dictionary<string, List<string>> Dict = null;
+            await Task.Run(() => { Dict = TinyJson.JSONParser.FromJson<Dictionary<string, List<string>>>(rawText); });
+            this.Clear();
+            foreach ( KeyValuePair<string, List<string>> entry in Dict )
+            {
+                this.Add(entry.Key, entry.Value);
+            }
+        }
+
+        public async Task Push()
+        {
+            string Dict = null;
+            await Task.Run(() => { Dict = TinyJson.JSONWriter.ToJson(this); });
+            System.IO.File.WriteAllText(File.FullName, Dict);
         }
     }
 }
