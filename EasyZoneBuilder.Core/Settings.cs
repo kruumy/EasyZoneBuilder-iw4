@@ -32,9 +32,7 @@ namespace EasyZoneBuilder.Core
             }
         }
 
-        [IgnoreDataMember]
         public static IW4 IW4 { get; private set; }
-        [IgnoreDataMember]
         public static FileInfo File => new FileInfo(Path.Combine(Environment.CurrentDirectory, "EasyZoneBuilder.appsettings.json"));
         static Settings()
         {

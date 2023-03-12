@@ -10,7 +10,18 @@ namespace EasyZoneBuilder.Core
         public DirectoryInfo Directory { get; }
         public Mod[] Mods { get; }
 
-        public readonly string[] BlacklistedZones =
+        public static readonly string[] DEFAULT_MP_ZONES =
+        {
+            "code_pre_gfx_mp",
+            "localized_code_pre_gfx_mp",
+            "localized_code_post_gfx_mp",
+            "common_mp",
+            "localized_common_mp",
+            "ui_mp",
+            "localized_ui_mp"
+        };
+
+        public static readonly string[] BLACKLISTED_ZONES =
         {
             "mp_ambush_sh",
             "mp_bloc",
@@ -42,7 +53,7 @@ namespace EasyZoneBuilder.Core
                 for ( int i = 0; i < fullPath.Length; i++ )
                 {
                     string name = Path.GetFileNameWithoutExtension(fullPath[ i ]);
-                    if ( !BlacklistedZones.Any(z => name == z) && !toexclude.Any(z => name == z) )
+                    if ( !BLACKLISTED_ZONES.Any(z => name == z) && !toexclude.Any(z => name == z) )
                     {
                         result.Add(name);
                     }

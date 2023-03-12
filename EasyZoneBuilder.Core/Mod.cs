@@ -24,28 +24,41 @@ namespace EasyZoneBuilder.Core
         {
             CSV.Push();
             await ZoneBuilder.BuildZone(CSV, FastFile);
+            FastFile.Refresh();
         }
 
         public async Task ReadZone()
         {
-            CSV.Clear();
-            CSV.AddRange(await ZoneBuilder.ListAssets(FastFile));
-            CSV.Push();
+            FastFile.Refresh();
+            if ( FastFile.Exists )
+            {
+                CSV.Clear();
+                CSV.AddRange(await ZoneBuilder.ListAssets(FastFile));
+                CSV.Push();
+            }
+            else
+            {
+                throw new FileNotFoundException(nameof(FastFile), FastFile.FullName);
+            }
+
         }
 
-        public void SyncCSVToPrecache()
+        public async Task SyncCSVToPrecache()
         {
-            List<string> toRemoveFromPreacache = new List<string>();
+            Dictionary<string, AssetType> mptoKeep = new Dictionary<string, AssetType>();
+            Dictionary<string, Dictionary<string, AssetType>> depOutput = await DependencyGraph.DefaultInstance.GetAssetsAsync(IW4.DEFAULT_MP_ZONES);
+            Dictionary<AssetType, List<string>> defaultMP = depOutput.Values.Flip().Concat();
             foreach ( KeyValuePair<string, AssetType> entry in Precache )
             {
-                if ( !entry.Key.Contains("pb_") && !entry.Key.Contains("mp_") ) // TODO: make this better, possible use dependecygraph or cache default mp assets
+                if ( defaultMP[ entry.Value ].Any(a => a == entry.Key) )
                 {
-                    toRemoveFromPreacache.Add(entry.Key);
+                    mptoKeep.Add(entry.Key, entry.Value);
                 }
             }
-            foreach ( string key in toRemoveFromPreacache.Distinct() )
+            Precache.Clear();
+            foreach ( KeyValuePair<string, AssetType> item in mptoKeep )
             {
-                Precache.Remove(key);
+                Precache.Add(item.Key, item.Value);
             }
             foreach ( KeyValuePair<string, AssetType> entry in CSV )
             {

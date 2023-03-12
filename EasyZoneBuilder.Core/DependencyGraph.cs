@@ -61,9 +61,25 @@ namespace EasyZoneBuilder.Core
             return ret;
         }
 
+        public Dictionary<string, Dictionary<string, AssetType>> GetAssets( IEnumerable<string> zones )
+        {
+            Dictionary<string, Dictionary<string, AssetType>> ret = new Dictionary<string, Dictionary<string, AssetType>>();
+            foreach ( string zone in zones )
+            {
+                ret[ zone ] = GetAssets(zone);
+            }
+            return ret;
+        }
+
+
         public async Task<Dictionary<string, AssetType>> GetAssetsAsync( string zone )
         {
             return await Task.Run(() => GetAssets(zone));
+        }
+
+        public async Task<Dictionary<string, Dictionary<string, AssetType>>> GetAssetsAsync( IEnumerable<string> zones )
+        {
+            return await Task.Run(() => GetAssets(zones));
         }
 
         public IEnumerable<string> GetRequiredZones( ModCSV csv )

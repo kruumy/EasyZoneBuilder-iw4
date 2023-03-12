@@ -72,14 +72,17 @@ namespace EasyZoneBuilder.GUI
             }
         }
 
-        private void writePrecacheBtn_Click( object sender, RoutedEventArgs e )
+        private async void writePrecacheBtn_Click( object sender, RoutedEventArgs e )
         {
             if ( selectedMod.SelectedItem is Core.Mod sMod )
             {
                 writePrecacheBtn.IsEnabled = false;
+                object oldContent = writePrecacheBtn.Content;
+                writePrecacheBtn.Content = "Writing...";
                 sMod.CSV.Push();
-                sMod.SyncCSVToPrecache();
+                await sMod.SyncCSVToPrecache();
                 sMod.Precache.Push();
+                writePrecacheBtn.Content = oldContent;
                 writePrecacheBtn.IsEnabled = true;
                 MessageBox.Show("Wrote to _precache.gsc successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
