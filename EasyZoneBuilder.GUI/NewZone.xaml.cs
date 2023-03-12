@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -66,11 +67,19 @@ namespace EasyZoneBuilder.GUI
                 ReadZoneBtn.IsEnabled = false;
                 object oldBtnContext = ReadZoneBtn.Content;
                 ReadZoneBtn.Content = "Reading...";
+                await RefreshAssetGrid();
+                ReadZoneBtn.Content = oldBtnContext;
+                ReadZoneBtn.IsEnabled = true;
+            }
+        }
+
+        private async Task RefreshAssetGrid()
+        {
+            if ( SelectZoneComboBox.SelectedItem is string ss )
+            {
                 AssetGrid.ItemsSource = Array.Empty<string>();
                 cvs.Source = await DependencyGraph.DefaultInstance.GetAssetsAsync(ss);
                 AssetGrid.ItemsSource = cvs.View;
-                ReadZoneBtn.Content = oldBtnContext;
-                ReadZoneBtn.IsEnabled = true;
             }
         }
 
@@ -104,7 +113,8 @@ namespace EasyZoneBuilder.GUI
             SearchBtn.IsEnabled = false;
             object oldContent = SearchBtn.Content;
             SearchBtn.Content = "Filtering...";
-            await cvs.Dispatcher.InvokeAsync(() => cvs.View.Refresh(), System.Windows.Threading.DispatcherPriority.Input);
+            await RefreshAssetGrid();
+            //await cvs.Dispatcher.InvokeAsync(() => cvs.View.Refresh(), System.Windows.Threading.DispatcherPriority.Input);
             SearchBtn.Content = oldContent;
             SearchBtn.IsEnabled = true;
             SearchTextBox.IsEnabled = true;
