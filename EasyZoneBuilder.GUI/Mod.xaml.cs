@@ -98,7 +98,7 @@ namespace EasyZoneBuilder.GUI
             }
         }
 
-        private void FindRequiredZonesBtn_Click( object sender, RoutedEventArgs e )
+        private async void FindRequiredZonesBtn_Click( object sender, RoutedEventArgs e )
         {
             if ( selectedMod.SelectedItem is Core.Mod sMod )
             {
@@ -106,6 +106,7 @@ namespace EasyZoneBuilder.GUI
                 object oldContent = FindRequiredZonesBtn.Content;
                 FindRequiredZonesBtn.Content = "Finding...";
                 detectedZonesBox.Text = string.Empty;
+                await DependencyGraph.DefaultInstance.Pull();
                 foreach ( string zone in DependencyGraph.DefaultInstance.GetRequiredZones(sMod.CSV) )
                 {
                     detectedZonesBox.Text += zone + ", ";
