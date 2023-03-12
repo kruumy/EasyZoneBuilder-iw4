@@ -77,10 +77,12 @@ namespace EasyZoneBuilder.GUI
         {
             if ( DependencyGraph.DefaultInstance.File.Exists )
             {
+                SelectZoneComboBox.IsEnabled = false;
                 await DependencyGraph.DefaultInstance.Pull();
                 IEnumerable<string> zones = DependencyGraph.DefaultInstance.GetZones();
                 SelectZoneComboBox.ItemsSource = zones;
                 SelectZoneComboBox.SelectedIndex = 0;
+                SelectZoneComboBox.IsEnabled = true;
             }
         }
 
