@@ -41,7 +41,6 @@ namespace EasyZoneBuilder.GUI
                 detectedZonesBox.Text = string.Empty;
                 CsvGrid.ItemsSource = sMod.CSV;
             }
-            CsvGrid.Items.Refresh();
         }
 
         private async void writeFastFileBtn_Click( object sender, RoutedEventArgs e )
@@ -133,7 +132,7 @@ namespace EasyZoneBuilder.GUI
         private void RequiredZonesExpanded_Click( object sender, RoutedEventArgs e )
         {
             RequiredZonesExpanded window = new RequiredZonesExpanded();
-            window.Show();
+            window.ShowDialog();
         }
     }
 }

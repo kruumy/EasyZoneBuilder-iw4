@@ -1,6 +1,7 @@
 ﻿using EasyZoneBuilder.Core.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -91,11 +92,18 @@ namespace EasyZoneBuilder.Core
                 string dependency_graph_assetQuery = $"{asset.Value}:{asset.Key}";
                 if ( this.TryGetValue(dependency_graph_assetQuery, out List<string> queryResult) )
                 {
-                    assets_zones.Add(new KeyValuePair<KeyValuePair<string, AssetType>, List<string>>(new KeyValuePair<string, AssetType>(asset.Key, asset.Value), queryResult));
+                    if ( queryResult.Count > 0 )
+                    {
+                        assets_zones.Add(new KeyValuePair<KeyValuePair<string, AssetType>, List<string>>(new KeyValuePair<string, AssetType>(asset.Key, asset.Value), queryResult));
+                    }
+                    else
+                    {
+                        Debug.WriteLine($"{nameof(DependencyGraph)}.{nameof(GetRequiredZones)} : Warning, Missing Asset {dependency_graph_assetQuery}. In dependency graph but has no zones.");
+                    }
                 }
                 else
                 {
-                    return new Dictionary<string, RequiredZonesEntryInfo>();
+                    Debug.WriteLine($"{nameof(DependencyGraph)}.{nameof(GetRequiredZones)} : Warning, Missing Asset {dependency_graph_assetQuery}. Not in dependency graph.");
                 }
             }
             Dictionary<string, RequiredZonesEntryInfo> finalZoneScore = new Dictionary<string, RequiredZonesEntryInfo>();

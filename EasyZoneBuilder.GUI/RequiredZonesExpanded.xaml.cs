@@ -33,7 +33,15 @@ namespace EasyZoneBuilder.GUI
             if ( Mod.Instance.selectedMod.SelectedItem is Core.Mod sMod )
             {
                 Dictionary<string, DependencyGraph.RequiredZonesEntryInfo> reqZones = DependencyGraph.DefaultInstance.GetRequiredZones(sMod.CSV);
-                AssetGrid.ItemsSource = ConvertToNewDictionary(reqZones);
+                Dictionary<KeyValuePair<string, AssetType>, string> items = ConvertToNewDictionary(reqZones);
+                foreach ( KeyValuePair<string, AssetType> item in sMod.CSV )
+                {
+                    if ( !items.ContainsKey(item) )
+                    {
+                        items.Add(item, string.Empty);
+                    }
+                }
+                AssetGrid.ItemsSource = items;
             }
         }
 
