@@ -82,7 +82,7 @@ namespace EasyZoneBuilder.Core
             return await Task.Run(() => GetAssets(zones));
         }
 
-        public IEnumerable<string> GetRequiredZones( ModCSV csv )
+        public Dictionary<string, RequiredZonesEntryInfo> GetRequiredZones( ModCSV csv )
         {
             // Took a lot of inspiration from https://github.com/XLabsProject/iw4-zone-asset-finder/blob/main/iw4-zone-asset-finder/Commands/BuildRequirements.cs
             List<KeyValuePair<string, List<string>>> assets_zones = new List<KeyValuePair<string, List<string>>>();
@@ -95,31 +95,42 @@ namespace EasyZoneBuilder.Core
                 }
                 else
                 {
-                    return Array.Empty<string>();
+                    return new Dictionary<string, RequiredZonesEntryInfo>();
                 }
             }
-            Dictionary<string, int> finalZoneScore = new Dictionary<string, int>();
+            Dictionary<string, RequiredZonesEntryInfo> finalZoneScore = new Dictionary<string, RequiredZonesEntryInfo>();
             while ( assets_zones.Count > 0 )
             {
-                Dictionary<string, int> zoneScore = new Dictionary<string, int>();
+                Dictionary<string, RequiredZonesEntryInfo> zoneScore = new Dictionary<string, RequiredZonesEntryInfo>();
                 foreach ( KeyValuePair<string, List<string>> asset_zones in assets_zones )
                 {
                     foreach ( string zone in asset_zones.Value )
                     {
+                        if ( !zoneScore.TryGetValue(zone, out _) )
+                        {
+                            zoneScore[ zone ] = new RequiredZonesEntryInfo();
+                        }
                         if ( !zoneScore.ContainsKey(zone) )
                         {
-                            zoneScore[ zone ] = 0;
+                            zoneScore[ zone ].score = 0;
                         }
-                        zoneScore[ zone ]++;
+                        zoneScore[ zone ].assets.Add(asset_zones.Key);
+                        zoneScore[ zone ].score++;
                     }
                 }
-                string nextZone = zoneScore.OrderByDescending(o => o.Value).First().Key;
+                string nextZone = zoneScore.OrderByDescending(o => o.Value.score).First().Key;
                 assets_zones.RemoveAll(o => o.Value.Contains(nextZone));
                 finalZoneScore[ nextZone ] = zoneScore[ nextZone ];
             }
-            return finalZoneScore.Keys;
+            return finalZoneScore;
         }
 
+
+        public class RequiredZonesEntryInfo
+        {
+            public int score;
+            public List<string> assets = new List<string>();
+        }
         public IEnumerable<string> GetZones()
         {
             HashSet<string> result = new HashSet<string>();

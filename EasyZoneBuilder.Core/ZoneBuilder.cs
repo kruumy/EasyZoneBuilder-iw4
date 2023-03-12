@@ -150,7 +150,7 @@ namespace EasyZoneBuilder.Core
         {
             List<string> commands = new List<string>();
             await DependencyGraph.DefaultInstance.Pull();
-            foreach ( string zone in DependencyGraph.DefaultInstance.GetRequiredZones(csv) )
+            foreach ( string zone in DependencyGraph.DefaultInstance.GetRequiredZones(csv).Keys )
             {
                 Debug.WriteLine(zone);
                 commands.Add("loadzone " + zone);

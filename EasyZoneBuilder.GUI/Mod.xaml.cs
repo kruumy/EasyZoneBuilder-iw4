@@ -111,7 +111,7 @@ namespace EasyZoneBuilder.GUI
                 FindRequiredZonesBtn.Content = "Finding...";
                 detectedZonesBox.Text = string.Empty;
                 await DependencyGraph.DefaultInstance.Pull();
-                foreach ( string zone in DependencyGraph.DefaultInstance.GetRequiredZones(sMod.CSV) )
+                foreach ( string zone in DependencyGraph.DefaultInstance.GetRequiredZones(sMod.CSV).Keys )
                 {
                     detectedZonesBox.Text += zone + ", ";
                 }
