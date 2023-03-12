@@ -1,7 +1,5 @@
 ﻿using EasyZoneBuilder.Core;
-using Microsoft.Win32;
 using System;
-using System.IO;
 using System.Windows;
 
 namespace EasyZoneBuilder.GUI
@@ -14,7 +12,7 @@ namespace EasyZoneBuilder.GUI
         public MainWindow()
         {
             InitializeComponent();
-            if ( !Settings.File.Exists || string.IsNullOrEmpty(Settings.TargetExecutablePath) || !File.Exists(Settings.TargetExecutablePath) )
+            if ( !Settings.IsTargetExecutablePathValid )
             {
                 RunFirstTimeSetup();
             }
@@ -27,28 +25,12 @@ namespace EasyZoneBuilder.GUI
 
         private void RunFirstTimeSetup()
         {
-            MessageBox.Show("Please select your IW4 executable after pressing OK...", "First Time Setup");
-            OpenFileDialog selectIw4x = new OpenFileDialog
+            AppSettings appSettings = new AppSettings();
+            appSettings.ShowDialog();
+            if ( !Settings.IsTargetExecutablePathValid )
             {
-                Title = "Select your IW4 executable",
-                CheckFileExists = true,
-                CheckPathExists = true,
-                DefaultExt = "exe",
-                Filter = "Executable files (*.exe)|*.exe",
-                FilterIndex = 2,
-                RestoreDirectory = false,
-                ReadOnlyChecked = true,
-                ShowReadOnly = true,
-                Multiselect = false,
-            };
-            selectIw4x.ShowDialog();
-            string fileName = Path.GetFileNameWithoutExtension(selectIw4x.FileName);
-            if ( fileName != "iw4x" && fileName != "iw4m"  /* TODO add zonebuilder exe name */)
-            {
-                MessageBox.Show("Not legal executable, exiting...", "First Time Setup");
                 Environment.Exit(0);
             }
-            Settings.TargetExecutablePath = selectIw4x.FileName;
         }
 
         private void RunNoDependencyGraph()

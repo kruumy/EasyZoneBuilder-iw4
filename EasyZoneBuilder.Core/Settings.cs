@@ -8,6 +8,7 @@ namespace EasyZoneBuilder.Core
 {
     public static class Settings
     {
+        public static bool IsTargetExecutablePathValid => Settings.File.Exists && !string.IsNullOrEmpty(Settings.TargetExecutablePath) && System.IO.File.Exists(Settings.TargetExecutablePath);
         private static string _TargetExecutablePath = string.Empty;
         public static string TargetExecutablePath
         {
@@ -18,7 +19,7 @@ namespace EasyZoneBuilder.Core
             set
             {
                 _TargetExecutablePath = value;
-                if ( !string.IsNullOrEmpty(value) )
+                if ( !string.IsNullOrEmpty(value) && System.IO.File.Exists(value) )
                 {
                     FileInfo fileInfo = new FileInfo(value);
                     if ( fileInfo != null && fileInfo.Exists )

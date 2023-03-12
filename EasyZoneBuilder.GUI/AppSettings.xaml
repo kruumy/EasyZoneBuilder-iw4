@@ -1,0 +1,47 @@
+﻿<Window x:Class="EasyZoneBuilder.GUI.AppSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EasyZoneBuilder.GUI"
+        mc:Ignorable="d"
+        Style="{DynamicResource CustomWindowStyle}"
+        Title="App Settings" Height="300" Width="450" ResizeMode="NoResize" Icon="/Resources/settings.ico" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Label
+            Content="Hello"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            FontSize="36"
+            Grid.Row="1">
+        </Label>
+        <Button
+            Content="Select Your ZoneBuilder"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Padding="25,10"
+            Grid.Row="2"
+            FontSize="16"
+            Click="Button_Click">
+        </Button>
+        <Label
+            Content="If you're using IW4X, that is your game executable."
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            FontSize="9"
+            Grid.Row="3"
+            FontStyle="Italic">
+        </Label>
+    </Grid>
+
+</Window>
