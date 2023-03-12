@@ -37,11 +37,12 @@ namespace EasyZoneBuilder.Core
             get
             {
                 string[] fullPath = System.IO.Directory.GetFiles(Path.Combine(Directory.FullName, "zone"), "*.ff", SearchOption.AllDirectories);
+                string[] toexclude = System.IO.Directory.GetFiles(Path.Combine(Directory.FullName, "zone"), "*.ff", SearchOption.TopDirectoryOnly);
                 List<string> result = new List<string>(fullPath.Length);
                 for ( int i = 0; i < fullPath.Length; i++ )
                 {
                     string name = Path.GetFileNameWithoutExtension(fullPath[ i ]);
-                    if ( !BlacklistedZones.Any(z => name == z) )
+                    if ( !BlacklistedZones.Any(z => name == z) && !toexclude.Any(z => name == z) )
                     {
                         result.Add(name);
                     }
