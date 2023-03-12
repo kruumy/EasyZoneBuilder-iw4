@@ -18,7 +18,7 @@ namespace EasyZoneBuilder.GUI
             {
                 RunFirstTimeSetup();
             }
-            if ( !DependencyGraphUtil.File.Exists )
+            if ( !DependencyGraph.DefaultInstance.File.Exists )
             {
                 RunNoDependencyGraph();
             }

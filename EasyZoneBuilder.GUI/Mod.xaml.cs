@@ -26,7 +26,10 @@ namespace EasyZoneBuilder.GUI
         {
             if ( selectedMod.SelectedItem is Core.Mod sMod )
             {
-                sMod.CSV.Pull();
+                if ( sMod.CSV.File.Exists )
+                {
+                    sMod.CSV.Pull();
+                }
                 if ( sMod.CSV.Count <= 0 && sMod.FastFile.Exists )
                 {
                     if ( MessageBoxResult.Yes == MessageBox.Show("Empty mod.csv detected!\nWould you like to generate the mod.csv from the mod.ff?", "Notice", MessageBoxButton.YesNo, MessageBoxImage.Question) )
@@ -95,7 +98,7 @@ namespace EasyZoneBuilder.GUI
             }
         }
 
-        private async void FindRequiredZonesBtn_Click( object sender, RoutedEventArgs e )
+        private void FindRequiredZonesBtn_Click( object sender, RoutedEventArgs e )
         {
             if ( selectedMod.SelectedItem is Core.Mod sMod )
             {
@@ -103,7 +106,7 @@ namespace EasyZoneBuilder.GUI
                 object oldContent = FindRequiredZonesBtn.Content;
                 FindRequiredZonesBtn.Content = "Finding...";
                 detectedZonesBox.Text = string.Empty;
-                foreach ( string zone in await DependencyGraphUtil.GetRequiredZonesAsync(sMod.CSV) )
+                foreach ( string zone in DependencyGraph.DefaultInstance.GetRequiredZones(sMod.CSV) )
                 {
                     detectedZonesBox.Text += zone + ", ";
                 }

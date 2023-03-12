@@ -1,6 +1,7 @@
 ﻿using EasyZoneBuilder.Core;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -42,21 +43,22 @@ namespace EasyZoneBuilder.GUI
                 RegenerateDependencyGraphBtn.IsEnabled = false;
                 object oldContent = RegenerateDependencyGraphBtn.Content;
                 RegenerateDependencyGraphBtn.Content = "Generating...";
-                await DependencyGraphUtil.GenerateDependencyGraphJson();
+                await DependencyGraph.DefaultInstance.GenerateDependencyGraphJson(Settings.IW4.Zones);
                 RegenerateDependencyGraphBtn.Content = oldContent;
                 RegenerateDependencyGraphBtn.IsEnabled = true;
-                MessageBox.Show($"Successfully written to '{DependencyGraphUtil.File.Name}'!");
+                MessageBox.Show($"Successfully written to '{DependencyGraph.DefaultInstance.File.Name}'!");
                 DependencyGraphInfoBox_Loaded(sender, e);
             }
         }
 
         private async void DependencyGraphInfoBox_Loaded( object sender, RoutedEventArgs e )
         {
-            if ( DependencyGraphUtil.File.Exists )
+            if ( DependencyGraph.DefaultInstance.File.Exists )
             {
+                await DependencyGraph.DefaultInstance.Pull();
                 DependencyGraphInfoBox.Items.Clear();
-                System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>> graph = await DependencyGraphUtil.GetAsync();
-                DependencyGraphInfoBox.Items.Add($"Asset Count = {graph.Count}");
+                DependencyGraphInfoBox.Items.Add($"Asset Count = {DependencyGraph.DefaultInstance.Count}");
+                DependencyGraphInfoBox.Items.Add($"Zones Count = {DependencyGraph.DefaultInstance.GetZones().Count()}");
             }
         }
     }

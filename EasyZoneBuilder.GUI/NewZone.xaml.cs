@@ -66,7 +66,7 @@ namespace EasyZoneBuilder.GUI
                 object oldBtnContext = ReadZoneBtn.Content;
                 ReadZoneBtn.Content = "Reading...";
                 AssetGrid.ItemsSource = Array.Empty<string>();
-                cvs.Source = await DependencyGraphUtil.GetAssetsAsync(ss);
+                cvs.Source = await DependencyGraph.DefaultInstance.GetAssetsAsync(ss);
                 AssetGrid.ItemsSource = cvs.View;
                 ReadZoneBtn.Content = oldBtnContext;
                 ReadZoneBtn.IsEnabled = true;
@@ -75,9 +75,11 @@ namespace EasyZoneBuilder.GUI
 
         private async void SelectZoneComboBox_Loaded( object sender, RoutedEventArgs e )
         {
-            if ( DependencyGraphUtil.File.Exists )
+            if ( DependencyGraph.DefaultInstance.File.Exists )
             {
-                SelectZoneComboBox.ItemsSource = await DependencyGraphUtil.GetZones();
+                await DependencyGraph.DefaultInstance.Pull();
+                IEnumerable<string> zones = DependencyGraph.DefaultInstance.GetZones();
+                SelectZoneComboBox.ItemsSource = zones;
                 SelectZoneComboBox.SelectedIndex = 0;
             }
         }
@@ -99,7 +101,7 @@ namespace EasyZoneBuilder.GUI
             SearchBtn.IsEnabled = false;
             object oldContent = SearchBtn.Content;
             SearchBtn.Content = "Filtering...";
-            await Dispatcher.InvokeAsync(() => cvs.View.Refresh(), System.Windows.Threading.DispatcherPriority.Background);
+            await Dispatcher.InvokeAsync(() => cvs.View.Refresh(), System.Windows.Threading.DispatcherPriority.Input);
             SearchBtn.Content = oldContent;
             SearchBtn.IsEnabled = true;
             SearchTextBox.IsEnabled = true;

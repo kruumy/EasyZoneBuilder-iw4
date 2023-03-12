@@ -23,10 +23,6 @@ namespace EasyZoneBuilder.Core
 
         public void Pull()
         {
-            if ( !File.Exists )
-            {
-                Push();
-            }
             this.Clear();
             foreach ( string line in System.IO.File.ReadAllLines(this.File.FullName) )
             {

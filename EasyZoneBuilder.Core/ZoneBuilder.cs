@@ -149,7 +149,8 @@ namespace EasyZoneBuilder.Core
         public static async Task BuildZone( ModCSV csv, FileInfo destination )
         {
             List<string> commands = new List<string>();
-            foreach ( string zone in await DependencyGraphUtil.GetRequiredZonesAsync(csv) )
+            await DependencyGraph.DefaultInstance.Pull();
+            foreach ( string zone in DependencyGraph.DefaultInstance.GetRequiredZones(csv) )
             {
                 Debug.WriteLine(zone);
                 commands.Add("loadzone " + zone);

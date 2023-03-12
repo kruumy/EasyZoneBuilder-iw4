@@ -107,10 +107,18 @@ namespace EasyZoneBuilder.Core.TinyJson
                 }
                 stringBuilder.Append(']');
             }
-            else if ( type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>) )
+            else if ( type == typeof(DependencyGraph) || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>)) )
             {
-                Type keyType = type.GetGenericArguments()[ 0 ];
+                Type keyType;
 
+                if ( type == typeof(DependencyGraph) )
+                {
+                    keyType = typeof(string);
+                }
+                else
+                {
+                    keyType = type.GetGenericArguments()[ 0 ];
+                }
                 //Refuse to output dictionary keys that aren't of type string
                 if ( keyType != typeof(string) )
                 {
