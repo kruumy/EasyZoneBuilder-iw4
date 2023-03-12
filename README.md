@@ -10,7 +10,7 @@
   <a href="https://paypal.me/JPauls281"><img src="https://img.shields.io/badge/Donate-Paypal-orange?style=flat-square"></a>
 </div>
 
-<h4 align="center">Build zones fast!</h4>
+<h4 align="center">Singleplayer actors, tool assisted speedrun any%</h4>
 
 <div align="center">
   <a href="preview.png">
@@ -25,6 +25,10 @@
 | [IW4X Zonebuilder](https://github.com/XLabsProject/iw4x-client) | ✅ |
 | [Zonebuilder](https://github.com/RagdollPhysics/zonebuilder) | ❔ |
 | [Zonetool](https://github.com/ZoneTool/zonetool) | ❔ |
+
+## Note
+This is primarly made for speeding up the most tedious parts of creating singleplayer actors for Sass's [iw4cine](https://github.com/sortileges/iw4cine) mod. 
+Don't expect this to be a full-on replacement for ZoneBuilder if you plan on using it for mod making.
 
 ## Repository Structure
 ```
