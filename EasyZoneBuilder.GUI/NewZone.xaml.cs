@@ -1,6 +1,7 @@
 ﻿using EasyZoneBuilder.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -79,7 +80,7 @@ namespace EasyZoneBuilder.GUI
             {
                 SelectZoneComboBox.IsEnabled = false;
                 await DependencyGraph.DefaultInstance.Pull();
-                IEnumerable<string> zones = DependencyGraph.DefaultInstance.GetZones();
+                IEnumerable<string> zones = DependencyGraph.DefaultInstance.GetZones().OrderBy(s => s);
                 SelectZoneComboBox.ItemsSource = zones;
                 SelectZoneComboBox.SelectedIndex = 0;
                 SelectZoneComboBox.IsEnabled = true;
@@ -103,7 +104,7 @@ namespace EasyZoneBuilder.GUI
             SearchBtn.IsEnabled = false;
             object oldContent = SearchBtn.Content;
             SearchBtn.Content = "Filtering...";
-            await Dispatcher.InvokeAsync(() => cvs.View.Refresh(), System.Windows.Threading.DispatcherPriority.Input);
+            await cvs.Dispatcher.InvokeAsync(() => cvs.View.Refresh(), System.Windows.Threading.DispatcherPriority.Input);
             SearchBtn.Content = oldContent;
             SearchBtn.IsEnabled = true;
             SearchTextBox.IsEnabled = true;

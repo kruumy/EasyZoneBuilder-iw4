@@ -134,6 +134,7 @@ namespace EasyZoneBuilder.Core
             string Dict = null;
             await Task.Run(() => { Dict = TinyJson.JSONWriter.ToJson(this); });
             System.IO.File.WriteAllText(File.FullName, Dict);
+            File.Refresh();
         }
     }
 }

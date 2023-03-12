@@ -42,6 +42,7 @@ namespace EasyZoneBuilder.Core
                 sb.AppendLine($"{item.Value},{item.Key}");
             }
             System.IO.File.WriteAllText(File.FullName, sb.ToString());
+            File.Refresh();
         }
 
         public TempFileCopy TempCopy( FileInfo destination )

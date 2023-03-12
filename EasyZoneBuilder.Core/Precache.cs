@@ -38,6 +38,7 @@ namespace EasyZoneBuilder.Core
             }
             sb.Append(PRECACHE_EPOLOUGE);
             System.IO.File.WriteAllText(File.FullName, sb.ToString());
+            File.Refresh();
         }
         public void Pull()
         {
