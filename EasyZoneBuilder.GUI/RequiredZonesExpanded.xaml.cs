@@ -32,7 +32,7 @@ namespace EasyZoneBuilder.GUI
         {
             if ( Mod.Instance.selectedMod.SelectedItem is Core.Mod sMod )
             {
-                Dictionary<string, DependencyGraph.RequiredZonesEntryInfo> reqZones = DependencyGraph.DefaultInstance.GetRequiredZones(sMod.CSV);
+                Dictionary<string, Dictionary<string, AssetType>> reqZones = DependencyGraph.DefaultInstance.GetRequiredZones(sMod.CSV);
                 Dictionary<KeyValuePair<string, AssetType>, string> items = ConvertToNewDictionary(reqZones);
                 foreach ( KeyValuePair<string, AssetType> item in sMod.CSV )
                 {
@@ -46,13 +46,13 @@ namespace EasyZoneBuilder.GUI
             AssetGrid.Items.Refresh();
         }
 
-        private Dictionary<KeyValuePair<string, AssetType>, string> ConvertToNewDictionary( Dictionary<string, DependencyGraph.RequiredZonesEntryInfo> originalDict )
+        private Dictionary<KeyValuePair<string, AssetType>, string> ConvertToNewDictionary( Dictionary<string, Dictionary<string, AssetType>> originalDict )
         {
             Dictionary<KeyValuePair<string, AssetType>, string> newDict = new Dictionary<KeyValuePair<string, AssetType>, string>();
 
-            foreach ( KeyValuePair<string, DependencyGraph.RequiredZonesEntryInfo> kvp in originalDict )
+            foreach ( KeyValuePair<string, Dictionary<string, AssetType>> kvp in originalDict )
             {
-                foreach ( KeyValuePair<string, AssetType> asset in kvp.Value.assets )
+                foreach ( KeyValuePair<string, AssetType> asset in kvp.Value )
                 {
                     newDict.Add(asset, kvp.Key);
                 }

@@ -83,7 +83,7 @@ namespace EasyZoneBuilder.Core
             return await Task.Run(() => GetAssets(zones));
         }
 
-        public Dictionary<string, RequiredZonesEntryInfo> GetRequiredZones( ModCSV csv )
+        public Dictionary<string, Dictionary<string, AssetType>> GetRequiredZones( ModCSV csv )
         {
             // Took a lot of inspiration from https://github.com/XLabsProject/iw4-zone-asset-finder/blob/main/iw4-zone-asset-finder/Commands/BuildRequirements.cs
             List<KeyValuePair<KeyValuePair<string, AssetType>, List<string>>> assets_zones = new List<KeyValuePair<KeyValuePair<string, AssetType>, List<string>>>();
@@ -106,39 +106,28 @@ namespace EasyZoneBuilder.Core
                     Debug.WriteLine($"{nameof(DependencyGraph)}.{nameof(GetRequiredZones)} : Warning, Missing Asset {dependency_graph_assetQuery}. Not in dependency graph.");
                 }
             }
-            Dictionary<string, RequiredZonesEntryInfo> finalZoneScore = new Dictionary<string, RequiredZonesEntryInfo>();
+            Dictionary<string, Dictionary<string, AssetType>> finalZoneScore = new Dictionary<string, Dictionary<string, AssetType>>();
             while ( assets_zones.Count > 0 )
             {
-                Dictionary<string, RequiredZonesEntryInfo> zoneScore = new Dictionary<string, RequiredZonesEntryInfo>();
+                Dictionary<string, Dictionary<string, AssetType>> zoneScore = new Dictionary<string, Dictionary<string, AssetType>>();
                 foreach ( KeyValuePair<KeyValuePair<string, AssetType>, List<string>> asset_zones in assets_zones )
                 {
                     foreach ( string zone in asset_zones.Value )
                     {
                         if ( !zoneScore.TryGetValue(zone, out _) )
                         {
-                            zoneScore[ zone ] = new RequiredZonesEntryInfo();
+                            zoneScore[ zone ] = new Dictionary<string, AssetType>();
                         }
-                        if ( !zoneScore.ContainsKey(zone) )
-                        {
-                            zoneScore[ zone ].score = 0;
-                        }
-                        zoneScore[ zone ].assets.Add(asset_zones.Key.Key, asset_zones.Key.Value);
-                        zoneScore[ zone ].score++;
+                        zoneScore[ zone ].Add(asset_zones.Key.Key, asset_zones.Key.Value);
                     }
                 }
-                string nextZone = zoneScore.OrderByDescending(o => o.Value.score).First().Key;
+                string nextZone = zoneScore.OrderByDescending(o => o.Value.Count).First().Key;
                 assets_zones.RemoveAll(o => o.Value.Contains(nextZone));
                 finalZoneScore[ nextZone ] = zoneScore[ nextZone ];
             }
             return finalZoneScore;
         }
 
-
-        public class RequiredZonesEntryInfo
-        {
-            public int score;
-            public Dictionary<string, AssetType> assets = new Dictionary<string, AssetType>();
-        }
         public IEnumerable<string> GetZones()
         {
             HashSet<string> result = new HashSet<string>();
