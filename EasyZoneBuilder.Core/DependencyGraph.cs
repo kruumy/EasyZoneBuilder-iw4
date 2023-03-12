@@ -85,13 +85,13 @@ namespace EasyZoneBuilder.Core
         public Dictionary<string, RequiredZonesEntryInfo> GetRequiredZones( ModCSV csv )
         {
             // Took a lot of inspiration from https://github.com/XLabsProject/iw4-zone-asset-finder/blob/main/iw4-zone-asset-finder/Commands/BuildRequirements.cs
-            List<KeyValuePair<string, List<string>>> assets_zones = new List<KeyValuePair<string, List<string>>>();
+            List<KeyValuePair<KeyValuePair<string, AssetType>, List<string>>> assets_zones = new List<KeyValuePair<KeyValuePair<string, AssetType>, List<string>>>();
             foreach ( KeyValuePair<string, AssetType> asset in csv )
             {
                 string dependency_graph_assetQuery = $"{asset.Value}:{asset.Key}";
                 if ( this.TryGetValue(dependency_graph_assetQuery, out List<string> queryResult) )
                 {
-                    assets_zones.Add(new KeyValuePair<string, List<string>>(asset.Key, queryResult));
+                    assets_zones.Add(new KeyValuePair<KeyValuePair<string, AssetType>, List<string>>(new KeyValuePair<string, AssetType>(asset.Key, asset.Value), queryResult));
                 }
                 else
                 {
@@ -102,7 +102,7 @@ namespace EasyZoneBuilder.Core
             while ( assets_zones.Count > 0 )
             {
                 Dictionary<string, RequiredZonesEntryInfo> zoneScore = new Dictionary<string, RequiredZonesEntryInfo>();
-                foreach ( KeyValuePair<string, List<string>> asset_zones in assets_zones )
+                foreach ( KeyValuePair<KeyValuePair<string, AssetType>, List<string>> asset_zones in assets_zones )
                 {
                     foreach ( string zone in asset_zones.Value )
                     {
@@ -114,7 +114,7 @@ namespace EasyZoneBuilder.Core
                         {
                             zoneScore[ zone ].score = 0;
                         }
-                        zoneScore[ zone ].assets.Add(asset_zones.Key);
+                        zoneScore[ zone ].assets.Add(asset_zones.Key.Key, asset_zones.Key.Value);
                         zoneScore[ zone ].score++;
                     }
                 }
@@ -129,7 +129,7 @@ namespace EasyZoneBuilder.Core
         public class RequiredZonesEntryInfo
         {
             public int score;
-            public List<string> assets = new List<string>();
+            public Dictionary<string, AssetType> assets = new Dictionary<string, AssetType>();
         }
         public IEnumerable<string> GetZones()
         {

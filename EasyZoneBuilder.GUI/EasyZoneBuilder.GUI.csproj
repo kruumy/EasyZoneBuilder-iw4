@@ -89,6 +89,9 @@
     <Compile Include="NewZone.xaml.cs">
       <DependentUpon>NewZone.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RequiredZonesExpanded.xaml.cs">
+      <DependentUpon>RequiredZonesExpanded.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Zone.xaml.cs">
       <DependentUpon>Zone.xaml</DependentUpon>
     </Compile>
@@ -121,6 +124,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="NewZone.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RequiredZonesExpanded.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -188,6 +195,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\settings.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\open_window.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

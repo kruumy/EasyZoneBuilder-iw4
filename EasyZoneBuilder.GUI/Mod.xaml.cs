@@ -59,7 +59,7 @@ namespace EasyZoneBuilder.GUI
             }
         }
 
-        private void DeleteContextMenuItem_Click( object sender, RoutedEventArgs e )
+        public void DeleteContextMenuItem_Click( object sender, RoutedEventArgs e )
         {
             if ( selectedMod.SelectedItem is Core.Mod sMod && CsvGrid.SelectedItems.Count > 0 )
             {
@@ -102,7 +102,7 @@ namespace EasyZoneBuilder.GUI
             }
         }
 
-        private async void FindRequiredZonesBtn_Click( object sender, RoutedEventArgs e )
+        private void FindRequiredZonesBtn_Click( object sender, RoutedEventArgs e )
         {
             if ( selectedMod.SelectedItem is Core.Mod sMod )
             {
@@ -110,7 +110,7 @@ namespace EasyZoneBuilder.GUI
                 object oldContent = FindRequiredZonesBtn.Content;
                 FindRequiredZonesBtn.Content = "Finding...";
                 detectedZonesBox.Text = string.Empty;
-                await DependencyGraph.DefaultInstance.Pull();
+                //await DependencyGraph.DefaultInstance.Pull();
                 foreach ( string zone in DependencyGraph.DefaultInstance.GetRequiredZones(sMod.CSV).Keys )
                 {
                     detectedZonesBox.Text += zone + ", ";
@@ -128,6 +128,12 @@ namespace EasyZoneBuilder.GUI
         {
             DependencyGraphSettings window = new DependencyGraphSettings();
             window.ShowDialog();
+        }
+
+        private void RequiredZonesExpanded_Click( object sender, RoutedEventArgs e )
+        {
+            RequiredZonesExpanded window = new RequiredZonesExpanded();
+            window.Show();
         }
     }
 }
