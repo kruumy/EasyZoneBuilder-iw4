@@ -81,6 +81,7 @@ namespace EasyZoneBuilder.GUI
                 cvs.Source = await DependencyGraph.DefaultInstance.GetAssetsAsync(ss);
                 AssetGrid.ItemsSource = cvs.View;
             }
+            AssetGrid.Items.Refresh();
         }
 
         private async void SelectZoneComboBox_Loaded( object sender, RoutedEventArgs e )

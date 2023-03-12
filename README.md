@@ -10,7 +10,7 @@
   <a href="https://paypal.me/JPauls281"><img src="https://img.shields.io/badge/Donate-Paypal-orange?style=flat-square"></a>
 </div>
 
-<h4 align="center">Singleplayer actors, tool assisted speedrun any%</h4>
+<h4 align="center">Singleplayer actors, tool assisted speedrun</h4>
 
 <div align="center">
   <a href="preview.png">

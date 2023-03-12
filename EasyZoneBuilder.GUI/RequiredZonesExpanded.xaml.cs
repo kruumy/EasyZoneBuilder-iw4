@@ -43,6 +43,7 @@ namespace EasyZoneBuilder.GUI
                 }
                 AssetGrid.ItemsSource = items;
             }
+            AssetGrid.Items.Refresh();
         }
 
         private Dictionary<KeyValuePair<string, AssetType>, string> ConvertToNewDictionary( Dictionary<string, DependencyGraph.RequiredZonesEntryInfo> originalDict )
