@@ -112,7 +112,7 @@ namespace EasyZoneBuilder.Core
                         {
                             ret[ currentZone ] = new Dictionary<string, AssetType>();
                         }
-                        i += 5;
+                        i += 4;
                     }
                     else
                     {
