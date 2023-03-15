@@ -15,7 +15,6 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Label
@@ -26,7 +25,7 @@
             Grid.Row="1">
         </Label>
         <Button
-            Content="Select Your ZoneBuilder"
+            Content="Select Your IW4x Executable"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
             Padding="25,10"
@@ -34,14 +33,6 @@
             FontSize="16"
             Click="Button_Click">
         </Button>
-        <Label
-            Content="If you're using IW4X, that is your game executable."
-            VerticalAlignment="Center"
-            HorizontalAlignment="Center"
-            FontSize="9"
-            Grid.Row="3"
-            FontStyle="Italic">
-        </Label>
     </Grid>
 
 </Window>

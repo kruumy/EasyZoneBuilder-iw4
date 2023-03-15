@@ -23,8 +23,8 @@
 | Name | Status |
 | --- | --- |
 | [IW4X Zonebuilder](https://github.com/XLabsProject/iw4x-client) | ✅ |
-| [Zonebuilder](https://github.com/RagdollPhysics/zonebuilder) | ❔ |
-| [Zonetool](https://github.com/ZoneTool/zonetool) | ❔ |
+| [Zonebuilder](https://github.com/RagdollPhysics/zonebuilder) | ❌ |
+| [Zonetool](https://github.com/ZoneTool/zonetool) | ❌ |
 
 ## Note
 This is primarly made for speeding up the most tedious parts of creating singleplayer actors for Sass's [iw4cine](https://github.com/sortileges/iw4cine) mod. 
