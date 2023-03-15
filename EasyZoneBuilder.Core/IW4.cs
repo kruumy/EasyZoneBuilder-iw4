@@ -7,7 +7,7 @@ namespace EasyZoneBuilder.Core
 {
     public class IW4 : IDirectoryInfo
     {
-        public DirectoryInfo Directory { get; }
+        public DirectoryInfoEx Directory { get; }
         public Mod[] Mods { get; }
 
         public static readonly string[] DEFAULT_MP_ZONES =
@@ -62,13 +62,13 @@ namespace EasyZoneBuilder.Core
             }
         }
 
-        public IW4( DirectoryInfo Directory )
+        public IW4( DirectoryInfoEx Directory )
         {
             this.Directory = Directory;
-            DirectoryInfo modFolder = new DirectoryInfo(Path.Combine(Directory.FullName, "mods"));
+            DirectoryInfoEx modFolder = new DirectoryInfoEx(Path.Combine(Directory.FullName, "mods"));
             if ( modFolder.Exists )
             {
-                DirectoryInfo[] moddirs = modFolder.GetDirectories();
+                DirectoryInfoEx[] moddirs = modFolder.GetDirectories().ToArray();
                 Mods = new Mod[ moddirs.Length ];
                 for ( int i = 0; i < moddirs.Length; i++ )
                 {

@@ -10,11 +10,11 @@ namespace EasyZoneBuilder.Core
 {
     public static class ZoneBuilder
     {
-        public static FileInfo TargetExecutable { get; private set; }
+        public static FileInfoEx TargetExecutable { get; private set; }
 
         private static readonly int MAX_COMMANDS_PER_EXECUTATION = 30;
 
-        public static void Initialize( FileInfo iw4x )
+        public static void Initialize( FileInfoEx iw4x )
         {
             TargetExecutable = iw4x;
         }
@@ -130,15 +130,15 @@ namespace EasyZoneBuilder.Core
             return dict.Where(item => item.Value == assetType).Select(item => item.Key);
         }
 
-        public static async Task<IEnumerable<string>> ListAssets( AssetType assetType, FileInfo file )
+        public static async Task<IEnumerable<string>> ListAssets( AssetType assetType, FileInfoEx file )
         {
             Dictionary<string, AssetType> dict = await ListAssets(file);
             return dict.Where(item => item.Value == assetType).Select(item => item.Key);
         }
 
-        public static async Task<Dictionary<string, AssetType>> ListAssets( FileInfo file )
+        public static async Task<Dictionary<string, AssetType>> ListAssets( FileInfoEx file )
         {
-            FileInfo destination = new FileInfo(Path.Combine(TargetExecutable.Directory.FullName, @"zone\english", file.Name));
+            FileInfoEx destination = new FileInfoEx(Path.Combine(TargetExecutable.Directory.FullName, @"zone\english", file.Name));
             using ( TempFileCopy temp = new TempFileCopy(file, destination) )
             {
                 string command = Path.GetFileNameWithoutExtension(file.FullName);
@@ -146,7 +146,7 @@ namespace EasyZoneBuilder.Core
             }
         }
 
-        public static async Task BuildZone( ModCSV csv, FileInfo destination )
+        public static async Task BuildZone( ModCSV csv, FileInfoEx destination )
         {
             List<string> commands = new List<string>();
             await DependencyGraph.DefaultInstance.Pull();
@@ -156,7 +156,7 @@ namespace EasyZoneBuilder.Core
                 commands.Add("loadzone " + zone);
             }
             commands = commands.Distinct().ToList();
-            FileInfo csvdest = new FileInfo(Path.Combine(TargetExecutable.Directory.FullName, @"zone_source", csv.File.Name));
+            FileInfoEx csvdest = new FileInfoEx(Path.Combine(TargetExecutable.Directory.FullName, @"zone_source", csv.File.Name));
             if ( !csvdest.Directory.Exists )
             {
                 csvdest.Directory.Create();

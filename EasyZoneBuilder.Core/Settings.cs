@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization;
 
 namespace EasyZoneBuilder.Core
 {
@@ -21,7 +20,7 @@ namespace EasyZoneBuilder.Core
                 _TargetExecutablePath = value;
                 if ( !string.IsNullOrEmpty(value) && System.IO.File.Exists(value) )
                 {
-                    FileInfo fileInfo = new FileInfo(value);
+                    FileInfoEx fileInfo = new FileInfoEx(value);
                     if ( fileInfo != null && fileInfo.Exists )
                     {
                         ZoneBuilder.Initialize(fileInfo);
@@ -33,7 +32,7 @@ namespace EasyZoneBuilder.Core
         }
 
         public static IW4 IW4 { get; private set; }
-        public static FileInfo File => new FileInfo(Path.Combine(Environment.CurrentDirectory, "EasyZoneBuilder.appsettings.json"));
+        public static FileInfoEx File => new FileInfoEx(Path.Combine(Environment.CurrentDirectory, "EasyZoneBuilder.appsettings.json"));
         static Settings()
         {
             if ( File.Exists )

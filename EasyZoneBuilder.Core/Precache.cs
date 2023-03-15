@@ -1,6 +1,5 @@
 ﻿using EasyZoneBuilder.Core.Interfaces;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -8,10 +7,10 @@ namespace EasyZoneBuilder.Core
 {
     public class Precache : Dictionary<string, AssetType>, IFileInfo, ISync
     {
-        public FileInfo File { get; }
+        public FileInfoEx File { get; }
         private static readonly string ANIM_FUNCNAME = "PrecacheMPAnim";
         private static readonly string MODEL_FUNCNAME = "PrecacheModel";
-        public Precache( FileInfo File )
+        public Precache( FileInfoEx File )
         {
             this.File = File;
             if ( this.File.Exists )
@@ -38,7 +37,6 @@ namespace EasyZoneBuilder.Core
             }
             sb.Append(PRECACHE_EPOLOUGE);
             System.IO.File.WriteAllText(File.FullName, sb.ToString());
-            File.Refresh();
         }
         public void Pull()
         {

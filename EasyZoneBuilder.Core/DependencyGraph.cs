@@ -12,20 +12,20 @@ namespace EasyZoneBuilder.Core
     public class DependencyGraph : Dictionary<string, List<string>>, IASync, IFileInfo
     {
         [IgnoreDataMember]
-        public static readonly DependencyGraph DefaultInstance = new DependencyGraph(new FileInfo(Path.Combine(Environment.CurrentDirectory, "dependency_graph.json")));
+        public static readonly DependencyGraph DefaultInstance = new DependencyGraph(new FileInfoEx(Path.Combine(Environment.CurrentDirectory, "dependency_graph.json")));
 
-        public DependencyGraph( FileInfo File )
+        public DependencyGraph( FileInfoEx File )
         {
             this.File = File;
         }
 
-        public DependencyGraph( Dictionary<string, List<string>> dict, FileInfo File ) : base(dict)
+        public DependencyGraph( Dictionary<string, List<string>> dict, FileInfoEx File ) : base(dict)
         {
             this.File = File;
         }
 
         [IgnoreDataMember]
-        public FileInfo File { get; }
+        public FileInfoEx File { get; }
 
         public async Task GenerateDependencyGraphJson( IEnumerable<string> zones )
         {
@@ -158,7 +158,6 @@ namespace EasyZoneBuilder.Core
             string Dict = null;
             await Task.Run(() => { Dict = TinyJson.JSONWriter.ToJson(this); });
             System.IO.File.WriteAllText(File.FullName, Dict);
-            File.Refresh();
         }
     }
 }

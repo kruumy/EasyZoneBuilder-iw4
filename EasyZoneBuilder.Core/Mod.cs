@@ -8,39 +8,30 @@ namespace EasyZoneBuilder.Core
 {
     public class Mod : IDirectoryInfo
     {
-        public DirectoryInfo Directory { get; }
-        public FileInfo FastFile { get; }
+        public DirectoryInfoEx Directory { get; }
+        public FileInfoEx FastFile { get; }
         public ModCSV CSV { get; }
         public Precache Precache { get; }
-        public Mod( DirectoryInfo Directory )
+        public Mod( DirectoryInfoEx Directory )
         {
             this.Directory = Directory;
-            this.FastFile = new FileInfo(Path.Combine(Directory.FullName, "mod.ff"));
-            this.CSV = new ModCSV(new FileInfo(Path.Combine(Directory.FullName, Path.GetFileNameWithoutExtension(FastFile.FullName) + ".csv")));
-            this.Precache = new Precache(new FileInfo(Path.Combine(Directory.FullName, "_precache.gsc")));
+            this.FastFile = new FileInfoEx(Path.Combine(Directory.FullName, "mod.ff"));
+            this.CSV = new ModCSV(new FileInfoEx(Path.Combine(Directory.FullName, Path.GetFileNameWithoutExtension(FastFile.FullName) + ".csv")));
+            this.Precache = new Precache(new FileInfoEx(Path.Combine(Directory.FullName, "_precache.gsc")));
         }
 
         public async Task BuildZone()
         {
             CSV.Push();
             await ZoneBuilder.BuildZone(CSV, FastFile);
-            FastFile.Refresh();
         }
 
         public async Task ReadZone()
         {
-            FastFile.Refresh();
-            if ( FastFile.Exists )
-            {
-                CSV.Clear();
-                CSV.AddRange(await ZoneBuilder.ListAssets(FastFile));
-                CSV.Push();
-            }
-            else
-            {
-                throw new FileNotFoundException(nameof(FastFile), FastFile.FullName);
-            }
-
+            FastFile.AssertExist();
+            CSV.Clear();
+            CSV.AddRange(await ZoneBuilder.ListAssets(FastFile));
+            CSV.Push();
         }
 
         public async Task SyncCSVToPrecache()

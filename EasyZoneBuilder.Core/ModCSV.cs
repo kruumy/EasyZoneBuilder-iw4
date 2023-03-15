@@ -1,6 +1,5 @@
 ﻿using EasyZoneBuilder.Core.Interfaces;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 
 namespace EasyZoneBuilder.Core
@@ -8,7 +7,7 @@ namespace EasyZoneBuilder.Core
     public class ModCSV : Dictionary<string, AssetType>, IFileInfo, ISync
     {
 
-        public ModCSV( FileInfo File )
+        public ModCSV( FileInfoEx File )
         {
             this.File = File;
             if ( File.Exists )
@@ -19,7 +18,7 @@ namespace EasyZoneBuilder.Core
 
 
 
-        public FileInfo File { get; private set; }
+        public FileInfoEx File { get; private set; }
 
         public void Pull()
         {
@@ -42,10 +41,9 @@ namespace EasyZoneBuilder.Core
                 sb.AppendLine($"{item.Value},{item.Key}");
             }
             System.IO.File.WriteAllText(File.FullName, sb.ToString());
-            File.Refresh();
         }
 
-        public TempFileCopy TempCopy( FileInfo destination )
+        public TempFileCopy TempCopy( FileInfoEx destination )
         {
             return new TempFileCopy(this.File, destination);
         }

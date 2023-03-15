@@ -26,7 +26,6 @@ namespace EasyZoneBuilder.GUI
         {
             if ( selectedMod.SelectedItem is Core.Mod sMod )
             {
-                sMod.CSV.File.Refresh();
                 if ( sMod.CSV.File.Exists )
                 {
                     sMod.CSV.Pull();

@@ -1,14 +1,13 @@
 ﻿using System;
-using System.IO;
 
 namespace EasyZoneBuilder.Core
 {
     public class TempFileCopy : IDisposable
     {
-        public FileInfo File { get; }
-        public FileInfo Destination { get; }
+        public FileInfoEx File { get; }
+        public FileInfoEx Destination { get; }
 
-        public TempFileCopy( FileInfo File, FileInfo Destination )
+        public TempFileCopy( FileInfoEx File, FileInfoEx Destination )
         {
             this.File = File;
             this.Destination = Destination;
