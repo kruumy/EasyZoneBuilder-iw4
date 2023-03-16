@@ -21,7 +21,7 @@ namespace EasyZoneBuilder.GUI
 
         private void selectedZone_Loaded( object sender, RoutedEventArgs e )
         {
-            selectedZone.ItemsSource = Settings.IW4.Zones;
+            selectedZone.ItemsSource = Settings.IW4.GetZones();
         }
         public readonly CollectionViewSource cvs = new CollectionViewSource();
         private async void readFastFileBtn_Click( object sender, RoutedEventArgs e )

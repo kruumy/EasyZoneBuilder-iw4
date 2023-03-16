@@ -23,7 +23,7 @@ namespace EasyZoneBuilder.Core
         public void Pull()
         {
             this.Clear();
-            foreach ( string line in System.IO.File.ReadAllLines(this.File.FullName) )
+            foreach ( string line in this.File.ReadAllLines() )
             {
                 string[] splitLine = line.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries);
                 if ( splitLine.Length > 1 )
@@ -40,7 +40,7 @@ namespace EasyZoneBuilder.Core
             {
                 sb.AppendLine($"{item.Value},{item.Key}");
             }
-            System.IO.File.WriteAllText(File.FullName, sb.ToString());
+            File.WriteAllText(sb.ToString());
         }
 
         public TempFileCopy TempCopy( FileInfoEx destination )

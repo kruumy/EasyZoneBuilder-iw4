@@ -13,6 +13,10 @@ namespace EasyZoneBuilder.Core
         public string FullName { get; private set; }
         public string Name => Path.GetFileName(FullName);
 
-        public abstract void Create();
+        public abstract void Touch();
+
+        public abstract void Delete();
+
+
     }
 }

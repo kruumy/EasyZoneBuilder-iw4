@@ -1,21 +1,13 @@
 ﻿using System;
+using System.Linq;
 
 namespace EasyZoneBuilder.Core
 {
-    public enum AssetType
+    public enum AssetType // just need to add to this to add support for more asset types.
     {
         xanim,
         xmodel,
-        xmodelsurfs,
-        image,
-        material,
-        sound,
-        map_ents,
-        lightdef,
-        localize,
-        weapon,
-        stringtable,
-        leaderboarddef
+        fx
     }
 
     public static class AssetTypeUtil
@@ -32,6 +24,11 @@ namespace EasyZoneBuilder.Core
                 }
             }
             throw new ArgumentException(str, nameof(str));
+        }
+
+        public static bool IsSupportedAssetType(string str)
+        {
+            return typeof(AssetType).GetEnumNames().Any(e => e == str);
         }
     }
 }

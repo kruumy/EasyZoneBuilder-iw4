@@ -77,10 +77,10 @@ namespace EasyZoneBuilder.Core
         private static void ParseVerifyZoneLine( ref Dictionary<string, AssetType> dictToAddTo, string line )
         {
             string[] rawSplit = line.Split(':');
+            rawSplit[ 1 ] = rawSplit[ 1 ].Trim();
             try
             {
-                rawSplit[ 1 ] = rawSplit[ 1 ].Trim();
-                if ( typeof(AssetType).GetEnumNames().Any(e => e == rawSplit[ 1 ]) )
+                if ( AssetTypeUtil.IsSupportedAssetType(rawSplit[ 1 ]) )
                 {
                     dictToAddTo[ rawSplit[ 2 ].Trim() ] = AssetTypeUtil.Parse(rawSplit[ 1 ]);
                 }
@@ -138,7 +138,7 @@ namespace EasyZoneBuilder.Core
 
         public static async Task<Dictionary<string, AssetType>> ListAssets( FileInfoEx file )
         {
-            FileInfoEx destination = new FileInfoEx(Path.Combine(TargetExecutable.Directory.FullName, @"zone\english", file.Name));
+            FileInfoEx destination = TargetExecutable.Directory.GetDirectory("zone").GetDirectory("english").GetFile(file.Name);
             using ( TempFileCopy temp = new TempFileCopy(file, destination) )
             {
                 string command = Path.GetFileNameWithoutExtension(file.FullName);
@@ -156,10 +156,10 @@ namespace EasyZoneBuilder.Core
                 commands.Add("loadzone " + zone);
             }
             commands = commands.Distinct().ToList();
-            FileInfoEx csvdest = new FileInfoEx(Path.Combine(TargetExecutable.Directory.FullName, @"zone_source", csv.File.Name));
+            FileInfoEx csvdest = TargetExecutable.Directory.GetDirectory("zone_source").GetFile(csv.File.Name);
             if ( !csvdest.Directory.Exists )
             {
-                csvdest.Directory.Create();
+                csvdest.Directory.Touch();
             }
             csv.Push();
             using ( TempFileCopy tempcopy = csv.TempCopy(csvdest) )
@@ -167,16 +167,10 @@ namespace EasyZoneBuilder.Core
                 commands.Add("buildzone mod");
                 await ExecuteLines(commands.ToArray());
             }
-            string buildZoneOutput = Path.Combine(TargetExecutable.Directory.FullName, "zone", Path.GetFileNameWithoutExtension(csv.File.FullName) + ".ff");
-            if ( File.Exists(buildZoneOutput) )
-            {
-                System.IO.File.Delete(destination.FullName);
-                System.IO.File.Move(buildZoneOutput, destination.FullName);
-            }
-            else
-            {
-                throw new FileNotFoundException();
-            }
+            FileInfoEx buildZoneOutput = TargetExecutable.Directory.GetDirectory("zone").GetFile(csv.File.NameWithoutExtention + ".ff");
+            buildZoneOutput.AssertExist();
+            destination.Delete();
+            buildZoneOutput.Move(destination);
         }
     }
 }

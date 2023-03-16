@@ -43,7 +43,7 @@ namespace EasyZoneBuilder.Core
 
         public static void Pull()
         {
-            string rawFileContents = System.IO.File.ReadAllText(File.FullName);
+            string rawFileContents = File.ReadAllText();
             Dictionary<string, string> json = TinyJson.JSONParser.FromJson<Dictionary<string, string>>(rawFileContents);
             TargetExecutablePath = (string)(json[ nameof(TargetExecutablePath) ]);
         }
@@ -51,7 +51,7 @@ namespace EasyZoneBuilder.Core
         {
             Dictionary<string, string> json = new Dictionary<string, string>();
             json[ nameof(TargetExecutablePath) ] = TargetExecutablePath;
-            System.IO.File.WriteAllText(File.FullName, json.ToJson());
+            File.WriteAllText(json.ToJson());
         }
     }
 }

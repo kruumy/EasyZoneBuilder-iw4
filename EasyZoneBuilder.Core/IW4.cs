@@ -42,30 +42,25 @@ namespace EasyZoneBuilder.Core
         };
         // TODO: check why these zones dont work in zonebuilder,
         // my guess is that it needs some other zone loaded before it
-
-        public string[] Zones
+        
+        public IEnumerable<string> GetZones() // TODO: make this only read zones from patch english and dlc folders
         {
-            get
+            string[] fullPath = System.IO.Directory.GetFiles(Path.Combine(Directory.FullName, "zone"), "*.ff", SearchOption.AllDirectories);
+            for ( int i = 0; i < fullPath.Length; i++ )
             {
-                string[] fullPath = System.IO.Directory.GetFiles(Path.Combine(Directory.FullName, "zone"), "*.ff", SearchOption.AllDirectories);
-                string[] toexclude = System.IO.Directory.GetFiles(Path.Combine(Directory.FullName, "zone"), "*.ff", SearchOption.TopDirectoryOnly);
-                List<string> result = new List<string>(fullPath.Length);
-                for ( int i = 0; i < fullPath.Length; i++ )
+                string name = Path.GetFileNameWithoutExtension(fullPath[ i ]);
+                if ( !BLACKLISTED_ZONES.Any(z => name == z) )
                 {
-                    string name = Path.GetFileNameWithoutExtension(fullPath[ i ]);
-                    if ( !BLACKLISTED_ZONES.Any(z => name == z) && !toexclude.Any(z => name == z) )
-                    {
-                        result.Add(name);
-                    }
+                    yield return name;
                 }
-                return result.ToArray();
             }
+
         }
 
         public IW4( DirectoryInfoEx Directory )
         {
             this.Directory = Directory;
-            DirectoryInfoEx modFolder = new DirectoryInfoEx(Path.Combine(Directory.FullName, "mods"));
+            DirectoryInfoEx modFolder = Directory.GetDirectory("mods");
             if ( modFolder.Exists )
             {
                 DirectoryInfoEx[] moddirs = modFolder.GetDirectories().ToArray();

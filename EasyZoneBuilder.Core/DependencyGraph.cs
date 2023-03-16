@@ -54,7 +54,7 @@ namespace EasyZoneBuilder.Core
             foreach ( KeyValuePair<string, List<string>> dependency_graph_item in this )
             {
                 string[] assetLine = dependency_graph_item.Key.Split(':');
-                if ( dependency_graph_item.Value.Any(z => z == zone) )
+                if ( dependency_graph_item.Value.Any(z => z == zone) && AssetTypeUtil.IsSupportedAssetType(assetLine[ 0 ]) )
                 {
                     ret[ assetLine[ 1 ] ] = AssetTypeUtil.Parse(assetLine[ 0 ]);
                 }
@@ -89,7 +89,7 @@ namespace EasyZoneBuilder.Core
             List<KeyValuePair<KeyValuePair<string, AssetType>, List<string>>> assets_zones = new List<KeyValuePair<KeyValuePair<string, AssetType>, List<string>>>();
             foreach ( KeyValuePair<string, AssetType> asset in csv )
             {
-                string dependency_graph_assetQuery = $"{asset.Value}:{asset.Key}";
+                string dependency_graph_assetQuery = GetQueryString(asset);
                 if ( this.TryGetValue(dependency_graph_assetQuery, out List<string> queryResult) )
                 {
                     if ( queryResult.Count > 0 )
@@ -143,7 +143,7 @@ namespace EasyZoneBuilder.Core
 
         public async Task Pull()
         {
-            string rawText = System.IO.File.ReadAllText(this.File.FullName);
+            string rawText = this.File.ReadAllText();
             Dictionary<string, List<string>> Dict = null;
             await Task.Run(() => { Dict = TinyJson.JSONParser.FromJson<Dictionary<string, List<string>>>(rawText); });
             this.Clear();
@@ -157,7 +157,17 @@ namespace EasyZoneBuilder.Core
         {
             string Dict = null;
             await Task.Run(() => { Dict = TinyJson.JSONWriter.ToJson(this); });
-            System.IO.File.WriteAllText(File.FullName, Dict);
+            File.WriteAllText(Dict);
+        }
+
+        public string GetQueryString(KeyValuePair<string, AssetType> asset)
+        {
+            return GetQueryString(asset.Key, asset.Value);
+        }
+
+        public string GetQueryString(string assetName, AssetType assetType )
+        {
+            return $"{assetType}:{assetName}";
         }
     }
 }

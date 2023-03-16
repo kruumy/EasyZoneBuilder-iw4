@@ -20,7 +20,7 @@ namespace EasyZoneBuilder.GUI
 
         private void ZonesListBox_Loaded( object sender, RoutedEventArgs e )
         {
-            ZonesListBox.ItemsSource = Settings.IW4.Zones;
+            ZonesListBox.ItemsSource = Settings.IW4.GetZones();
         }
 
         private ConsoleWriter ConsoleWriter;
@@ -43,7 +43,7 @@ namespace EasyZoneBuilder.GUI
                 RegenerateDependencyGraphBtn.IsEnabled = false;
                 object oldContent = RegenerateDependencyGraphBtn.Content;
                 RegenerateDependencyGraphBtn.Content = "Generating...";
-                await DependencyGraph.DefaultInstance.GenerateDependencyGraphJson(Settings.IW4.Zones);
+                await DependencyGraph.DefaultInstance.GenerateDependencyGraphJson(Settings.IW4.GetZones());
                 RegenerateDependencyGraphBtn.Content = oldContent;
                 RegenerateDependencyGraphBtn.IsEnabled = true;
                 MessageBox.Show($"Successfully written to '{DependencyGraph.DefaultInstance.File.Name}'!");

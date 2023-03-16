@@ -22,7 +22,7 @@ namespace EasyZoneBuilder.Core
         {
             const string PRECACHE_PROLOUGE = "#include maps\\mp\\_utility;\n#include common_scripts\\utility;\n#using_animtree(\"multiplayer\");\nprecache()\n{\n";
             const string PRECACHE_EPOLOUGE = "}";
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder(PRECACHE_PROLOUGE.Length + PRECACHE_EPOLOUGE.Length);
             sb.Append(PRECACHE_PROLOUGE);
             foreach ( KeyValuePair<string, AssetType> entry in this )
             {
@@ -36,11 +36,11 @@ namespace EasyZoneBuilder.Core
                 }
             }
             sb.Append(PRECACHE_EPOLOUGE);
-            System.IO.File.WriteAllText(File.FullName, sb.ToString());
+            File.WriteAllText(sb.ToString());
         }
         public void Pull()
         {
-            string rawPrecache = System.IO.File.ReadAllText(File.FullName);
+            string rawPrecache = File.ReadAllText();
             for ( int i = 0; i < rawPrecache.Length; i++ )
             {
                 if ( rawPrecache[ i ] == '/' && rawPrecache[ i + 1 ] == '/' )
