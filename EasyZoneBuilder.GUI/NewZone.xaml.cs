@@ -27,7 +27,7 @@ namespace EasyZoneBuilder.GUI
             {
                 if ( !string.IsNullOrEmpty(SelectAssetTypeComboBox.Text) )
                 {
-                    e.Accepted = SelectAssetTypeComboBox.Text == "None" || asset.Value == AssetTypeUtil.Parse(SelectAssetTypeComboBox.Text);
+                    e.Accepted = SelectAssetTypeComboBox.Text == "None" || Enum.TryParse(SelectAssetTypeComboBox.Text, out AssetType assetType) && assetType == asset.Value;
                 }
                 if ( e.Accepted )
                 {

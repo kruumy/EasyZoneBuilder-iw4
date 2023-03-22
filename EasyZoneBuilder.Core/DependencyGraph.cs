@@ -56,7 +56,10 @@ namespace EasyZoneBuilder.Core
                 string[] assetLine = dependency_graph_item.Key.Split(':');
                 if ( dependency_graph_item.Value.Any(z => z == zone) && AssetTypeUtil.IsSupportedAssetType(assetLine[ 0 ]) )
                 {
-                    ret[ assetLine[ 1 ] ] = AssetTypeUtil.Parse(assetLine[ 0 ]);
+                    if ( Enum.TryParse(assetLine[ 0 ], out AssetType assetType) )
+                    {
+                        ret[ assetLine[ 1 ] ] = assetType;
+                    }
                 }
             }
             return ret;
@@ -160,12 +163,12 @@ namespace EasyZoneBuilder.Core
             File.WriteAllText(Dict);
         }
 
-        public string GetQueryString(KeyValuePair<string, AssetType> asset)
+        public string GetQueryString( KeyValuePair<string, AssetType> asset )
         {
             return GetQueryString(asset.Key, asset.Value);
         }
 
-        public string GetQueryString(string assetName, AssetType assetType )
+        public string GetQueryString( string assetName, AssetType assetType )
         {
             return $"{assetType}:{assetName}";
         }

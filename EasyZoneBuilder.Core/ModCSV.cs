@@ -1,4 +1,5 @@
 ﻿using EasyZoneBuilder.Core.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -28,7 +29,10 @@ namespace EasyZoneBuilder.Core
                 string[] splitLine = line.Split(new char[] { ',' }, System.StringSplitOptions.RemoveEmptyEntries);
                 if ( splitLine.Length > 1 )
                 {
-                    this[ splitLine[ 1 ].Trim() ] = AssetTypeUtil.Parse(splitLine[ 0 ].Trim());
+                    if ( Enum.TryParse(splitLine[ 0 ].Trim(), out AssetType type) )
+                    {
+                        this[ splitLine[ 1 ].Trim() ] = type;
+                    }
                 }
             }
         }

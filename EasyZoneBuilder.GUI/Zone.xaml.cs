@@ -33,7 +33,7 @@ namespace EasyZoneBuilder.GUI
                 readFastFileBtn.Content = "Reading...";
                 AssetList.ItemsSource = Array.Empty<string>();
                 AssetsFoundLabel.Content = "Assets Found: 0";
-                IEnumerable<string> assets = await ZoneBuilder.ListAssets(AssetTypeUtil.Parse(sat), ss);
+                IEnumerable<string> assets = await ZoneBuilder.ListAssets((AssetType)Enum.Parse(typeof(AssetType), sat), ss);
                 cvs.Source = assets;
                 AssetList.ItemsSource = cvs.View;
                 AssetsFoundLabel.Content = "Assets Found: " + assets.Count();
@@ -73,9 +73,10 @@ namespace EasyZoneBuilder.GUI
             if ( Mod.Instance.selectedMod.SelectedItem is Core.Mod sMod &&
                 AssetList.SelectedItem is string selectedAsset &&
                 this.selectedAssetType.SelectedItem is string selectedAssetType &&
-                selectedZone.SelectedItem is string _selectedZone )
+                selectedZone.SelectedItem is string _selectedZone &&
+                Enum.TryParse(selectedAssetType, out AssetType assetType) )
             {
-                sMod.CSV[ selectedAsset ] = AssetTypeUtil.Parse(selectedAssetType);
+                sMod.CSV[ selectedAsset ] = assetType;
                 sMod.CSV.Push();
                 Mod.Instance.ReadModCsvBtn_Click(sender, e);
             }

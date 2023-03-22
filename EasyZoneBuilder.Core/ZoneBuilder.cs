@@ -82,7 +82,10 @@ namespace EasyZoneBuilder.Core
             {
                 if ( AssetTypeUtil.IsSupportedAssetType(rawSplit[ 1 ]) )
                 {
-                    dictToAddTo[ rawSplit[ 2 ].Trim() ] = AssetTypeUtil.Parse(rawSplit[ 1 ]);
+                    if ( Enum.TryParse(rawSplit[ 1 ], out AssetType assetType) )
+                    {
+                        dictToAddTo[ rawSplit[ 2 ].Trim() ] = assetType;
+                    }
                 }
             }
             catch ( ArgumentException ) { }

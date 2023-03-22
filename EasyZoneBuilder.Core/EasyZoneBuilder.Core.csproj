@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MSFT.ParallelExtensionsExtras" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="dependency_graph.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
