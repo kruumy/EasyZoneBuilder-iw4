@@ -77,9 +77,9 @@ namespace EasyZoneBuilder.Core
         private static void ParseVerifyZoneLine( ref Dictionary<string, AssetType> dictToAddTo, string line )
         {
             string[] rawSplit = line.Split(':');
-            rawSplit[ 1 ] = rawSplit[ 1 ].Trim();
             try
             {
+                rawSplit[ 1 ] = rawSplit[ 1 ].Trim();
                 if ( AssetTypeUtil.IsSupportedAssetType(rawSplit[ 1 ]) )
                 {
                     if ( Enum.TryParse(rawSplit[ 1 ], out AssetType assetType) )

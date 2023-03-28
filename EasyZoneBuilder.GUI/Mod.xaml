@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EasyZoneBuilder.GUI"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="400">
+             d:DesignHeight="450" d:DesignWidth="400" DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -22,15 +22,16 @@
                 x:Name="selectedMod"
                 Grid.Column="0"
                 Margin="5"
-                DisplayMemberPath="Directory.Name"
-                Loaded="selectedMod_Loaded">
+                DisplayMemberPath="Directory.Name" 
+                ItemsSource="{Binding Mods}">
             </ComboBox>
             <Button
                 x:Name="ReadModCsvBtn"
                 Grid.Column="1"
                 Margin="5"
                 Content="Read mod.csv"
-                Click="ReadModCsvBtn_Click">
+                Click="ReadModCsvBtn_Click" 
+                IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBoolConverter}, ElementName=selectedMod, ValidatesOnNotifyDataErrors=False}">
                 <Button.ContextMenu>
                     <ContextMenu>
                         <MenuItem
@@ -46,7 +47,8 @@
           Grid.Row="1"
           AutoGenerateColumns="False"
           SelectionMode="Extended"
-          Margin="5">
+          Margin="5,3" 
+          ItemsSource="{Binding SelectedItem.CSV, ElementName=selectedMod}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="AssetType"
                             Binding="{Binding Value}"
@@ -78,17 +80,9 @@
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="auto"></ColumnDefinition>
                 <ColumnDefinition Width="40"></ColumnDefinition>
                 <ColumnDefinition Width="40"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button
-                x:Name="FindRequiredZonesBtn"
-                Grid.Column="1"
-                Content="Find Required Zones"
-                Margin="5"
-                Click="FindRequiredZonesBtn_Click">
-            </Button>
             <TextBox
                 x:Name="detectedZonesBox"
                 Grid.Column="0"
@@ -96,13 +90,16 @@
                 IsReadOnly="True"
                 TextAlignment="Left"
                 TextWrapping="NoWrap"
-                VerticalContentAlignment="Center">
+                VerticalContentAlignment="Center"
+                Text="{Binding SelectedItem.CSV.RequiredZones,Mode=OneWay, Converter={StaticResource IEnumberableToString}, ElementName=selectedMod}"
+                >
             </TextBox>
             <Button
                 x:Name="RequiredZonesExpandedBtn"
-                Grid.Column="2"
+                Grid.Column="1"
                 Margin="5"
                 Padding="2"
+                IsEnabled="{Binding Items.Count, ElementName=CsvGrid}"
                 Click="RequiredZonesExpanded_Click">
                 <StackPanel>
                     <Image>
@@ -114,7 +111,7 @@
             </Button>
             <Button
                 x:Name="DependencyGraphSettingsBtn"
-                Grid.Column="3"
+                Grid.Column="2"
                 Margin="5"
                 Padding="2"
                 Click="DependencyGraphSettingsBtn_Click">
@@ -138,14 +135,16 @@
                 Grid.Column="0"
                 Margin="5"
                 Content="Write To FastFile"
-                Click="writeFastFileBtn_Click">
+                Click="writeFastFileBtn_Click" 
+                IsEnabled="{Binding Items.Count, ElementName=CsvGrid}">
             </Button>
             <Button
                 x:Name="writePrecacheBtn"
                 Grid.Column="1"
                 Margin="5"
                 Content="Write To Precache"
-                Click="writePrecacheBtn_Click">
+                Click="writePrecacheBtn_Click"
+                IsEnabled="{Binding Items.Count, ElementName=CsvGrid}">
             </Button>
         </Grid>
         

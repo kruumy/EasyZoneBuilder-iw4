@@ -1,5 +1,6 @@
 ﻿using EasyZoneBuilder.Core.Interfaces;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
@@ -8,7 +9,7 @@ namespace EasyZoneBuilder.Core
     public class IW4 : IDirectoryInfo
     {
         public DirectoryInfoEx Directory { get; }
-        public Mod[] Mods { get; }
+        public ObservableCollection<Mod> Mods { get; } = new ObservableCollection<Mod>();
 
         public static readonly string[] DEFAULT_MP_ZONES =
         {
@@ -42,7 +43,7 @@ namespace EasyZoneBuilder.Core
         };
         // TODO: check why these zones dont work in zonebuilder,
         // my guess is that it needs some other zone loaded before it
-        
+
         public IEnumerable<string> GetZones() // TODO: make this only read zones from patch english and dlc folders
         {
             string[] fullPath = System.IO.Directory.GetFiles(Path.Combine(Directory.FullName, "zone"), "*.ff", SearchOption.AllDirectories);
@@ -63,13 +64,12 @@ namespace EasyZoneBuilder.Core
             DirectoryInfoEx modFolder = Directory.GetDirectory("mods");
             if ( modFolder.Exists )
             {
-                DirectoryInfoEx[] moddirs = modFolder.GetDirectories().ToArray();
-                Mods = new Mod[ moddirs.Length ];
-                for ( int i = 0; i < moddirs.Length; i++ )
+                foreach ( DirectoryInfoEx dir in modFolder.GetDirectories() )
                 {
-                    Mods[ i ] = new Mod(moddirs[ i ]);
+                    Mods.Add(new Mod(dir));
                 }
             }
+
         }
     }
 }

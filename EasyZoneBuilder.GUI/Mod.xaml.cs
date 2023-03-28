@@ -1,5 +1,6 @@
 ﻿using EasyZoneBuilder.Core;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -17,10 +18,7 @@ namespace EasyZoneBuilder.GUI
             InitializeComponent();
         }
 
-        private void selectedMod_Loaded( object sender, RoutedEventArgs e )
-        {
-            selectedMod.ItemsSource = Core.Settings.IW4.Mods;
-        }
+        public ObservableCollection<Core.Mod> Mods => Core.Settings.IW4.Mods;
 
         public void ReadModCsvBtn_Click( object sender, RoutedEventArgs e )
         {
@@ -37,10 +35,7 @@ namespace EasyZoneBuilder.GUI
                         readFastFileContextMenu_Click(sender, e);
                     }
                 }
-                detectedZonesBox.Text = string.Empty;
-                CsvGrid.ItemsSource = sMod.CSV;
             }
-            CsvGrid.Items.Refresh();
         }
 
         private async void writeFastFileBtn_Click( object sender, RoutedEventArgs e )
@@ -98,28 +93,6 @@ namespace EasyZoneBuilder.GUI
                 ReadModCsvBtn_Click(sender, e);
                 ReadModCsvBtn.Content = oldContent;
                 ReadModCsvBtn.IsEnabled = true;
-            }
-        }
-
-        private void FindRequiredZonesBtn_Click( object sender, RoutedEventArgs e )
-        {
-            if ( selectedMod.SelectedItem is Core.Mod sMod )
-            {
-                FindRequiredZonesBtn.IsEnabled = false;
-                object oldContent = FindRequiredZonesBtn.Content;
-                FindRequiredZonesBtn.Content = "Finding...";
-                detectedZonesBox.Text = string.Empty;
-                //await DependencyGraph.DefaultInstance.Pull();
-                foreach ( string zone in DependencyGraph.DefaultInstance.GetRequiredZones(sMod.CSV).Keys )
-                {
-                    detectedZonesBox.Text += zone + ", ";
-                }
-                if ( detectedZonesBox.Text.Length > 2 )
-                {
-                    detectedZonesBox.Text = detectedZonesBox.Text.Remove(detectedZonesBox.Text.Length - 2, 2);
-                }
-                FindRequiredZonesBtn.Content = oldContent;
-                FindRequiredZonesBtn.IsEnabled = true;
             }
         }
 

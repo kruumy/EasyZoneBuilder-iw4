@@ -14,6 +14,8 @@ namespace EasyZoneBuilder.GUI
             InitializeComponent();
         }
 
+
+
         private void Button_Click( object sender, RoutedEventArgs e )
         {
             OpenFileDialog selectIw4x = new OpenFileDialog

@@ -18,6 +18,7 @@ namespace EasyZoneBuilder.Core
         }
 
 
+        public IEnumerable<string> RequiredZones => Core.DependencyGraph.DefaultInstance.GetRequiredZones(this).Keys; // TODO notify on collection changed
 
         public FileInfoEx File { get; private set; }
 

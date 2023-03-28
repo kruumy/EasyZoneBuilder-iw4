@@ -10,13 +10,13 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <DataGrid x:Name="AssetGrid"
           Grid.Row="0"
           AutoGenerateColumns="False"
           SelectionMode="Extended"
-          Margin="5">
+          Margin="3">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="AssetType"
                             Binding="{Binding Key.Value}"
@@ -52,7 +52,7 @@
         <Button
             x:Name="FindRequiredZonesBtn"
             Grid.Row="1"
-            Margin="5"
+            Margin="3"
             Content="Find Required Zones"
             Click="FindRequiredZonesBtn_Click">
             

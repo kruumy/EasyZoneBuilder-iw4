@@ -80,6 +80,8 @@
     <Compile Include="AppSettings.xaml.cs">
       <DependentUpon>AppSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\IEnumerableToString.cs" />
+    <Compile Include="Converters\SelectedIndexToBoolConverter.cs" />
     <Compile Include="Themes\ColourfulDarkTheme.xaml.cs">
       <DependentUpon>ColourfulDarkTheme.xaml</DependentUpon>
     </Compile>
@@ -192,5 +194,6 @@
   <ItemGroup>
     <Resource Include="Resources\open_window.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
