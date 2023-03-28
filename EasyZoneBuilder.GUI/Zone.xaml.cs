@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -9,7 +10,7 @@ using System.Windows.Data;
 namespace EasyZoneBuilder.GUI
 {
     /// <summary>
-    /// Interaction logic for Zone.xaml
+    /// Interaction logic for NewZone.xaml
     /// </summary>
     public partial class Zone : UserControl
     {
@@ -19,72 +20,113 @@ namespace EasyZoneBuilder.GUI
             cvs.Filter += Cvs_Filter;
         }
 
-        private void selectedZone_Loaded( object sender, RoutedEventArgs e )
-        {
-            selectedZone.ItemsSource = Settings.IW4.GetZones();
-        }
-        public readonly CollectionViewSource cvs = new CollectionViewSource();
-        private async void readFastFileBtn_Click( object sender, RoutedEventArgs e )
-        {
-            if ( selectedZone.SelectedItem is string ss && selectedAssetType.SelectedItem is string sat )
-            {
-                readFastFileBtn.IsEnabled = false;
-                object oldBtnContext = readFastFileBtn.Content;
-                readFastFileBtn.Content = "Reading...";
-                AssetList.ItemsSource = Array.Empty<string>();
-                AssetsFoundLabel.Content = "Assets Found: 0";
-                IEnumerable<string> assets = await ZoneBuilder.ListAssets((AssetType)Enum.Parse(typeof(AssetType), sat), ss);
-                cvs.Source = assets;
-                AssetList.ItemsSource = cvs.View;
-                AssetsFoundLabel.Content = "Assets Found: " + assets.Count();
-                readFastFileBtn.Content = oldBtnContext;
-                readFastFileBtn.IsEnabled = true;
-            }
-        }
-
         private void Cvs_Filter( object sender, FilterEventArgs e )
         {
-            SearchBox.Text = SearchBox.Text.Trim();
-            if ( string.IsNullOrEmpty(SearchBox.Text) )
+            e.Accepted = false;
+            if ( e.Item is KeyValuePair<string, AssetType> asset )
             {
-                e.Accepted = true;
-            }
-            else
-            {
-                if ( e.Item is string s )
+                if ( !string.IsNullOrEmpty(SelectAssetTypeComboBox.Text) )
                 {
-                    e.Accepted = s.Contains(SearchBox.Text); // TODO: search by word and not phrase
+                    e.Accepted = SelectAssetTypeComboBox.Text == "None" || Enum.TryParse(SelectAssetTypeComboBox.Text, out AssetType assetType) && assetType == asset.Value;
                 }
-                else
+                if ( e.Accepted )
                 {
-                    e.Accepted = false;
+                    if ( string.IsNullOrEmpty(SearchTextBox.Text.Trim()) )
+                    {
+                        e.Accepted = true;
+                    }
+                    else
+                    {
+                        e.Accepted = asset.Key.Contains(SearchTextBox.Text);
+                    }
                 }
             }
         }
 
-        private void selectedAssetType_Loaded( object sender, RoutedEventArgs e )
-        {
-            selectedAssetType.ItemsSource = typeof(AssetType).GetEnumNames();
-            selectedAssetType.SelectedValue = 0;
-        }
-
+        public readonly CollectionViewSource cvs = new CollectionViewSource();
         private void AddToCSVMenuItem_Click( object sender, RoutedEventArgs e )
         {
-            if ( Mod.Instance.selectedMod.SelectedItem is Core.Mod sMod &&
-                AssetList.SelectedItem is string selectedAsset &&
-                this.selectedAssetType.SelectedItem is string selectedAssetType &&
-                selectedZone.SelectedItem is string _selectedZone &&
-                Enum.TryParse(selectedAssetType, out AssetType assetType) )
+            if ( Mod.Instance.selectedMod.SelectedItem is Core.Mod sMod && AssetGrid.SelectedItems.Count > 0 )
             {
-                sMod.CSV[ selectedAsset ] = assetType;
-                sMod.CSV.Push();
-                Mod.Instance.ReadModCsvBtn_Click(sender, e);
+                foreach ( object item in AssetGrid.SelectedItems )
+                {
+                    if ( item is KeyValuePair<string, AssetType> kv )
+                    {
+                        sMod.CSV[ kv.Key ] = kv.Value;
+                        sMod.CSV.Push();
+                        Mod.Instance.ReadModCsvBtn_Click(sender, e);
+                    }
+                }
             }
         }
 
-        private void SearchBtn_Click( object sender, RoutedEventArgs e )
+        private async void ReadZoneBtn_Click( object sender, RoutedEventArgs e )
         {
-            cvs?.View?.Refresh();
+            if ( SelectZoneComboBox.SelectedItem is string ss )
+            {
+                ReadZoneBtn.IsEnabled = false;
+                object oldBtnContext = ReadZoneBtn.Content;
+                ReadZoneBtn.Content = "Reading...";
+                await RefreshAssetGrid();
+                ReadZoneBtn.Content = oldBtnContext;
+                ReadZoneBtn.IsEnabled = true;
+            }
+        }
+
+        private async Task RefreshAssetGrid()
+        {
+            if ( SelectZoneComboBox.SelectedItem is string ss )
+            {
+                AssetGrid.ItemsSource = Array.Empty<string>();
+                cvs.Source = await DependencyGraph.DefaultInstance.GetAssetsAsync(ss);
+                AssetGrid.ItemsSource = cvs.View;
+            }
+            AssetGrid.Items.Refresh();
+        }
+
+        private async void SelectZoneComboBox_Loaded( object sender, RoutedEventArgs e )
+        {
+            if ( DependencyGraph.DefaultInstance.File.Exists )
+            {
+                SelectZoneComboBox.IsEnabled = false;
+                await DependencyGraph.DefaultInstance.Pull();
+                IEnumerable<string> zones = DependencyGraph.DefaultInstance.GetZones().OrderBy(s => s);
+                SelectZoneComboBox.ItemsSource = zones;
+                SelectZoneComboBox.SelectedIndex = 0;
+                SelectZoneComboBox.IsEnabled = true;
+            }
+        }
+
+        private void SelectAssetTypeComboBox_Loaded( object sender, RoutedEventArgs e )
+        {
+            SelectAssetTypeComboBox.Items.Clear();
+            SelectAssetTypeComboBox.Items.Add("None");
+            SelectAssetTypeComboBox.SelectedIndex = 0;
+            foreach ( string item in typeof(AssetType).GetEnumNames() )
+            {
+                SelectAssetTypeComboBox.Items.Add(item);
+            }
+        }
+
+        private async void SearchBtn_Click( object sender, RoutedEventArgs e )
+        {
+            SearchTextBox.IsEnabled = false;
+            SearchBtn.IsEnabled = false;
+            object oldContent = SearchBtn.Content;
+            SearchBtn.Content = "Filtering...";
+            await RefreshAssetGrid();
+            //await cvs.Dispatcher.InvokeAsync(() => cvs.View.Refresh(), System.Windows.Threading.DispatcherPriority.Input);
+            SearchBtn.Content = oldContent;
+            SearchBtn.IsEnabled = true;
+            SearchTextBox.IsEnabled = true;
+        }
+
+        private void SearchTextBox_KeyDown( object sender, System.Windows.Input.KeyEventArgs e )
+        {
+            if ( e.Key == System.Windows.Input.Key.Enter && SearchTextBox.IsEnabled )
+            {
+                SearchBtn_Click(sender, e);
+            }
         }
     }
 }

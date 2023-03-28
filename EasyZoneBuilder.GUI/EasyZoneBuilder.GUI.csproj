@@ -86,14 +86,11 @@
     <Compile Include="DependencyGraphSettings.xaml.cs">
       <DependentUpon>DependencyGraphSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="NewZone.xaml.cs">
-      <DependentUpon>NewZone.xaml</DependentUpon>
+    <Compile Include="Zone.xaml.cs">
+      <DependentUpon>Zone.xaml</DependentUpon>
     </Compile>
     <Compile Include="RequiredZonesExpanded.xaml.cs">
       <DependentUpon>RequiredZonesExpanded.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Zone.xaml.cs">
-      <DependentUpon>Zone.xaml</DependentUpon>
     </Compile>
     <Page Include="AppSettings.xaml">
       <SubType>Designer</SubType>
@@ -123,15 +120,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="NewZone.xaml">
+    <Page Include="Zone.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="RequiredZonesExpanded.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Zone.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

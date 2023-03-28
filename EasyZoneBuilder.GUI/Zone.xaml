@@ -9,46 +9,47 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="25"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Grid.Column="0">
+
+        <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <ComboBox
-                x:Name="selectedZone"
+                x:Name="SelectZoneComboBox"
+                Margin="5"
                 Grid.Column="0"
-                Margin="5"
-                Loaded="selectedZone_Loaded">
+                Loaded="SelectZoneComboBox_Loaded">
             </ComboBox>
-            <ComboBox
-                x:Name="selectedAssetType"
+            <Button
+                x:Name="ReadZoneBtn"
+                Margin="5"
                 Grid.Column="1"
-                Margin="5"
-                Loaded="selectedAssetType_Loaded">
-            </ComboBox>
+                Content="Read Zone"
+                Click="ReadZoneBtn_Click">
+            </Button>
         </Grid>
-        <Grid Grid.Row="1" Grid.Column="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Label
-                x:Name="AssetsFoundLabel"
-                Content="Assets Found: 0"
-                HorizontalAlignment="Left"
-                FontSize="11"
-                Margin="2,0,0,0">
-            </Label>
-        </Grid>
-        <ListBox 
-            x:Name="AssetList"
-            Grid.Row="2" 
-            Margin="5">
-            <ListBox.ContextMenu>
+        
+        <DataGrid 
+              x:Name="AssetGrid"
+              Grid.Row="1"
+              AutoGenerateColumns="False"
+              SelectionMode="Extended"
+              Margin="5">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="AssetType"
+                            Binding="{Binding Value}"
+                            Width="75"
+                            IsReadOnly="True" />
+                <DataGridTextColumn Header="Name"
+                            Binding="{Binding Key}"
+                            Width="*"
+                            IsReadOnly="True" />
+            </DataGrid.Columns>
+            <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem
                         x:Name="AddToCSVMenuItem"
@@ -63,35 +64,37 @@
                         </MenuItem.Icon>
                     </MenuItem>
                 </ContextMenu>
-            </ListBox.ContextMenu>
-        </ListBox>
-        <Grid Grid.Row="3">
+            </DataGrid.ContextMenu>
+        </DataGrid>
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="125"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="100"></ColumnDefinition>
+                <ColumnDefinition Width="75"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBox
-                x:Name="SearchBox"
-                Margin="5"
-                Grid.Column="0"
-                TextWrapping="NoWrap">
+                    x:Name="SearchTextBox"
+                    Margin="5"
+                    Grid.Column="1"
+                    KeyDown="SearchTextBox_KeyDown">
             </TextBox>
             <Button
-                x:Name="SearchBtn"
-                Grid.Column="1"
-                Margin="5"
-                Content="Search"
-                Click="SearchBtn_Click">
-                
+                    x:Name="SearchBtn"
+                    Margin="5"
+                    Grid.Column="2"
+                    Content="Filter"
+                    Click="SearchBtn_Click">
             </Button>
-        </Grid>
-        <Button
-                x:Name="readFastFileBtn"
-                Grid.Column="0"
-                Grid.Row="4"
+            <ComboBox
+                x:Name="SelectAssetTypeComboBox"
+                Grid.Row="1"
                 Margin="5"
-                Content="Read From FastFile"
-                Click="readFastFileBtn_Click">
-        </Button>
+                Loaded="SelectAssetTypeComboBox_Loaded">
+            </ComboBox>
+        </Grid>
     </Grid>
 </UserControl>
