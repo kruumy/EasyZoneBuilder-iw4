@@ -80,8 +80,8 @@
     <Compile Include="AppSettings.xaml.cs">
       <DependentUpon>AppSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DarkTheme.xaml.cs">
-      <DependentUpon>DarkTheme.xaml</DependentUpon>
+    <Compile Include="Themes\ColourfulDarkTheme.xaml.cs">
+      <DependentUpon>ColourfulDarkTheme.xaml</DependentUpon>
     </Compile>
     <Compile Include="DependencyGraphSettings.xaml.cs">
       <DependentUpon>DependencyGraphSettings.xaml</DependentUpon>
@@ -96,7 +96,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DarkTheme.xaml">
+    <Page Include="Themes\ColourfulDarkTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
