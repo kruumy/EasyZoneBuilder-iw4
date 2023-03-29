@@ -58,7 +58,7 @@ namespace EasyZoneBuilder.GUI
                 await DependencyGraph.DefaultInstance.Pull();
                 DependencyGraphInfoBox.Items.Clear();
                 DependencyGraphInfoBox.Items.Add($"Asset Count = {DependencyGraph.DefaultInstance.Count}");
-                DependencyGraphInfoBox.Items.Add($"Zones Count = {DependencyGraph.DefaultInstance.GetZones().Count()}");
+                DependencyGraphInfoBox.Items.Add($"Zones Count = {DependencyGraph.DefaultInstance.Zones.Count()}");
             }
         }
     }

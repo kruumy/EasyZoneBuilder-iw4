@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:EasyZoneBuilder.GUI"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="400">
+             d:DesignHeight="450" d:DesignWidth="400" DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -22,7 +22,8 @@
                 x:Name="SelectZoneComboBox"
                 Margin="5"
                 Grid.Column="0"
-                Loaded="SelectZoneComboBox_Loaded">
+                SelectedIndex="0"
+                ItemsSource="{Binding Graph.Zones}">
             </ComboBox>
             <Button
                 x:Name="ReadZoneBtn"
@@ -94,7 +95,8 @@
                 x:Name="SelectAssetTypeComboBox"
                 Grid.Row="1"
                 Margin="5"
-                Loaded="SelectAssetTypeComboBox_Loaded">
+                SelectedIndex="0"
+                ItemsSource="{Binding Graph.AvailableAssetTypeNames}">
             </ComboBox>
         </Grid>
     </Grid>

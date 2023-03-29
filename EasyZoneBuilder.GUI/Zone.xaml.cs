@@ -1,7 +1,6 @@
 ﻿using EasyZoneBuilder.Core;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,6 +18,8 @@ namespace EasyZoneBuilder.GUI
             InitializeComponent();
             cvs.Filter += Cvs_Filter;
         }
+
+        public DependencyGraph Graph => Core.DependencyGraph.DefaultInstance;
 
         private void Cvs_Filter( object sender, FilterEventArgs e )
         {
@@ -82,30 +83,6 @@ namespace EasyZoneBuilder.GUI
                 AssetGrid.ItemsSource = cvs.View;
             }
             AssetGrid.Items.Refresh();
-        }
-
-        private async void SelectZoneComboBox_Loaded( object sender, RoutedEventArgs e )
-        {
-            if ( DependencyGraph.DefaultInstance.File.Exists )
-            {
-                SelectZoneComboBox.IsEnabled = false;
-                await DependencyGraph.DefaultInstance.Pull();
-                IEnumerable<string> zones = DependencyGraph.DefaultInstance.GetZones().OrderBy(s => s);
-                SelectZoneComboBox.ItemsSource = zones;
-                SelectZoneComboBox.SelectedIndex = 0;
-                SelectZoneComboBox.IsEnabled = true;
-            }
-        }
-
-        private void SelectAssetTypeComboBox_Loaded( object sender, RoutedEventArgs e )
-        {
-            SelectAssetTypeComboBox.Items.Clear();
-            SelectAssetTypeComboBox.Items.Add("None");
-            SelectAssetTypeComboBox.SelectedIndex = 0;
-            foreach ( string item in typeof(AssetType).GetEnumNames() )
-            {
-                SelectAssetTypeComboBox.Items.Add(item);
-            }
         }
 
         private async void SearchBtn_Click( object sender, RoutedEventArgs e )

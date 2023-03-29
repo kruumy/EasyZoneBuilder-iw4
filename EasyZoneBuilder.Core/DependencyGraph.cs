@@ -1,6 +1,7 @@
 ﻿using EasyZoneBuilder.Core.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace EasyZoneBuilder.Core
 {
-    public class DependencyGraph : Dictionary<string, List<string>>, IASync, IFileInfo
+    public class DependencyGraph : Dictionary<string, List<string>>, IASync, IFileInfo, INotifyPropertyChanged
     {
         [IgnoreDataMember]
         public static readonly DependencyGraph DefaultInstance = new DependencyGraph(new FileInfoEx(Path.Combine(Environment.CurrentDirectory, "dependency_graph.json")));
@@ -17,15 +18,42 @@ namespace EasyZoneBuilder.Core
         public DependencyGraph( FileInfoEx File )
         {
             this.File = File;
-        }
-
-        public DependencyGraph( Dictionary<string, List<string>> dict, FileInfoEx File ) : base(dict)
-        {
-            this.File = File;
+            _ = Pull();
         }
 
         [IgnoreDataMember]
         public FileInfoEx File { get; }
+
+        public IEnumerable<string> AvailableAssetTypeNames
+        {
+            get
+            {
+                HashSet<string> result = new HashSet<string>();
+                foreach ( string item in this.Keys )
+                {
+                    result.Add(item.Split(':')[ 0 ]);
+                }
+                return result;
+            }
+        }
+
+        public IEnumerable<string> Zones
+        {
+            get
+            {
+                HashSet<string> result = new HashSet<string>();
+                foreach ( List<string> item in this.Values )
+                {
+                    foreach ( string item1 in item )
+                    {
+                        result.Add(item1);
+                    }
+                }
+                return result;
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public async Task GenerateDependencyGraphJson( IEnumerable<string> zones )
         {
@@ -75,7 +103,6 @@ namespace EasyZoneBuilder.Core
             return ret;
         }
 
-
         public async Task<Dictionary<string, AssetType>> GetAssetsAsync( string zone )
         {
             return await Task.Run(() => GetAssets(zone));
@@ -84,6 +111,16 @@ namespace EasyZoneBuilder.Core
         public async Task<Dictionary<string, Dictionary<string, AssetType>>> GetAssetsAsync( IEnumerable<string> zones )
         {
             return await Task.Run(() => GetAssets(zones));
+        }
+
+        public string GetQueryString( KeyValuePair<string, AssetType> asset )
+        {
+            return GetQueryString(asset.Key, asset.Value);
+        }
+
+        public string GetQueryString( string assetName, AssetType assetType )
+        {
+            return $"{assetType}:{assetName}";
         }
 
         public Dictionary<string, Dictionary<string, AssetType>> GetRequiredZones( ModCSV csv )
@@ -131,19 +168,6 @@ namespace EasyZoneBuilder.Core
             return finalZoneScore;
         }
 
-        public IEnumerable<string> GetZones()
-        {
-            HashSet<string> result = new HashSet<string>();
-            foreach ( List<string> item in this.Values )
-            {
-                foreach ( string item1 in item )
-                {
-                    result.Add(item1);
-                }
-            }
-            return result;
-        }
-
         public async Task Pull()
         {
             string rawText = this.File.ReadAllText();
@@ -154,6 +178,9 @@ namespace EasyZoneBuilder.Core
             {
                 this.Add(entry.Key, entry.Value);
             }
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Zones))); //TODO make this call on collection change
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AvailableAssetTypeNames)));
         }
 
         public async Task Push()
@@ -161,16 +188,6 @@ namespace EasyZoneBuilder.Core
             string Dict = null;
             await Task.Run(() => { Dict = TinyJson.JSONWriter.ToJson(this); });
             File.WriteAllText(Dict);
-        }
-
-        public string GetQueryString( KeyValuePair<string, AssetType> asset )
-        {
-            return GetQueryString(asset.Key, asset.Value);
-        }
-
-        public string GetQueryString( string assetName, AssetType assetType )
-        {
-            return $"{assetType}:{assetName}";
         }
     }
 }
