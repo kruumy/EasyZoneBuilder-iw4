@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EasyZoneBuilder.Core
 {
-    public class Precache : Dictionary<string, AssetType>, IFileInfo, ISync
+    public class Precache : ObservableDictionary<string, AssetType>, IFileInfo, ISync
     {
         public FileInfoEx File { get; }
         private static readonly string ANIM_FUNCNAME = "PrecacheMPAnim";

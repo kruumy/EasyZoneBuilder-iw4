@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace EasyZoneBuilder.Core
 {
-    public class DependencyGraph : Dictionary<string, List<string>>, IASync, IFileInfo, INotifyPropertyChanged
+    public class DependencyGraph : ObservableDictionary<string, List<string>>, IASync, IFileInfo, INotifyPropertyChanged
     {
         [IgnoreDataMember]
         public static readonly DependencyGraph DefaultInstance = new DependencyGraph(new FileInfoEx(Path.Combine(Environment.CurrentDirectory, "dependency_graph.json")));

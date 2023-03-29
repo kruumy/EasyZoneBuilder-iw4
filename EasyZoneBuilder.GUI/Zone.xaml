@@ -23,7 +23,7 @@
                 Margin="5"
                 Grid.Column="0"
                 SelectedIndex="0"
-                ItemsSource="{Binding Graph.Zones}">
+                ItemsSource="{Binding Graph.Zones}" IsEnabled="{Binding Items.Count, RelativeSource={RelativeSource Self}}">
             </ComboBox>
             <Button
                 x:Name="ReadZoneBtn"

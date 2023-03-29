@@ -5,7 +5,7 @@ using System.Text;
 
 namespace EasyZoneBuilder.Core
 {
-    public class ModCSV : Dictionary<string, AssetType>, IFileInfo, ISync
+    public class ModCSV : ObservableDictionary<string, AssetType>, IFileInfo, ISync
     {
 
         public ModCSV( FileInfoEx File )
