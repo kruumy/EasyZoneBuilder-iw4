@@ -91,7 +91,18 @@ namespace EasyZoneBuilder.Core
             catch ( ArgumentException ) { }
             catch ( IndexOutOfRangeException ) { Debug.WriteLine(line); }
         }
-
+        public static async Task<Dictionary<string, Dictionary<string, AssetType>>> ListAssets( IEnumerable<AssetType> assetTypes, IEnumerable<string> zones )
+        {
+            Dictionary<string, Dictionary<string, AssetType>> dict = await ListAssets(zones);
+            foreach ( AssetType assetType in assetTypes )
+            {
+                foreach ( KeyValuePair<string, Dictionary<string, AssetType>> entry in dict )
+                {
+                    dict[ entry.Key ] = entry.Value.Where(item => item.Value == assetType).ToDictionary(kvp => kvp.Key, kvp => kvp.Value); ;
+                }
+            }
+            return dict;
+        }
         public static async Task<Dictionary<string, Dictionary<string, AssetType>>> ListAssets( IEnumerable<string> zones )
         {
             string[] commands = new string[ zones.Count() ];
@@ -125,6 +136,16 @@ namespace EasyZoneBuilder.Core
                 }
             }
             return ret;
+        }
+
+        public static async Task<IEnumerable<string>> ListAssets( IEnumerable<AssetType> assetTypes, string zone )
+        {
+            IEnumerable<KeyValuePair<string, AssetType>> dict = await ListAssets(zone);
+            foreach ( AssetType assetType in assetTypes )
+            {
+                dict = dict.Where(item => item.Value == assetType);
+            }
+            return dict.Select(item => item.Key);
         }
 
         public static async Task<IEnumerable<string>> ListAssets( AssetType assetType, string zone )

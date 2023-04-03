@@ -30,8 +30,13 @@ namespace EasyZoneBuilder.Core
 
         public async Task GenerateDependencyGraphJson( IEnumerable<string> zones )
         {
+            IEnumerable<AssetType> assetTypes = (AssetType[])typeof(AssetType).GetEnumValues();
+            await GenerateDependencyGraphJson(zones, assetTypes);
+        }
+        public async Task GenerateDependencyGraphJson( IEnumerable<string> zones, IEnumerable<AssetType> assetTypes )
+        {
             Console.WriteLine($"Reading {zones.Count()} zones...");
-            Dictionary<string, Dictionary<string, AssetType>> zone_asset_assetType = await ZoneBuilder.ListAssets(zones);
+            Dictionary<string, Dictionary<string, AssetType>> zone_asset_assetType = await ZoneBuilder.ListAssets(assetTypes, zones);
             this.Clear();
             foreach ( KeyValuePair<string, Dictionary<string, AssetType>> item in zone_asset_assetType )
             {
