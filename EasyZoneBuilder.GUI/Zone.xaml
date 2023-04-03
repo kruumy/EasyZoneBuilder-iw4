@@ -23,7 +23,8 @@
                 Margin="5"
                 Grid.Column="0"
                 SelectedIndex="0"
-                ItemsSource="{Binding Graph, Converter={StaticResource DependencyGraphZones}, IsAsync=True, Mode=OneWay, ValidatesOnNotifyDataErrors=False}">
+                ItemsSource="{Binding Graph, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource DependencyGraphZones}, IsAsync=True, Mode=OneWay, ValidatesOnNotifyDataErrors=False}" 
+                IsEnabled="{Binding Items.Count, RelativeSource={RelativeSource Self}}">
             </ComboBox>
             <ComboBox
                 x:Name="SelectAssetTypeComboBox"
@@ -39,7 +40,13 @@
               Grid.Row="1"
               AutoGenerateColumns="False"
               SelectionMode="Extended"
-              Margin="5">
+              Margin="5" >
+            <DataGrid.ItemsSource>
+                <MultiBinding Mode="OneWay" Converter="{StaticResource DependencyGraphGetAssets}">
+                    <Binding ElementName="SelectZoneComboBox" Path="SelectedItem"/>
+                    <Binding Path="Graph" />
+                </MultiBinding>
+            </DataGrid.ItemsSource>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="AssetType"
                             Binding="{Binding Value}"

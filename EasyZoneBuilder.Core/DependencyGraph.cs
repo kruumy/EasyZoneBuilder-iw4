@@ -1,7 +1,6 @@
 ﻿using EasyZoneBuilder.Core.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EasyZoneBuilder.Core
 {
-    public class DependencyGraph : ObservableDictionary<string, List<string>>, IASync, IFileInfo, INotifyPropertyChanged
+    public class DependencyGraph : ObservableDictionary<string, List<string>>, IASync, IFileInfo
     {
         [IgnoreDataMember]
         public static readonly DependencyGraph DefaultInstance = new DependencyGraph(new FileInfoEx(Path.Combine(Environment.CurrentDirectory, "dependency_graph.json")));
@@ -24,7 +23,17 @@ namespace EasyZoneBuilder.Core
         [IgnoreDataMember]
         public FileInfoEx File { get; }
 
-        public IEnumerable<string> AvailableAssetTypeNames
+        public IEnumerable<string> GetAvailableAssetTypeNames()
+        {
+            HashSet<string> result = new HashSet<string>();
+            foreach ( string item in this.Keys )
+            {
+                result.Add(item.Split(':')[ 0 ]);
+            }
+            return result;
+        }
+
+        public IEnumerable<string> AvailableAssetTypeNames // TODO remove this without breaking everything
         {
             get
             {
@@ -37,20 +46,17 @@ namespace EasyZoneBuilder.Core
             }
         }
 
-        public IEnumerable<string> Zones
+        public IEnumerable<string> GetZones()
         {
-            get
+            HashSet<string> result = new HashSet<string>();
+            foreach ( List<string> item in this.Values )
             {
-                HashSet<string> result = new HashSet<string>();
-                foreach ( List<string> item in this.Values )
+                foreach ( string item1 in item )
                 {
-                    foreach ( string item1 in item )
-                    {
-                        result.Add(item1);
-                    }
+                    result.Add(item1);
                 }
-                return result;
             }
+            return result;
         }
 
         public async Task GenerateDependencyGraphJson( IEnumerable<string> zones )

@@ -13,6 +13,7 @@
             <converters:SelectedIndexToBoolConverter x:Key="SelectedIndexToBoolConverter" />
             <converters:IEnumberableToString x:Key="IEnumberableToString" />
             <converters:DependencyGraphZones x:Key="DependencyGraphZones" />
+            <converters:DependencyGraphGetAssets x:Key="DependencyGraphGetAssets" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

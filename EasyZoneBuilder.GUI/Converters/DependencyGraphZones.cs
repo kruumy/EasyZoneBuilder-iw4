@@ -13,15 +13,8 @@ namespace EasyZoneBuilder.GUI.Converters
         {
             if ( value is DependencyGraph graph )
             {
-                HashSet<string> result = new HashSet<string>();
-                foreach ( List<string> item in graph.Values )
-                {
-                    foreach ( string item1 in item )
-                    {
-                        result.Add(item1);
-                    }
-                }
-                return result;
+                IEnumerable<string> zones = graph.GetZones();
+                return zones;
             }
             return null;
         }
