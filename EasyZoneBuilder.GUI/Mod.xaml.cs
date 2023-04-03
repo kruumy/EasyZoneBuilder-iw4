@@ -20,24 +20,6 @@ namespace EasyZoneBuilder.GUI
 
         public ObservableCollection<Core.Mod> Mods => Core.Settings.IW4.Mods;
 
-        public void ReadModCsvBtn_Click( object sender, RoutedEventArgs e )
-        {
-            if ( selectedMod.SelectedItem is Core.Mod sMod )
-            {
-                if ( sMod.CSV.File.Exists )
-                {
-                    sMod.CSV.Pull();
-                }
-                if ( sMod.CSV.Count <= 0 && sMod.FastFile.Exists )
-                {
-                    if ( MessageBoxResult.Yes == MessageBox.Show("Empty mod.csv detected!\nWould you like to generate the mod.csv from the mod.ff?", "Notice", MessageBoxButton.YesNo, MessageBoxImage.Question) )
-                    {
-                        readFastFileContextMenu_Click(sender, e);
-                    }
-                }
-            }
-        }
-
         private async void writeFastFileBtn_Click( object sender, RoutedEventArgs e )
         {
             if ( selectedMod.SelectedItem is Core.Mod sMod )
@@ -62,7 +44,6 @@ namespace EasyZoneBuilder.GUI
                     sMod.CSV.Remove(((KeyValuePair<string, AssetType>)item).Key);
                 }
                 sMod.CSV.Push();
-                ReadModCsvBtn_Click(sender, e);
             }
         }
 
@@ -81,21 +62,6 @@ namespace EasyZoneBuilder.GUI
                 MessageBox.Show("Wrote to _precache.gsc successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
-
-        private async void readFastFileContextMenu_Click( object sender, RoutedEventArgs e )
-        {
-            if ( selectedMod.SelectedItem is Core.Mod sMod && sMod.FastFile.Exists )
-            {
-                ReadModCsvBtn.IsEnabled = false;
-                object oldContent = ReadModCsvBtn.Content;
-                ReadModCsvBtn.Content = "Reading...";
-                await sMod.ReadZone();
-                ReadModCsvBtn_Click(sender, e);
-                ReadModCsvBtn.Content = oldContent;
-                ReadModCsvBtn.IsEnabled = true;
-            }
-        }
-
         private void DependencyGraphSettingsBtn_Click( object sender, RoutedEventArgs e )
         {
             DependencyGraphSettings window = new DependencyGraphSettings();

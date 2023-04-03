@@ -13,42 +13,20 @@
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Grid.Column="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <ComboBox
+        <ComboBox
                 x:Name="selectedMod"
                 Grid.Column="0"
+                Grid.Row="0"
                 Margin="5"
                 DisplayMemberPath="Directory.Name" 
-                ItemsSource="{Binding Mods}">
-            </ComboBox>
-            <Button
-                x:Name="ReadModCsvBtn"
-                Grid.Column="1"
-                Margin="5"
-                Content="Read mod.csv"
-                Click="ReadModCsvBtn_Click" 
-                IsEnabled="{Binding SelectedIndex, Converter={StaticResource SelectedIndexToBoolConverter}, ElementName=selectedMod, ValidatesOnNotifyDataErrors=False}">
-                <Button.ContextMenu>
-                    <ContextMenu>
-                        <MenuItem
-                            x:Name="readFastFileContextMenu"
-                              Header="Read mod.ff"
-                              Click="readFastFileContextMenu_Click">
-                        </MenuItem>
-                    </ContextMenu>
-                </Button.ContextMenu>
-            </Button>
-        </Grid>
+                ItemsSource="{Binding Mods, IsAsync=True}">
+        </ComboBox>
         <DataGrid x:Name="CsvGrid"
           Grid.Row="1"
           AutoGenerateColumns="False"
           SelectionMode="Extended"
           Margin="5,3" 
-          ItemsSource="{Binding SelectedItem.CSV, ElementName=selectedMod}">
+          ItemsSource="{Binding SelectedItem.CSV, ElementName=selectedMod, IsAsync=True}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="AssetType"
                             Binding="{Binding Value}"
@@ -91,7 +69,7 @@
                 TextAlignment="Left"
                 TextWrapping="NoWrap"
                 VerticalContentAlignment="Center"
-                Text="{Binding SelectedItem.CSV.RequiredZones,Mode=OneWay, Converter={StaticResource IEnumberableToString}, ElementName=selectedMod}"
+                Text="{Binding SelectedItem.CSV.RequiredZones, Converter={StaticResource IEnumberableToString}, ElementName=selectedMod, IsAsync=True, Mode=OneWay}"
                 >
             </TextBox>
             <Button

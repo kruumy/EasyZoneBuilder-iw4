@@ -12,6 +12,7 @@
             </ResourceDictionary.MergedDictionaries>
             <converters:SelectedIndexToBoolConverter x:Key="SelectedIndexToBoolConverter" />
             <converters:IEnumberableToString x:Key="IEnumberableToString" />
+            <converters:DependencyGraphZones x:Key="DependencyGraphZones" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -23,17 +23,17 @@
                 Margin="5"
                 Grid.Column="0"
                 SelectedIndex="0"
-                ItemsSource="{Binding Graph.Zones}" IsEnabled="{Binding Items.Count, RelativeSource={RelativeSource Self}}">
+                ItemsSource="{Binding Graph, Converter={StaticResource DependencyGraphZones}, IsAsync=True, Mode=OneWay, ValidatesOnNotifyDataErrors=False}">
             </ComboBox>
-            <Button
-                x:Name="ReadZoneBtn"
-                Margin="5"
+            <ComboBox
+                x:Name="SelectAssetTypeComboBox"
                 Grid.Column="1"
-                Content="Read Zone"
-                Click="ReadZoneBtn_Click">
-            </Button>
+                Margin="5"
+                SelectedIndex="0"
+                ItemsSource="{Binding Graph.AvailableAssetTypeNames}">
+            </ComboBox>
         </Grid>
-        
+
         <DataGrid 
               x:Name="AssetGrid"
               Grid.Row="1"
@@ -67,37 +67,12 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
-
-        <Grid Grid.Row="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="125"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="75"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <TextBox
-                    x:Name="SearchTextBox"
-                    Margin="5"
-                    Grid.Column="1"
-                    MaxLines="1"
-                    KeyDown="SearchTextBox_KeyDown">
-            </TextBox>
-            <Button
-                    x:Name="SearchBtn"
-                    Margin="5"
-                    Grid.Column="2"
-                    Content="Filter"
-                    Click="SearchBtn_Click">
-            </Button>
-            <ComboBox
-                x:Name="SelectAssetTypeComboBox"
-                Grid.Row="1"
-                Margin="5"
-                SelectedIndex="0"
-                ItemsSource="{Binding Graph.AvailableAssetTypeNames}">
-            </ComboBox>
-        </Grid>
+        <TextBox
+             x:Name="SearchTextBox"
+             Margin="5"
+             Grid.Row="2"
+             MaxLines="1"
+             Padding="5">
+        </TextBox>
     </Grid>
 </UserControl>

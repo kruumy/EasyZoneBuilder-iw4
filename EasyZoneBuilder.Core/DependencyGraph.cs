@@ -53,8 +53,6 @@ namespace EasyZoneBuilder.Core
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public async Task GenerateDependencyGraphJson( IEnumerable<string> zones )
         {
             Console.WriteLine($"Reading {zones.Count()} zones...");
@@ -178,9 +176,6 @@ namespace EasyZoneBuilder.Core
             {
                 this.Add(entry.Key, entry.Value);
             }
-
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Zones))); //TODO make this call on collection change
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(AvailableAssetTypeNames)));
         }
 
         public async Task Push()

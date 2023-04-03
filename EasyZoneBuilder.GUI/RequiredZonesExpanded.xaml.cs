@@ -70,7 +70,6 @@ namespace EasyZoneBuilder.GUI
                     sMod.CSV.Remove(((KeyValuePair<KeyValuePair<string, AssetType>, string>)item).Key.Key);
                 }
                 sMod.CSV.Push();
-                Mod.Instance.ReadModCsvBtn_Click(sender, e);
                 RefreshAssetGrid();
             }
         }
