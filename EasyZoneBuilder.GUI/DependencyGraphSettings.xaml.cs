@@ -61,6 +61,44 @@ namespace EasyZoneBuilder.GUI
                 DependencyGraphInfoBox.Items.Add($"Zones Count = {DependencyGraph.DefaultInstance.GetZones().Count()}");
             }
         }
+
+        private void SelectAssetTypes_Loaded( object sender, RoutedEventArgs e )
+        {
+            foreach ( string item in typeof(AssetType).GetEnumNames() )
+            {
+                CheckBox checkBox = new CheckBox
+                {
+                    Content = item
+                };
+                SelectAssetTypes.Children.Add(checkBox);
+
+            }
+        }
+
+        private void GetSelectedAssetTypes()
+        {
+            // TODO
+        }
+
+        private void SetAllAssetTypeCheckBoxes( bool ischecked )
+        {
+            foreach ( object item in SelectAssetTypes.Children )
+            {
+                if ( item is CheckBox checkbox )
+                {
+                    checkbox.IsChecked = ischecked;
+                }
+            }
+        }
+        private void SelectAllButton_Click( object sender, RoutedEventArgs e )
+        {
+            SetAllAssetTypeCheckBoxes(true);
+        }
+
+        private void SelectNoneButton_Click( object sender, RoutedEventArgs e )
+        {
+            SetAllAssetTypeCheckBoxes(false);
+        }
     }
 
     internal class ConsoleWriter : TextWriter, IDisposable

@@ -6,15 +6,58 @@
         xmlns:local="clr-namespace:EasyZoneBuilder.GUI"
         mc:Ignorable="d"
         Style="{DynamicResource CustomWindowStyle}"
-        Title="Dependency Graph Settings" Height="300" Width="450" Icon="/Resources/settings.ico" WindowStartupLocation="CenterOwner">
+        Title="Dependency Graph Settings" Height="300" Width="600" Icon="/Resources/settings.ico" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="125"></ColumnDefinition>
-            <ColumnDefinition Width="125"></ColumnDefinition>
+            <ColumnDefinition Width="125"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="125"/>
+            <ColumnDefinition Width="125"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Label
+                Content="Possible Asset Types"
+                HorizontalAlignment="Center">
+            </Label>
+            <ScrollViewer
+                Grid.Row="1">
+                <StackPanel
+                    x:Name="SelectAssetTypes"
+                    Loaded="SelectAssetTypes_Loaded">   
+                </StackPanel>
+            </ScrollViewer>
+            <Grid
+                Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button
+                    x:Name="SelectAllButton"
+                    Grid.Column="0"
+                    Content="All"
+                    Margin="5"
+                    Click="SelectAllButton_Click">
+                </Button>
+                <Button
+                    x:Name="SelectNoneButton"
+                    Grid.Column="1"
+                    Content="None"
+                    Margin="5"
+                    Click="SelectNoneButton_Click">
+                </Button>
+            </Grid>
+        </Grid>
+        
+       
+        
+        <Grid Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
@@ -33,7 +76,7 @@
                 Loaded="DependencyGraphInfoBox_Loaded">
             </ListBox>
         </Grid>
-        <Grid Grid.Column="2">
+        <Grid Grid.Column="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
@@ -56,11 +99,11 @@
         
         
 
-        <Grid Grid.Column="0">
+        <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="40"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
             </Grid.RowDefinitions>
             <Button
                 x:Name="RegenerateDependencyGraphBtn"
