@@ -14,49 +14,16 @@ namespace EasyZoneBuilder.Core
         [IgnoreDataMember]
         public static readonly DependencyGraph DefaultInstance = new DependencyGraph(new FileInfoEx(Path.Combine(Environment.CurrentDirectory, "dependency_graph.json")));
 
-        public DependencyGraph( FileInfoEx File )
-        {
-            this.File = File;
-            _ = Pull();
-        }
+        [IgnoreDataMember]
+        public object AvailableAssetTypeNames => null;
 
         [IgnoreDataMember]
         public FileInfoEx File { get; }
 
-        public IEnumerable<string> GetAvailableAssetTypeNames()
+        public DependencyGraph( FileInfoEx File )
         {
-            HashSet<string> result = new HashSet<string>();
-            foreach ( string item in this.Keys )
-            {
-                result.Add(item.Split(':')[ 0 ]);
-            }
-            return result;
-        }
-
-        public IEnumerable<string> AvailableAssetTypeNames // TODO remove this without breaking everything
-        {
-            get
-            {
-                HashSet<string> result = new HashSet<string>();
-                foreach ( string item in this.Keys )
-                {
-                    result.Add(item.Split(':')[ 0 ]);
-                }
-                return result;
-            }
-        }
-
-        public IEnumerable<string> GetZones()
-        {
-            HashSet<string> result = new HashSet<string>();
-            foreach ( List<string> item in this.Values )
-            {
-                foreach ( string item1 in item )
-                {
-                    result.Add(item1);
-                }
-            }
-            return result;
+            this.File = File;
+            _ = Pull();
         }
 
         public async Task GenerateDependencyGraphJson( IEnumerable<string> zones )
@@ -117,6 +84,18 @@ namespace EasyZoneBuilder.Core
             return await Task.Run(() => GetAssets(zones));
         }
 
+        public IEnumerable<string> GetAvailableAssetTypeNames()
+        {
+            HashSet<string> result = new HashSet<string>();
+            foreach ( string item in this.Keys )
+            {
+                result.Add(item.Split(':')[ 0 ]);
+            }
+            return result;
+        }
+
+        // TODO remove this without breaking everything
+
         public string GetQueryString( KeyValuePair<string, AssetType> asset )
         {
             return GetQueryString(asset.Key, asset.Value);
@@ -170,6 +149,19 @@ namespace EasyZoneBuilder.Core
                 finalZoneScore[ nextZone ] = zoneScore[ nextZone ];
             }
             return finalZoneScore;
+        }
+
+        public IEnumerable<string> GetZones()
+        {
+            HashSet<string> result = new HashSet<string>();
+            foreach ( List<string> item in this.Values )
+            {
+                foreach ( string item1 in item )
+                {
+                    result.Add(item1);
+                }
+            }
+            return result;
         }
 
         public async Task Pull()
