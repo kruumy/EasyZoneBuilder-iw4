@@ -13,11 +13,28 @@ namespace EasyZoneBuilder.GUI.Converters
         {
             if ( !values.Any(item => item is null) )
             {
-                string Map = values.FirstOrDefault(item => item is string) as string;
-                DependencyGraph Graph = values.FirstOrDefault(item => item is DependencyGraph) as DependencyGraph;
-                AssetType assetType = (AssetType)values.FirstOrDefault(item => item.GetType() == typeof(AssetType));
+                DependencyGraph Graph = values[ 0 ] as DependencyGraph;
+                string Map = values[ 1 ] as string;
                 IEnumerable<KeyValuePair<string, AssetType>> assets = Graph?.GetAssets(Map);
-                assets = assets.Where(item => item.Value == assetType);
+
+                if ( values.Length >= 3 )
+                {
+                    AssetType assetType = (AssetType)values[ 2 ];
+                    assets = assets.Where(item => item.Value == assetType);
+                }
+
+                if ( values.Length >= 4 )
+                {
+                    string[] searchQueries = (values[ 3 ] as string).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach ( string searchQuery in searchQueries )
+                    {
+                        assets = assets.Where(item => item.Key.Contains(searchQuery));
+                    }
+                }
+
+
+
+
                 return assets;
             }
             return null;

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:EasyZoneBuilder.GUI"
         mc:Ignorable="d"
         Style="{DynamicResource CustomWindowStyle}"
-        Title="Dependency Graph Settings" Height="300" Width="450" ResizeMode="NoResize" Icon="/Resources/settings.ico" WindowStartupLocation="CenterOwner">
+        Title="Dependency Graph Settings" Height="300" Width="450" Icon="/Resources/settings.ico" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>

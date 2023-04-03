@@ -47,6 +47,7 @@
                     <Binding Path="Graph" />
                     <Binding ElementName="SelectZoneComboBox" Path="SelectedItem"/>
                     <Binding ElementName="SelectAssetTypeComboBox" Path="SelectedItem"/>
+                    <Binding ElementName="SearchTextBox" Path="Text" />
                 </MultiBinding>
             </DataGrid.ItemsSource>
             <DataGrid.Columns>
