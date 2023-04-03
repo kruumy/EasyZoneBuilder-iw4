@@ -822,8 +822,8 @@
 
     <Style TargetType="{x:Type ComboBoxItem}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="Padding" Value="8,5" />
-        <Setter Property="Margin" Value="3" />
+        <Setter Property="Padding" Value="2" />
+        <Setter Property="Margin" Value="2" />
         <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
         <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
         <Setter Property="Foreground" Value="{StaticResource ControlDefaultForeground}" />

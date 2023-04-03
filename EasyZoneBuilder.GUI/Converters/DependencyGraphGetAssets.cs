@@ -11,6 +11,7 @@ namespace EasyZoneBuilder.GUI.Converters
     {
         private static IEnumerable<KeyValuePair<string, AssetType>> CachedAssets = null;
         private static string CachedAssetsMap = string.Empty;
+
         public object Convert( object[] values, Type targetType, object parameter, CultureInfo culture )
         {
             if ( !values.Any(item => item is null) )
@@ -43,9 +44,6 @@ namespace EasyZoneBuilder.GUI.Converters
                         assets = assets.Where(item => item.Key.Contains(searchQuery));
                     }
                 }
-
-
-
 
                 return assets;
             }
