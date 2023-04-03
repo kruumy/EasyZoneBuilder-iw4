@@ -94,12 +94,9 @@ namespace EasyZoneBuilder.Core
         public static async Task<Dictionary<string, Dictionary<string, AssetType>>> ListAssets( IEnumerable<AssetType> assetTypes, IEnumerable<string> zones )
         {
             Dictionary<string, Dictionary<string, AssetType>> dict = await ListAssets(zones);
-            foreach ( AssetType assetType in assetTypes )
+            foreach ( KeyValuePair<string, Dictionary<string, AssetType>> entry in dict.ToList() )
             {
-                foreach ( KeyValuePair<string, Dictionary<string, AssetType>> entry in dict )
-                {
-                    dict[ entry.Key ] = entry.Value.Where(item => item.Value == assetType).ToDictionary(kvp => kvp.Key, kvp => kvp.Value); ;
-                }
+                dict[ entry.Key ] = entry.Value.Where(item => assetTypes.Any(asset => item.Value == asset)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
             return dict;
         }

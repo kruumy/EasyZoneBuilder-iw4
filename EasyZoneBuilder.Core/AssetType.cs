@@ -2,7 +2,7 @@
 
 namespace EasyZoneBuilder.Core
 {
-    public enum AssetType // just need to add to this to add support for more asset types.
+    public enum AssetType
     {
         xanim,
         xmodel,

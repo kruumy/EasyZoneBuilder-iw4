@@ -15,7 +15,7 @@
             <ColumnDefinition Width="125"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0">
+        <Grid Grid.Column="0" IsEnabled="{Binding IsEnabled, ElementName=RegenerateDependencyGraphBtn}" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"/>
                 <RowDefinition Height="*"/>

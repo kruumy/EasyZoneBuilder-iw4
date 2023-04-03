@@ -20,7 +20,10 @@ namespace EasyZoneBuilder.Core
         public DependencyGraph( FileInfoEx File )
         {
             this.File = File;
-            StartPull();
+            if ( this.File.Exists )
+            {
+                StartPull();
+            }
         }
 
         public async void StartPull()
@@ -111,7 +114,8 @@ namespace EasyZoneBuilder.Core
                     result.Add(assetType);
                 }
             }
-            return result;
+
+            return result.OrderBy(item => item);
         }
 
         // TODO remove this without breaking everything

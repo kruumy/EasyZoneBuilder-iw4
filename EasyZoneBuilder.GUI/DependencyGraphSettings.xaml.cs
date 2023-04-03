@@ -1,5 +1,6 @@
 ﻿using EasyZoneBuilder.Core;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -38,12 +39,17 @@ namespace EasyZoneBuilder.GUI
 
         private async void RegenerateDependencyGraphBtn_Click( object sender, RoutedEventArgs e )
         {
+            if ( GetSelectedAssetTypes().Count() <= 0 )
+            {
+                MessageBox.Show("Please select atleast 1 asset type before regenerating dependency graph!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             if ( MessageBoxResult.OK == MessageBox.Show("Are you sure? This will take a few minutes.", "Warning", MessageBoxButton.OKCancel, MessageBoxImage.Warning) )
             {
                 RegenerateDependencyGraphBtn.IsEnabled = false;
                 object oldContent = RegenerateDependencyGraphBtn.Content;
                 RegenerateDependencyGraphBtn.Content = "Generating...";
-                await DependencyGraph.DefaultInstance.GenerateDependencyGraphJson(Settings.IW4.GetZones());
+                await DependencyGraph.DefaultInstance.GenerateDependencyGraphJson(Settings.IW4.GetZones(), GetSelectedAssetTypes());
                 RegenerateDependencyGraphBtn.Content = oldContent;
                 RegenerateDependencyGraphBtn.IsEnabled = true;
                 MessageBox.Show($"Successfully written to '{DependencyGraph.DefaultInstance.File.Name}'!");
@@ -75,9 +81,15 @@ namespace EasyZoneBuilder.GUI
             }
         }
 
-        private void GetSelectedAssetTypes()
+        private IEnumerable<AssetType> GetSelectedAssetTypes()
         {
-            // TODO
+            foreach ( object item in SelectAssetTypes.Children )
+            {
+                if ( item is CheckBox checkbox && (bool)checkbox.IsChecked )
+                {
+                    yield return (AssetType)Enum.Parse(typeof(AssetType), checkbox.Content.ToString());
+                }
+            }
         }
 
         private void SetAllAssetTypeCheckBoxes( bool ischecked )
