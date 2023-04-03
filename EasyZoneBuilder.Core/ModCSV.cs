@@ -52,13 +52,5 @@ namespace EasyZoneBuilder.Core
         {
             return new TempFileCopy(this.File, destination);
         }
-
-        public void AddRange( IEnumerable<KeyValuePair<string, AssetType>> pairs )
-        {
-            foreach ( KeyValuePair<string, AssetType> pair in pairs )
-            {
-                this[ pair.Key ] = pair.Value;
-            }
-        }
     }
 }

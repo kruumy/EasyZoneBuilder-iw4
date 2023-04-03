@@ -39,6 +39,8 @@ namespace EasyZoneBuilder.Core
         public event NotifyCollectionChangedEventHandler CollectionChanged;
         public event PropertyChangedEventHandler PropertyChanged;
 
+
+
         protected void RaisePropertyChanged( string propName )
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
@@ -56,6 +58,16 @@ namespace EasyZoneBuilder.Core
             base.Add(key, val);
             RaiseCollectionChanged(NotifyCollectionChangedAction.Add);
         }
+
+        public void AddRange( IEnumerable<KeyValuePair<TKey, TValue>> pairs )
+        {
+            foreach ( KeyValuePair<TKey, TValue> item in pairs )
+            {
+                base.Add(item.Key, item.Value);
+            }
+            RaiseCollectionChanged(NotifyCollectionChangedAction.Add);
+        }
+
         public new void Clear()
         {
             base.Clear();
@@ -83,6 +95,15 @@ namespace EasyZoneBuilder.Core
                 base[ key ] = value;
                 RaiseCollectionChanged(NotifyCollectionChangedAction.Add);
             }
+        }
+
+        public void SetIndexerRange( IEnumerable<KeyValuePair<TKey, TValue>> pairs )
+        {
+            foreach ( KeyValuePair<TKey, TValue> item in pairs )
+            {
+                base[ item.Key ] = item.Value;
+            }
+            RaiseCollectionChanged(NotifyCollectionChangedAction.Add);
         }
     }
 }

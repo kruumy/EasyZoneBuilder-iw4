@@ -81,6 +81,7 @@
       <DependentUpon>AppSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\DependencyGraphGetAssets.cs" />
+    <Compile Include="Converters\DependencyGraphGetAvailableAssetTypes.cs" />
     <Compile Include="Converters\DependencyGraphZones.cs" />
     <Compile Include="Converters\IEnumerableToString.cs" />
     <Compile Include="Converters\SelectedIndexToBoolConverter.cs" />

@@ -14,6 +14,7 @@
             <converters:IEnumberableToString x:Key="IEnumberableToString" />
             <converters:DependencyGraphZones x:Key="DependencyGraphZones" />
             <converters:DependencyGraphGetAssets x:Key="DependencyGraphGetAssets" />
+            <converters:DependencyGraphGetAvailableAssetTypes x:Key="DependencyGraphGetAvailableAssetTypes" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

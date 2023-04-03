@@ -15,15 +15,17 @@ namespace EasyZoneBuilder.Core
         public static readonly DependencyGraph DefaultInstance = new DependencyGraph(new FileInfoEx(Path.Combine(Environment.CurrentDirectory, "dependency_graph.json")));
 
         [IgnoreDataMember]
-        public object AvailableAssetTypeNames => null;
-
-        [IgnoreDataMember]
         public FileInfoEx File { get; }
 
         public DependencyGraph( FileInfoEx File )
         {
             this.File = File;
-            _ = Pull();
+            StartPull();
+        }
+
+        public async void StartPull()
+        {
+            await Pull();
         }
 
         public async Task GenerateDependencyGraphJson( IEnumerable<string> zones )
@@ -90,6 +92,19 @@ namespace EasyZoneBuilder.Core
             foreach ( string item in this.Keys )
             {
                 result.Add(item.Split(':')[ 0 ]);
+            }
+            return result;
+        }
+
+        public IEnumerable<AssetType> GetAvailableAssetTypes()
+        {
+            HashSet<AssetType> result = new HashSet<AssetType>();
+            foreach ( string item in this.Keys )
+            {
+                if ( Enum.TryParse<AssetType>(item.Split(':')[ 0 ], true, out AssetType assetType) )
+                {
+                    result.Add(assetType);
+                }
             }
             return result;
         }
@@ -170,10 +185,7 @@ namespace EasyZoneBuilder.Core
             Dictionary<string, List<string>> Dict = null;
             await Task.Run(() => { Dict = TinyJson.JSONParser.FromJson<Dictionary<string, List<string>>>(rawText); });
             this.Clear();
-            foreach ( KeyValuePair<string, List<string>> entry in Dict )
-            {
-                this.Add(entry.Key, entry.Value);
-            }
+            this.AddRange(Dict);
         }
 
         public async Task Push()

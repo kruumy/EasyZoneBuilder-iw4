@@ -47,14 +47,8 @@ namespace EasyZoneBuilder.Core
                 }
             }
             Precache.Clear();
-            foreach ( KeyValuePair<string, AssetType> item in mptoKeep )
-            {
-                Precache.Add(item.Key, item.Value);
-            }
-            foreach ( KeyValuePair<string, AssetType> entry in CSV )
-            {
-                Precache[ entry.Key ] = entry.Value;
-            }
+            Precache.AddRange(mptoKeep);
+            Precache.SetIndexerRange(CSV);
         }
     }
 }
