@@ -9,13 +9,25 @@ namespace EasyZoneBuilder.GUI.Converters
 {
     public class DependencyGraphGetAssets : IMultiValueConverter
     {
+        private static IEnumerable<KeyValuePair<string, AssetType>> CachedAssets = null;
+        private static string CachedAssetsMap = string.Empty;
         public object Convert( object[] values, Type targetType, object parameter, CultureInfo culture )
         {
             if ( !values.Any(item => item is null) )
             {
                 DependencyGraph Graph = values[ 0 ] as DependencyGraph;
                 string Map = values[ 1 ] as string;
-                IEnumerable<KeyValuePair<string, AssetType>> assets = Graph?.GetAssets(Map);
+                IEnumerable<KeyValuePair<string, AssetType>> assets = null;
+                if ( CachedAssetsMap == Map && CachedAssets != null )
+                {
+                    assets = CachedAssets;
+                }
+                else
+                {
+                    assets = Graph?.GetAssets(Map);
+                    CachedAssets = assets;
+                    CachedAssetsMap = Map;
+                }
 
                 if ( values.Length >= 3 )
                 {
