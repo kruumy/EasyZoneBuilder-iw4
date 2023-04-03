@@ -118,8 +118,6 @@ namespace EasyZoneBuilder.Core
             return result.OrderBy(item => item);
         }
 
-        // TODO remove this without breaking everything
-
         public string GetQueryString( KeyValuePair<string, AssetType> asset )
         {
             return GetQueryString(asset.Key, asset.Value);
