@@ -19,11 +19,6 @@ namespace EasyZoneBuilder.GUI
             InitializeComponent();
         }
 
-        private void ZonesListBox_Loaded( object sender, RoutedEventArgs e )
-        {
-            ZonesListBox.ItemsSource = Settings.DefaultInstance.IW4.GetZones();
-        }
-
         private ConsoleWriter ConsoleWriter;
 
         private void ConsoleOutputBox_Loaded( object sender, RoutedEventArgs e )
@@ -41,19 +36,27 @@ namespace EasyZoneBuilder.GUI
         {
             if ( GetSelectedAssetTypes().Count() <= 0 )
             {
-                MessageBox.Show("Please select atleast 1 asset type before regenerating dependency graph!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Console.WriteLine("Please select atleast one asset type!");
                 return;
             }
-            if ( MessageBoxResult.OK == MessageBox.Show("Are you sure? This will take a few minutes.", "Warning", MessageBoxButton.OKCancel, MessageBoxImage.Warning) )
+            else if ( GetSelectedZones().Count() <= 0 )
             {
+                Console.WriteLine("Please select atleast one zone!");
+                return;
+            }
+            else if ( MessageBoxResult.OK == MessageBox.Show("Are you sure? This will take a few minutes.", "Warning", MessageBoxButton.OKCancel, MessageBoxImage.Warning) )
+            {
+                AllowWindowClose = false;
                 RegenerateDependencyGraphBtn.IsEnabled = false;
                 object oldContent = RegenerateDependencyGraphBtn.Content;
                 RegenerateDependencyGraphBtn.Content = "Generating...";
-                await DependencyGraph.DefaultInstance.GenerateDependencyGraphJson(Settings.DefaultInstance.IW4.GetZones(), GetSelectedAssetTypes());
+                await DependencyGraph.DefaultInstance.GenerateDependencyGraphJson(GetSelectedZones(), GetSelectedAssetTypes());
                 RegenerateDependencyGraphBtn.Content = oldContent;
                 RegenerateDependencyGraphBtn.IsEnabled = true;
+                AllowWindowClose = true;
                 MessageBox.Show($"Successfully written to '{DependencyGraph.DefaultInstance.File.Name}'!\nPlease restart EasyZoneBuilder.");
                 DependencyGraphInfoBox_Loaded(sender, e);
+
             }
         }
 
@@ -74,10 +77,21 @@ namespace EasyZoneBuilder.GUI
             {
                 CheckBox checkBox = new CheckBox
                 {
-                    Content = item
+                    Content = new TextBlock { Text = item }
                 };
                 SelectAssetTypes.Children.Add(checkBox);
 
+            }
+        }
+
+        private IEnumerable<string> GetSelectedZones()
+        {
+            foreach ( object item in SelectZones.Children )
+            {
+                if ( item is CheckBox checkbox && (bool)checkbox.IsChecked )
+                {
+                    yield return (checkbox.Content as TextBlock).Text;
+                }
             }
         }
 
@@ -87,14 +101,14 @@ namespace EasyZoneBuilder.GUI
             {
                 if ( item is CheckBox checkbox && (bool)checkbox.IsChecked )
                 {
-                    yield return (AssetType)Enum.Parse(typeof(AssetType), checkbox.Content.ToString());
+                    yield return (AssetType)Enum.Parse(typeof(AssetType), (checkbox.Content as TextBlock).Text.ToString());
                 }
             }
         }
 
-        private void SetAllAssetTypeCheckBoxes( bool ischecked )
+        private static void SetAllCheckBoxes( UIElementCollection collection, bool ischecked )
         {
-            foreach ( object item in SelectAssetTypes.Children )
+            foreach ( object item in collection )
             {
                 if ( item is CheckBox checkbox )
                 {
@@ -104,12 +118,62 @@ namespace EasyZoneBuilder.GUI
         }
         private void SelectAllButton_Click( object sender, RoutedEventArgs e )
         {
-            SetAllAssetTypeCheckBoxes(true);
+            SetAllCheckBoxes(SelectAssetTypes.Children, true);
         }
 
         private void SelectNoneButton_Click( object sender, RoutedEventArgs e )
         {
-            SetAllAssetTypeCheckBoxes(false);
+            SetAllCheckBoxes(SelectAssetTypes.Children, false);
+        }
+
+        private void SelectZones_Loaded( object sender, RoutedEventArgs e )
+        {
+            foreach ( string item in Core.Settings.DefaultInstance.IW4.GetZones() )
+            {
+                SelectZones.Children.Add(new CheckBox
+                {
+                    Content = new TextBlock { Text = item }
+                });
+            }
+        }
+
+        private void SelectNoneZonesButton_Click( object sender, RoutedEventArgs e )
+        {
+            SetAllCheckBoxes(SelectZones.Children, false);
+        }
+
+        private void SelectAllZonesButton_Click( object sender, RoutedEventArgs e )
+        {
+            SetAllCheckBoxes(SelectZones.Children, true);
+        }
+
+        private void SelectRecommendedZonesButton_Click( object sender, RoutedEventArgs e )
+        {
+            foreach ( object item in SelectZones.Children )
+            {
+                if ( item is CheckBox checkbox && checkbox.Content is TextBlock text )
+                {
+                    if (
+                        !text.Text.Contains("mp_") &&
+                        !text.Text.Contains("_mp") &&
+                        !text.Text.Contains("iw4x")
+                        )
+                    {
+                        checkbox.IsChecked = true;
+                    }
+                    else
+                    {
+                        checkbox.IsChecked = false;
+                    }
+                }
+            }
+        }
+
+
+        private bool AllowWindowClose = true;
+        private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e )
+        {
+            e.Cancel = !AllowWindowClose;
         }
     }
 

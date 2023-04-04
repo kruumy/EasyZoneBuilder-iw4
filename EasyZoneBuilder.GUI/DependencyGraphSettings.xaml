@@ -6,13 +6,13 @@
         xmlns:local="clr-namespace:EasyZoneBuilder.GUI"
         mc:Ignorable="d"
         Style="{DynamicResource CustomWindowStyle}"
-        Title="Dependency Graph Settings" Height="300" Width="600" Icon="/Resources/settings.ico" WindowStartupLocation="CenterOwner">
+        Title="Dependency Graph Settings" Closing="Window_Closing" Height="400" Width="675" MinHeight="200" MinWidth="675" Icon="/Resources/settings.ico" WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="125"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="125"/>
-            <ColumnDefinition Width="125"/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0" IsEnabled="{Binding IsEnabled, ElementName=RegenerateDependencyGraphBtn}" >
@@ -57,7 +57,7 @@
         
        
         
-        <Grid Grid.Column="2">
+        <Grid Grid.Column="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
@@ -76,30 +76,59 @@
                 Loaded="DependencyGraphInfoBox_Loaded">
             </ListBox>
         </Grid>
-        <Grid Grid.Column="3">
+        <Grid Grid.Column="1" IsEnabled="{Binding IsEnabled, ElementName=RegenerateDependencyGraphBtn}" >
             <Grid.RowDefinitions>
-                <RowDefinition Height="25"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Label
-                Content="Detected Zones"
+                Content="Possible Zones"
                 HorizontalAlignment="Center">
             </Label>
-            <ListBox
-                x:Name="ZonesListBox"
-                Grid.Row="1"
-                Margin="5"
-                FontSize="11"
-                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                Loaded="ZonesListBox_Loaded">
-            </ListBox>
+            <ScrollViewer
+                Grid.Row="1">
+                <StackPanel
+                    x:Name="SelectZones"
+                    Loaded="SelectZones_Loaded">
+                </StackPanel>
+            </ScrollViewer>
+            <Grid
+                Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button
+                    x:Name="SelectAllZonesButton"
+                    Grid.Column="0"
+                    Content="All"
+                    Margin="5"
+                    Click="SelectAllZonesButton_Click">
+                </Button>
+                <Button
+                    x:Name="SelectNoneZonesButton"
+                    Grid.Column="1"
+                    Content="None"
+                    Margin="5"
+                    Click="SelectNoneZonesButton_Click">
+                </Button>
+                <Button
+                    x:Name="SelectRecommendedZonesButton"
+                    Grid.Column="2"
+                    Content="Single Player"
+                    Margin="5"
+                    Click="SelectRecommendedZonesButton_Click">
+                </Button>
+            </Grid>
         </Grid>
 
-        
-        
-        
 
-        <Grid Grid.Column="1">
+
+
+
+        <Grid Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
