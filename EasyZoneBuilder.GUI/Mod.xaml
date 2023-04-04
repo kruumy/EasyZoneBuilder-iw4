@@ -113,8 +113,13 @@
                 Grid.Column="0"
                 Margin="5"
                 Content="Write To FastFile"
-                Click="writeFastFileBtn_Click" 
-                IsEnabled="{Binding Items.Count, ElementName=CsvGrid}">
+                Click="writeFastFileBtn_Click">
+                <Button.IsEnabled>
+                    <MultiBinding Converter="{StaticResource AllBooleansAreParameter}" ConverterParameter="True" Mode="OneWay">
+                        <Binding Path="Items.Count" ElementName="CsvGrid" Converter="{StaticResource IntToBoolConverter}"/>
+                        <Binding Path="SelectedItem.CSV.HasUnknownAssets" ElementName="selectedMod" Converter="{StaticResource InvertBoolean}"/>
+                    </MultiBinding>
+                </Button.IsEnabled>
             </Button>
             <Button
                 x:Name="writePrecacheBtn"

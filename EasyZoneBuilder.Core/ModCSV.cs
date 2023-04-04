@@ -21,9 +21,11 @@ namespace EasyZoneBuilder.Core
         private void ModCSV_CollectionChanged( object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e )
         {
             RaisePropertyChanged(nameof(RequiredZones));
+            RaisePropertyChanged(nameof(HasUnknownAssets));
         }
 
         public IEnumerable<string> RequiredZones => Core.DependencyGraph.DefaultInstance.GetRequiredZones(this).Keys;
+        public bool HasUnknownAssets => Core.DependencyGraph.DefaultInstance.HasUnknownAssets(this);
 
         public FileInfoEx File { get; private set; }
 

@@ -15,6 +15,9 @@
             <converters:DependencyGraphZones x:Key="DependencyGraphZones" />
             <converters:DependencyGraphGetAssets x:Key="DependencyGraphGetAssets" />
             <converters:DependencyGraphGetAvailableAssetTypes x:Key="DependencyGraphGetAvailableAssetTypes" />
+            <converters:AllBooleansAreParameter x:Key="AllBooleansAreParameter" />
+            <converters:IntToBoolConverter x:Key="IntToBoolConverter" />
+            <converters:InvertBoolean x:Key="InvertBoolean" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
