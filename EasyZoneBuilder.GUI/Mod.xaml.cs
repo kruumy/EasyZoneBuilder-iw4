@@ -39,9 +39,9 @@ namespace EasyZoneBuilder.GUI
         {
             if ( selectedMod.SelectedItem is Core.Mod sMod && CsvGrid.SelectedItems.Count > 0 )
             {
-                foreach ( object item in CsvGrid.SelectedItems )
+                while ( CsvGrid.SelectedItems.Count > 0 )
                 {
-                    sMod.CSV.Remove(((KeyValuePair<string, AssetType>)item).Key);
+                    sMod.CSV.Remove(((KeyValuePair<string, AssetType>)CsvGrid.SelectedItems[ 0 ]).Key);
                 }
                 sMod.CSV.Push();
             }
