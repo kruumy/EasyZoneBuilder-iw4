@@ -44,12 +44,14 @@ namespace EasyZoneBuilder.Core
         // TODO: check why these zones dont work in zonebuilder,
         // my guess is that it needs some other zone loaded before it
 
-        public IEnumerable<string> GetZones() // TODO: make this only read zones from patch english and dlc folders
+        public IEnumerable<string> GetZones()
         {
-            string[] fullPath = System.IO.Directory.GetFiles(Path.Combine(Directory.FullName, "zone"), "*.ff", SearchOption.AllDirectories);
-            for ( int i = 0; i < fullPath.Length; i++ )
+            IEnumerable<string> fullPath = System.IO.Directory.EnumerateFiles(Path.Combine(Directory.FullName, "zone"), "*.ff", SearchOption.AllDirectories);
+            IEnumerable<string> remove = System.IO.Directory.EnumerateFiles(Path.Combine(Directory.FullName, "zone"), "*.ff", SearchOption.TopDirectoryOnly);
+            fullPath = fullPath.Difference(remove);
+            foreach ( string path in fullPath )
             {
-                string name = Path.GetFileNameWithoutExtension(fullPath[ i ]);
+                string name = Path.GetFileNameWithoutExtension(path);
                 if ( !BLACKLISTED_ZONES.Any(z => name == z) )
                 {
                     yield return name;
