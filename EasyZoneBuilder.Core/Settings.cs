@@ -1,23 +1,41 @@
-﻿using EasyZoneBuilder.Core.TinyJson;
+﻿using EasyZoneBuilder.Core.Interfaces;
+using EasyZoneBuilder.Core.TinyJson;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 
 namespace EasyZoneBuilder.Core
 {
-    public static class Settings
+    public class Settings : INotifyPropertyChanged, ISync
     {
-        public static bool IsTargetExecutablePathValid => Settings.File.Exists && !string.IsNullOrEmpty(Settings.TargetExecutablePath) && System.IO.File.Exists(Settings.TargetExecutablePath);
-        private static string _TargetExecutablePath = string.Empty;
-        public static string TargetExecutablePath
+        public static Settings DefaultInstance = new Settings(new FileInfoEx(Path.Combine(Environment.CurrentDirectory, "EasyZoneBuilder.appsettings.json")));
+        private IW4 _IW4;
+        private string _TargetExecutablePath = string.Empty;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public FileInfoEx File { get; }
+        public bool IsTargetExecutablePathValid => File.Exists && !string.IsNullOrEmpty(this.TargetExecutablePath) && System.IO.File.Exists(this.TargetExecutablePath);
+
+        public IW4 IW4
         {
-            get
+            get => _IW4;
+            private set
             {
-                return _TargetExecutablePath;
+                _IW4 = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IW4)));
             }
+        }
+
+        public string TargetExecutablePath
+        {
+            get => _TargetExecutablePath;
             set
             {
                 _TargetExecutablePath = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TargetExecutablePath)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsTargetExecutablePathValid)));
                 if ( !string.IsNullOrEmpty(value) && System.IO.File.Exists(value) )
                 {
                     FileInfoEx fileInfo = new FileInfoEx(value);
@@ -31,23 +49,23 @@ namespace EasyZoneBuilder.Core
             }
         }
 
-        public static IW4 IW4 { get; private set; }
-        public static FileInfoEx File => new FileInfoEx(Path.Combine(Environment.CurrentDirectory, "EasyZoneBuilder.appsettings.json"));
-        static Settings()
+        private Settings( FileInfoEx File )
         {
+            this.File = File;
             if ( File.Exists )
             {
                 Pull();
             }
         }
 
-        public static void Pull()
+        public void Pull()
         {
             string rawFileContents = File.ReadAllText();
             Dictionary<string, string> json = TinyJson.JSONParser.FromJson<Dictionary<string, string>>(rawFileContents);
             TargetExecutablePath = (string)(json[ nameof(TargetExecutablePath) ]);
         }
-        public static void Push()
+
+        public void Push()
         {
             Dictionary<string, string> json = new Dictionary<string, string>();
             json[ nameof(TargetExecutablePath) ] = TargetExecutablePath;

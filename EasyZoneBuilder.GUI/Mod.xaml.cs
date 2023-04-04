@@ -1,6 +1,5 @@
 ﻿using EasyZoneBuilder.Core;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -18,7 +17,7 @@ namespace EasyZoneBuilder.GUI
             InitializeComponent();
         }
 
-        public ObservableCollection<Core.Mod> Mods => Core.Settings.IW4.Mods;
+        public Settings Settings => Core.Settings.DefaultInstance;
 
         private async void writeFastFileBtn_Click( object sender, RoutedEventArgs e )
         {

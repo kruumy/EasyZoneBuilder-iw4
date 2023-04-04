@@ -19,7 +19,7 @@
                 Grid.Row="0"
                 Margin="5"
                 DisplayMemberPath="Directory.Name" 
-                ItemsSource="{Binding Mods, IsAsync=True}">
+                ItemsSource="{Binding Settings.IW4.Mods, IsAsync=True}">
         </ComboBox>
         <DataGrid x:Name="CsvGrid"
           Grid.Row="1"

@@ -34,7 +34,7 @@ namespace EasyZoneBuilder.GUI
             string fileName = Path.GetFileNameWithoutExtension(selectIw4x.FileName);
             if ( fileName == "iw4x" || fileName == "iw4m"  /* TODO add zonebuilder exe name */)
             {
-                Core.Settings.TargetExecutablePath = selectIw4x.FileName;
+                Core.Settings.DefaultInstance.TargetExecutablePath = selectIw4x.FileName;
                 this.Close();
                 return;
             }

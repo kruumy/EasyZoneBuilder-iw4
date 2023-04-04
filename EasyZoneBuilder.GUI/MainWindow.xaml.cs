@@ -12,7 +12,7 @@ namespace EasyZoneBuilder.GUI
         public MainWindow()
         {
             InitializeComponent();
-            if ( !Settings.IsTargetExecutablePathValid )
+            if ( !Settings.DefaultInstance.IsTargetExecutablePathValid )
             {
                 RunFirstTimeSetup();
             }
@@ -27,7 +27,7 @@ namespace EasyZoneBuilder.GUI
         {
             AppSettings appSettings = new AppSettings();
             appSettings.ShowDialog();
-            if ( !Settings.IsTargetExecutablePathValid )
+            if ( !Settings.DefaultInstance.IsTargetExecutablePathValid )
             {
                 Environment.Exit(0);
             }
