@@ -27,7 +27,7 @@ namespace EasyZoneBuilder.Core
         public IEnumerable<string> RequiredZones => Core.DependencyGraph.DefaultInstance.GetRequiredZones(this).Keys;
         public bool HasUnknownAssets => Core.DependencyGraph.DefaultInstance.HasUnknownAssets(this);
 
-        public FileInfoEx File { get; private set; }
+        public FileInfoEx File { get; }
 
         public void Pull()
         {
