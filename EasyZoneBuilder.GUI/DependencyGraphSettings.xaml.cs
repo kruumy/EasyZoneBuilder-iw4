@@ -52,7 +52,7 @@ namespace EasyZoneBuilder.GUI
                 await DependencyGraph.DefaultInstance.GenerateDependencyGraphJson(Settings.DefaultInstance.IW4.GetZones(), GetSelectedAssetTypes());
                 RegenerateDependencyGraphBtn.Content = oldContent;
                 RegenerateDependencyGraphBtn.IsEnabled = true;
-                MessageBox.Show($"Successfully written to '{DependencyGraph.DefaultInstance.File.Name}'!");
+                MessageBox.Show($"Successfully written to '{DependencyGraph.DefaultInstance.File.Name}'!\nPlease restart EasyZoneBuilder.");
                 DependencyGraphInfoBox_Loaded(sender, e);
             }
         }
