@@ -15,10 +15,15 @@ namespace EasyZoneBuilder.Core
             {
                 Pull();
             }
+            this.CollectionChanged += ModCSV_CollectionChanged;
         }
 
+        private void ModCSV_CollectionChanged( object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e )
+        {
+            RaisePropertyChanged(nameof(RequiredZones));
+        }
 
-        public IEnumerable<string> RequiredZones => Core.DependencyGraph.DefaultInstance.GetRequiredZones(this).Keys; // TODO notify on collection changed
+        public IEnumerable<string> RequiredZones => Core.DependencyGraph.DefaultInstance.GetRequiredZones(this).Keys;
 
         public FileInfoEx File { get; private set; }
 

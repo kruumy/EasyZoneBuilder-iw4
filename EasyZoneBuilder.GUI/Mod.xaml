@@ -69,7 +69,7 @@
                 TextAlignment="Left"
                 TextWrapping="NoWrap"
                 VerticalContentAlignment="Center"
-                Text="{Binding SelectedItem.CSV.RequiredZones, Converter={StaticResource IEnumberableToString}, ElementName=selectedMod, IsAsync=True, Mode=OneWay}"
+                Text="{Binding ItemsSource.RequiredZones, Converter={StaticResource IEnumberableToString}, ElementName=CsvGrid, IsAsync=True, Mode=OneWay}"
                 >
             </TextBox>
             <Button
