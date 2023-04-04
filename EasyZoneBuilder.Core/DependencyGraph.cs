@@ -49,7 +49,7 @@ namespace EasyZoneBuilder.Core
                     {
                         this[ $"{item1.Value}:{item1.Key}" ] = new List<string>();
                     }
-                    this[ $"{item1.Value}:{item1.Key}" ].Add(item.Key); // TODO: might need to remove duplicates
+                    this[ $"{item1.Value}:{item1.Key}" ].Add(item.Key);
                 }
             }
             await Push();
