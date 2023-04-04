@@ -128,6 +128,12 @@ namespace EasyZoneBuilder.Core
             return $"{assetType}:{assetName}";
         }
 
+        public bool HasUnknownAssets( ModCSV csv )
+        {
+            Dictionary<string, AssetType> assets = GetRequiredZones(csv).Values.Concat();
+            return csv.Count > assets.Count();
+        }
+
         public Dictionary<string, Dictionary<string, AssetType>> GetRequiredZones( ModCSV csv )
         {
             // Took a lot of inspiration from https://github.com/XLabsProject/iw4-zone-asset-finder/blob/main/iw4-zone-asset-finder/Commands/BuildRequirements.cs
