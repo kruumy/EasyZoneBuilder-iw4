@@ -20,6 +20,14 @@
                 Margin="5"
                 DisplayMemberPath="Directory.Name" 
                 ItemsSource="{Binding Settings.IW4.Mods, IsAsync=True}">
+            <ComboBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Open Mod Folder"
+                              x:Name="OpenModFolderContextMenu"
+                              Click="OpenModFolderContextMenu_Click">
+                    </MenuItem>
+                </ContextMenu> 
+            </ComboBox.ContextMenu>
         </ComboBox>
         <DataGrid x:Name="CsvGrid"
           Grid.Row="1"

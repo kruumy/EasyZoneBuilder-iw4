@@ -52,9 +52,16 @@ namespace EasyZoneBuilder.Core
                     {
                         throw new Exception($"{TargetExecutable.FullName} {args} : " + err);
                     }
-                    ret.AppendLine(raw.Substring(raw.LastIndexOf('"') + 3).Replace("\r", string.Empty));
+                    string result = raw.Substring(raw.LastIndexOf('"') + 3).Replace("\r", string.Empty);
+                    ret.AppendLine(result);
+
+#if DEBUG
+                    File.AppendAllText("zonebuilder.log", $"[{DateTime.Now}]\n[{args}]\n{result}\n");
+#endif
                 }
             }
+
+
             return ret.ToString();
         }
 

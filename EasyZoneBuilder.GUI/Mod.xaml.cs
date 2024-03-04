@@ -1,5 +1,6 @@
 ﻿using EasyZoneBuilder.Core;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -71,6 +72,14 @@ namespace EasyZoneBuilder.GUI
         {
             RequiredZonesExpanded window = new RequiredZonesExpanded();
             window.ShowDialog();
+        }
+
+        private void OpenModFolderContextMenu_Click( object sender, RoutedEventArgs e )
+        {
+            if( selectedMod.SelectedItem is Core.Mod mod && mod.Directory != null && mod.Directory.Exists)
+            {
+                Process.Start("explorer.exe", mod.Directory.FullName);
+            }
         }
     }
 }
