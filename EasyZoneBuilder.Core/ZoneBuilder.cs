@@ -195,8 +195,16 @@ namespace EasyZoneBuilder.Core
                 commands.Add("buildzone mod");
                 await ExecuteLines(commands.ToArray());
             }
-            FileInfoEx buildZoneOutput = TargetExecutable.Directory.GetDirectory("zone").GetFile(csv.File.NameWithoutExtention + ".ff");
-            buildZoneOutput.AssertExist();
+            FileInfoEx[] buildZoneOutputs =
+            { 
+                TargetExecutable.Directory.GetDirectory("zone").GetFile(csv.File.NameWithoutExtention + ".ff"),
+                TargetExecutable.Directory.GetDirectory("zonebuilder_out").GetFile(csv.File.NameWithoutExtention + ".ff")
+            };
+            FileInfoEx buildZoneOutput = buildZoneOutputs.FirstOrDefault( file => file.Exists );
+            if ( buildZoneOutput == null)
+            {
+                throw new FileNotFoundException("Could not find zonebuilder output mod.ff","mod.ff");
+            }
             destination.Delete();
             buildZoneOutput.Move(destination);
         }
